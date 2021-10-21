@@ -11,6 +11,7 @@ class Bucket{
         // ~Bucket();
         int bucketSize();
         bool existsInBucket(Entry *);
+        Entry * getEntry(Entry *);
         enum htable_retval insert(Entry *);
         void print(void);
 };
@@ -19,16 +20,17 @@ class HashTable {
     private:
         int size;
         Bucket * array;
-        long long (*hash_func)(Word & w);//pointer to hash function
+        unsigned long(*hash_func)(Word & );//pointer to hash function
     public:
         HashTable();
-        HashTable(int sz,long long (*)(Word &));
+        HashTable(int sz,unsigned long (*)(Word &));
         ~HashTable();
         int getSize(void);
         void setSize(int s);
-        void setHashFunc(long long (*)(Word &))
-        enum htable_retval insert(Word & w);
-        int getEntry(Word &w);
+        void setHashFunc(unsigned long (*)(Word &));
+        enum htable_retval updateEntryPayload(Entry *,int);
+        enum htable_retval insert(Entry *,int);
+        int getEntry(Entry *);
 
 
 };
