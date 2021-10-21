@@ -1,5 +1,6 @@
 #include <iostream>
-#include "hash_table.hpp"
+#include "../include/hash_table.hpp"
+#include "../include/hash_functions.hpp"
 
 /* BUCKETS START*/
 Bucket::Bucket():list(){
@@ -21,7 +22,7 @@ bool existsInBucket(Entry * e2){
     int exists=false;
     for(int i=0;i<list.getLen();i++){
         e1=list.getItem(i);
-        if((e1->getWord()).exactMatch(e1->getWord())){
+        if((e1->getWord()).exactMatch(e2->getWord())){
             exists=true;
             break;
         }
@@ -29,12 +30,26 @@ bool existsInBucket(Entry * e2){
     return exists;
 }
 
+Entry * Bucket::getEntry(Entry * e2){
+    //returns NULL if doesn't exist
+    Entry * e1=NULL;
+    for(int i=0;i<list.getLen();i++){
+        e1=list.getItem(i);
+        if((e1->getWord()).exactMatch(e2->getWord())){
+            e1=e2;
+            break;
+        }
+
+    }
+    return e1;
+}
+
 void Bucket::print(void){
     list.print();
 }
 /* BUCKETS END*/
 /* HashTable START*/
-HashTable::HashTable(int sz,long long (*h_f)(Word & w)){
+HashTable::HashTable(int sz,unsigned long (*h_f)(Word & w)){
     this->size=sz;
     hash_func=h_f;
     this->array=new Bucket(sz);
@@ -57,12 +72,26 @@ int HashTable::getSize(void){
 void HashTable::setSize(int s){
     this->size=s;
 }
-void setHashFunc(long long (*h_f)(Word &)){
+void setHashFunc(unsigned long (*h_f)(Word &)){
     this->hash_func=h_f;
 }
 
-enum htable_retval HashTable::insert(Word &w){
-    // Entry e();
+enum htable_retval HashTable::insert(Entry * e){
+    //insert just inserts entry in hashtable
+    unsigned long hash= this->hash_func((e->getWord()).getStr());
+    int bucket_index=hash%this->size;
+    return this->array[bucket_index].insert(e);
 }
+
+enum htable_retval HashTable::updateEntryPayload(Entry *e,int payload){
+    unsigned long hash= this->hash_func((e->getWord()).getStr());
+    int bucket_index=hash%this->size;
+    Entry *to_be_updated=this->array[bucket_index].getEntry(e);
+    if(to_be_updated==NULL)
+        return FAILURE;
+    to_be_updated->addToPayload(payload);
+    return SUCCESS;
+}
+
 
 /* HashTable END*/
