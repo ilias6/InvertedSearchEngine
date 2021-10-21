@@ -5,9 +5,10 @@
 #include "../include/word.hpp"
 
 
-Entry::Entry(const char * w, int val):word(w), payload() {
+Entry::Entry(const char * w, int val):
+    word(w), payload() {
+    this->addToPayload(val);
 }
-
 
 Word & Entry::getWord() {
     return this->word;

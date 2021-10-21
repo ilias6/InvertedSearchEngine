@@ -9,9 +9,13 @@ class Word {
     public:
 	/*Basic*/
 	void set(const char *);
+	int getLen();
+	char * getStr();
 	void print();
         Word(const char *);
-	/*cmp(const char *);*/
+	bool exactMatch(const & Word);
+	int hammingDist(const & Word);
+	int editDist(const & Word);
         ~Word();
 };
 

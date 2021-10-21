@@ -38,3 +38,26 @@ void Word::set(const char * s) {
 void Word::print() {
     cout << str;
 }
+
+int Word::getLen() {
+    return this->len;
+}
+
+char * Word::getStr() {
+    return this->str;
+}
+
+bool Word::exactMatch(const Word & w) {
+    if (this->len != w.getLen())
+	return false;
+
+    char * str = w.getStr();
+    for (int i = 0; i < this->len; ++i)
+	if (this->str[i] == str[i])
+	    return false;
+    return true;
+}
+
+
+}
+
