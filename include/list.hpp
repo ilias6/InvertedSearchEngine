@@ -26,6 +26,7 @@ class List {
 	List();
 	~List();
 	void print() const;
+	int getLen();
 	void insert(T, T ** t = NULL);
 	bool exists(T) const;
 	void remove(T);
@@ -57,6 +58,11 @@ void List<T>::print() const {
 	lst->print();
 	lst = lst->getNext();
     }
+}
+
+template <typename T>
+int List<T>::print() const {
+    return this->len;
 }
 
 template <typename T>
