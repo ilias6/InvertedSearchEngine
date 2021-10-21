@@ -1,38 +1,6 @@
 #include <iostream>
 #include "hash_table.hpp"
 
-/* DATA IN BUCKETS START*/
-
-Data::Data(Word &w,int indx){
-    word=w;
-    entry_indx=indx;
-}
-
-Word & Data::getWord(){
-    return this->word;
-}
-
-void Data::setWord(Word &w){
-    this->word=w;
-    return;
-}
-
-void Data::setEntryIndex(int indx){
-    this->entry_indx=indx;
-    return ;
-}
-void Data::getEntryIndex(int indx){
-    return entry_indx;
-}
-
-void Data::print(void){
-    cout<<'\t'<<this->word<<" "<<this->entry_indx<<endl;
-    return ;
-}
-bool Data::operator==(const Data & d2){
-    return this->word==d2.word;
-}
-/* DATA IN BUCKETS END*/
 /* BUCKETS START*/
 Bucket::Bucket():list(){
 
@@ -42,24 +10,59 @@ int Bucket::bucketSize(){
     return this->list.len();
 }
 
-int  Bucket::getEntryIndex(Word & w){//if ret val is -1 -> word doesn't exist
-    // get Data from list and return indx
+
+int Bucket::insert(Entry * e){
+    list.insert(e);
+    return SUCCESS;
 }
 
-int Bucket::insert(Word &w,int entry_indx){
-
-    // neeeds to be checked !!!!!!!!!!!!!!!!!!
-    Data d(w,entry_indx);
-    if(!list->exists(d)){
-        list.insert(d)
-        return SUCCESS;
+bool existsInBucket(Entry * e2){
+    Entry * e1;
+    int exists=false;
+    for(int i=0;i<list.getLen();i++){
+        e1=list.getItem(i);
+        if((e1->getWord()).exactMatch(e1->getWord())){
+            exists=true;
+            break;
+        }
     }
-    return FAILURE;
+    return exists;
 }
+
 void Bucket::print(void){
-    cout<<"-------------------"<<list<<endl;
+    list.print();
 }
 /* BUCKETS END*/
 /* HashTable START*/
+HashTable::HashTable(int sz,long long (*h_f)(Word & w)){
+    this->size=sz;
+    hash_func=h_f;
+    this->array=new Bucket(sz);
+}
+HashTable::HashTable(){
+    this->size=0;
+    this->array=NULL;
+    this->hash_func=NULL;
+}
+HashTable::~HashTable(){
+    this->size=0;
+    delete this->array;
+    this->array=NULL;
+    this->hash_func=NULL;
+}
+
+int HashTable::getSize(void){
+    return this->size;
+}
+void HashTable::setSize(int s){
+    this->size=s;
+}
+void setHashFunc(long long (*h_f)(Word &)){
+    this->hash_func=h_f;
+}
+
+enum htable_retval HashTable::insert(Word &w){
+    // Entry e();
+}
 
 /* HashTable END*/

@@ -5,26 +5,13 @@
 enum htable_retval{SUCCESS,FAILURE};
 class Bucket{
     private:
-        class Data{
-            private:
-                Word &word;
-                int entry_index;
-            public:
-                Data(Word &,int);
-                Word & getWord(void);
-                void setWord(Word &);
-                void setEntryIndex(int);
-                int GetEntryIndex(void);
-                void print(void);
-                bool operator==(const Data &);
-        };
-        List<Data> list; //list of Data
+        List<Entry*> list; //list of Data
     public:
         Bucket();
         // ~Bucket();
         int bucketSize();
-        int getEntryIndex(Word &);//if ret val is -1 -> word doesn't exist
-        enum htable_retval insert(Word &,int);
+        bool existsInBucket(Entry *);
+        enum htable_retval insert(Entry *);
         void print(void);
 };
 
@@ -35,11 +22,13 @@ class HashTable {
         long long (*hash_func)(Word & w);//pointer to hash function
     public:
         HashTable();
+        HashTable(int sz,long long (*)(Word &));
         ~HashTable();
         int getSize(void);
-        int setSize(int s);
+        void setSize(int s);
+        void setHashFunc(long long (*)(Word &))
         enum htable_retval insert(Word & w);
-        int getEntryIndex(Word &w);
+        int getEntry(Word &w);
 
 
 };
