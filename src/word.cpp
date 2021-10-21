@@ -59,12 +59,43 @@ bool Word::exactMatch(const Word & w) const {
 }
 
 int Word::hammingDist(const Word & w) const {
-
-    return 0;
+    int counter = 0;
+    for (int i = 0; i < this->len; ++i)
+	if (this->str[i] != w.str[i])
+	    ++counter;
+    return counter;
 }
 
 int Word::editDist(const Word & w) const {
+    int l1 = this->len;
+    int l2 = w.len;
+    char * str1 = this->str;
+    char * str2 = w.str;
+    int ** v = new int*[l1+1];
+    for (int i = 0; i < l1+1; ++i)
+	v[i] = new int[l2+1];
 
+    for (int i = 0; i < l1+1; i++) {
+        v[i][0] = i;
+    }
+    for (int j = 0; j < l2+1; j++) {
+        v[0][j] = j;
+    }
 
-    return 0;
+    for (int i = 0; i < this->len; ++i) {
+	for (int j = 0; j < w.len; ++j) {
+	    if (str1[i] == str2[j])
+		v[i+1][j+1] = v[i][j];
+	    else
+		v[i+1][j+1] = 1 + min(min(v[i+1][j], v[i][j+1]), v[i][j]);
+	}
+
+    }
+
+    int diff = v[l1][l2];
+    for (int i = 0; i < l1+1; ++i)
+	delete v[i];
+    delete v;
+
+    return diff;
 }
