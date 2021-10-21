@@ -58,4 +58,13 @@ bool Word::exactMatch(const Word & w) const {
     return true;
 }
 
+int Word::hammingDist(const Word & w) const {
 
+    return 0;
+}
+
+int Word::editDist(const Word & w) const {
+
+
+    return 0;
+}

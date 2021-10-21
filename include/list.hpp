@@ -11,7 +11,7 @@ class ListNode {
 	ListNode<T>(T);
 	void print() const;
 	ListNode<T> * getNext() const;
-	T getData() const;
+	T & getData();
 	void setNext(ListNode<T> *);
 	void setData(T);
 };
@@ -26,9 +26,10 @@ class List {
 	List();
 	~List();
 	void print() const;
-	void insert(T);
+	void insert(T, T ** t = NULL);
 	bool exists(T) const;
 	void remove(T);
+	T & getItem(int);
 
 };
 
@@ -59,8 +60,25 @@ void List<T>::print() const {
 }
 
 template <typename T>
-void List<T>::insert(T item) {
+T & List<T>::getItem(int index) {
+    if (index >= this->len) {
+	T t = {0};
+	return t;
+    }
+
+    ListNode<T> * lst = this->head;
+    for (int i = 0; i <= index; ++i)
+	lst = lst->next;
+
+    return lst->getData();
+
+}
+
+
+template <typename T>
+void List<T>::insert(T item, T ** itemPtr) {
     ListNode<T> * node = new ListNode<T>(item);
+    *itemPtr = &node->getData();
 
     if (this->head == NULL) {
 	this->head = node;
@@ -144,7 +162,7 @@ ListNode<T> * ListNode<T>::getNext() const {
 }
 
 template <typename T>
-T ListNode<T>::getData() const {
+T & ListNode<T>::getData() {
     return this->data;
 }
 

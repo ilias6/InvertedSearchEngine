@@ -9,11 +9,12 @@ class Entry {
 	Word word;	
 	List<int> payload;
     public:
-	List<int> & getPayload();
+	List<int> getPayload();
 	void addToPayload(int);
-	Word & getWord();
+	Word getWord() const;
 	Entry(const char *, int);
 	~Entry();
+	bool operator==(const Entry &);
 };
 
 #endif

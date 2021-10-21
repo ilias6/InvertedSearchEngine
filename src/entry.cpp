@@ -10,14 +10,20 @@ Entry::Entry(const char * w, int val):
     this->addToPayload(val);
 }
 
-Word & Entry::getWord() {
+Word Entry::getWord() const {
     return this->word;
 }
 
-List<int> & Entry::getPayload() {
+List<int> Entry::getPayload() {
     return this->payload;
 }
 
 void Entry::addToPayload(int q) {
     this->payload.insert(q);
+}
+
+bool Entry::operator==(const Entry & e) {
+   if (this->word.exactMatch(e.getWord()))
+	return true;
+    return false;
 }
