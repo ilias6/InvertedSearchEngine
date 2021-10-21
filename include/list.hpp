@@ -26,7 +26,7 @@ class List {
 	List();
 	~List();
 	void print() const;
-	int getLen();
+	int getLen() const;
 	void insert(T, T ** t = NULL);
 	bool exists(T) const;
 	void remove(T);
