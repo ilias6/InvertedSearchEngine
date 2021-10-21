@@ -1,14 +1,17 @@
 #include <iostream>
 #include "../include/hash_table.hpp"
 #include "../include/hash_functions.hpp"
+#include "../include/entry.hpp"
+
 
 /* BUCKETS START*/
-Bucket::Bucket():list(){
+using namespace std;
+Bucket::Bucket(){
 
 }
 
 int Bucket::bucketSize(){
-    return this->list.len();
+    return this->list.getLen();
 }
 
 

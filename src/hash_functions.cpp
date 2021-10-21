@@ -17,7 +17,7 @@ unsigned long djb2(unsigned char *str)
 //sdbm hash
 unsigned long sdbm(unsigned char*str)
     {
-        unsigned char *str;
+        
         unsigned long hash = 0;
         int c;
 

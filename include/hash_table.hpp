@@ -2,6 +2,8 @@
 #define __HASH_TABLE_HPP__
 #include "list.hpp"
 #include "word.hpp"
+#include "entry.hpp"
+
 enum htable_retval{SUCCESS,FAILURE};
 class Bucket{
     private:
