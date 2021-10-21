@@ -35,19 +35,19 @@ void Word::set(const char * s) {
     }
 }
 
-void Word::print() {
+void Word::print() const {
     cout << str;
 }
 
-int Word::getLen() {
+int Word::getLen() const {
     return this->len;
 }
 
-char * Word::getStr() {
+char * Word::getStr() const {
     return this->str;
 }
 
-bool Word::exactMatch(const Word & w) {
+bool Word::exactMatch(const Word & w) const {
     if (this->len != w.getLen())
 	return false;
 
@@ -59,4 +59,3 @@ bool Word::exactMatch(const Word & w) {
 }
 
 
-}

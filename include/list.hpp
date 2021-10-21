@@ -9,11 +9,11 @@ class ListNode {
 	ListNode<T> * next;
     public:
 	ListNode<T>(T);
-	void print();
-	ListNode<T> * getNext();
+	void print() const;
+	ListNode<T> * getNext() const;
+	T getData() const;
 	void setNext(ListNode<T> *);
 	void setData(T);
-	T getData();
 };
 
 template <typename T>
@@ -25,9 +25,9 @@ class List {
     public:
 	List();
 	~List();
-	void print();
+	void print() const;
 	void insert(T);
-	bool exists(T);
+	bool exists(T) const;
 	void remove(T);
 
 };
@@ -50,7 +50,7 @@ List<T>::~List() {
 }
 
 template <typename T>
-void List<T>::print() {
+void List<T>::print() const {
     ListNode<T> * lst = this->head;
     while (lst != NULL) {
 	lst->print();
@@ -106,7 +106,7 @@ void List<T>::remove(T item) {
 }
 
 template <typename T>
-bool List<T>::exists(T item) {
+bool List<T>::exists(T item) const {
     ListNode<T> * lst = this->head;
     while (lst != NULL) {
 	if (lst->getData() == item)
@@ -134,18 +134,17 @@ void ListNode<T>::setData(T item) {
 }
 
 template <typename T>
-void ListNode<T>::print() {
+void ListNode<T>::print() const {
     std::cout << this->data << std::endl;
 }
 
-
 template <typename T>
-ListNode<T> * ListNode<T>::getNext() {
+ListNode<T> * ListNode<T>::getNext() const {
     return this->next;
 }
 
 template <typename T>
-T ListNode<T>::getData() {
+T ListNode<T>::getData() const {
     return this->data;
 }
 
