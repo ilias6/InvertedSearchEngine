@@ -13,9 +13,9 @@ class Word {
 	char * getStr();
 	void print();
         Word(const char *);
-	bool exactMatch(const & Word);
-	int hammingDist(const & Word);
-	int editDist(const & Word);
+	bool exactMatch(const Word &);
+	int hammingDist(const Word &);
+	int editDist(const Word &);
         ~Word();
 };
 
