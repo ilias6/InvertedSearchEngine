@@ -61,7 +61,7 @@ void List<T>::print() const {
 }
 
 template <typename T>
-int List<T>::print() const {
+int List<T>::getLen() const {
     return this->len;
 }
 
