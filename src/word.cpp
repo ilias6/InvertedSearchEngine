@@ -35,30 +35,30 @@ void Word::set(const char * s) {
     }
 }
 
-void Word::print() const {
+void Word::print(){
     cout << str;
 }
 
-int Word::getLen() const {
+int Word::getLen(){
     return this->len;
 }
 
-char * Word::getStr() const {
+const char * Word::getStr(){
     return this->str;
 }
 
-bool Word::exactMatch(const Word & w) const {
+bool Word::exactMatch(Word &w){
     if (this->len != w.getLen())
 	return false;
 
-    char * str = w.getStr();
+    const char * str = w.getStr();
     for (int i = 0; i < this->len; ++i)
 	if (this->str[i] == str[i])
 	    return false;
     return true;
 }
 
-int Word::hammingDist(const Word & w) const {
+int Word::hammingDist(Word &w){
     int counter = 0;
     for (int i = 0; i < this->len; ++i)
 	if (this->str[i] != w.str[i])
@@ -66,7 +66,7 @@ int Word::hammingDist(const Word & w) const {
     return counter;
 }
 
-int Word::editDist(const Word & w) const {
+int Word::editDist(Word &w){
     int l1 = this->len;
     int l2 = w.len;
     char * str1 = this->str;

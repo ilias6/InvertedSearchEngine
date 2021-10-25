@@ -10,7 +10,7 @@ Entry::Entry(const char * w, int val):
     this->addToPayload(val);
 }
 
-Word Entry::getWord() const {
+Word &Entry::getWord(){
     return this->word;
 }
 
@@ -22,7 +22,7 @@ void Entry::addToPayload(int q) {
     this->payload.insert(q);
 }
 
-bool Entry::operator==(const Entry & e) {
+bool Entry::operator==(Entry & e) {
    if (this->word.exactMatch(e.getWord()))
 	return true;
     return false;

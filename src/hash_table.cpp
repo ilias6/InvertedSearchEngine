@@ -15,12 +15,12 @@ int Bucket::bucketSize(){
 }
 
 
-int Bucket::insert(Entry * e){
+enum htable_retval Bucket::insert(Entry * e){
     list.insert(e);
     return SUCCESS;
 }
 
-bool existsInBucket(Entry * e2){
+bool Bucket::existsInBucket(Entry * e2){
     Entry * e1;
     int exists=false;
     for(int i=0;i<list.getLen();i++){
@@ -52,10 +52,10 @@ void Bucket::print(void){
 }
 /* BUCKETS END*/
 /* HashTable START*/
-HashTable::HashTable(int sz,unsigned long (*h_f)(Word & w)){
+HashTable::HashTable(int sz,unsigned long (*h_f)(const char *)){
     this->size=sz;
     hash_func=h_f;
-    this->array=new Bucket(sz);
+    this->array=new Bucket[sz];
 }
 HashTable::HashTable(){
     this->size=0;
@@ -75,7 +75,7 @@ int HashTable::getSize(void){
 void HashTable::setSize(int s){
     this->size=s;
 }
-void setHashFunc(unsigned long (*h_f)(Word &)){
+void HashTable::setHashFunc(unsigned long (*h_f)(const char *)){
     this->hash_func=h_f;
 }
 
