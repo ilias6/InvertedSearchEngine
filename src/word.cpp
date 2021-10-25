@@ -6,19 +6,29 @@ using namespace std;
 
 Word::Word(const char * s) {
     if (s != NULL) {
-	this->len = strlen(s);
-	this->str = new char[this->len+1];
-	strncpy(this->str, s, this->len);
+    	this->len = strlen(s);
+    	this->str = new char[this->len+1];
+    	strncpy(this->str, s, this->len);
     }
     else {
-	this->len = 0;
-	this->str = NULL;
+	    this->len = 0;
+	    this->str = NULL;
     }
 }
 
+Word::Word(Word &w) {
+    const char * s=w.getStr();
+    this->len = strlen(s);
+    this->str = new char[this->len+1];
+    strncpy(this->str, s, this->len);
+
+}
+
 Word::~Word() {
-    if (this->str != NULL)
-	delete this->str;
+    if (this->str != NULL){
+        cout <<"Deleting " <<this->str<<endl;
+	    delete this->str;
+    }
 }
 
 void Word::set(const char * s) {

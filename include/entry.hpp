@@ -13,7 +13,9 @@ class Entry {
 	       void addToPayload(int);
 	       Word &getWord();
 	       Entry(const char *, int);
+           Entry(Word &,int);
 	       ~Entry();
+           void print(void);
            bool operator==(Entry &);
 };
 

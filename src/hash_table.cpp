@@ -64,7 +64,8 @@ HashTable::HashTable(){
 }
 HashTable::~HashTable(){
     this->size=0;
-    delete this->array;
+    if(this->array!=NULL)
+        delete[] this->array;
     this->array=NULL;
     this->hash_func=NULL;
 }
@@ -94,6 +95,16 @@ enum htable_retval HashTable::updateEntryPayload(Entry *e,int payload){
         return FAILURE;
     to_be_updated->addToPayload(payload);
     return SUCCESS;
+}
+
+void HashTable::print(void){
+    cout<<"::HASHTABLE INFO::"<<endl;
+    cout<<"\tSize: "<<this->size<<endl;
+    for(int i=0;i<this->size;i++){
+        cout<<"-BUCKET "<<i<<" -"<<endl;
+        this->array[i].print();
+    }
+
 }
 
 

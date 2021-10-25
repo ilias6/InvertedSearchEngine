@@ -25,14 +25,15 @@ class HashTable {
         unsigned long(*hash_func)(const char *);//pointer to hash function
     public:
         HashTable();
-        HashTable(int sz,unsigned long (*)(const char *));
+        HashTable(int sz,unsigned long (*h_f)(const char *));
         ~HashTable();
         int getSize(void);
         void setSize(int s);
-        void setHashFunc(unsigned long (*)(const char * ));
+        void setHashFunc(unsigned long (*h_f)(const char * ));
         enum htable_retval updateEntryPayload(Entry *,int);
         enum htable_retval insert(Entry *);
         int getEntry(Entry *);
+        void print(void);
 
 
 };

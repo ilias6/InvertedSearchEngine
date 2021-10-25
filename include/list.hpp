@@ -101,7 +101,8 @@ T List<T>::getItemCopy(int index) {
 template <typename T>
 void List<T>::insert(T item, T ** itemPtr) {
     ListNode<T> * node = new ListNode<T>(item);
-    *itemPtr = &node->getData();
+    if(itemPtr!=NULL)
+        *itemPtr = &node->getData();
 
     if (this->head == NULL) {
 	this->head = node;
@@ -159,8 +160,8 @@ bool List<T>::exists(T item) const {
 }
 
 template <typename T>
-ListNode<T>::ListNode(T data) {
-    this->data = data;
+ListNode<T>::ListNode(T data){
+    this->data=data;
     this->next = NULL;
 }
 
