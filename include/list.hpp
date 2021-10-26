@@ -160,8 +160,8 @@ bool List<T>::exists(T item) const {
 }
 
 template <typename T>
-ListNode<T>::ListNode(T data){
-    this->data=data;
+ListNode<T>::ListNode(T data):data(data){
+    // this->data=data;
     this->next = NULL;
 }
 
@@ -177,7 +177,7 @@ void ListNode<T>::setData(T item) {
 
 template <typename T>
 void ListNode<T>::print() const {
-    std::cout << this->data << std::endl;
+    // std::cout << this->data << std::endl;
 }
 
 template <typename T>
