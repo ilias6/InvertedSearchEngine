@@ -99,3 +99,4 @@ int Word::editDist(const Word & w) const {
 
     return diff;
 }
+
