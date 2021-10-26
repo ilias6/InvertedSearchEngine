@@ -8,7 +8,7 @@ class ListNode {
 	T data;
 	ListNode<T> * next;
     public:
-	ListNode<T>(T);
+	ListNode<T>(T&);
 	void print() const;
 	ListNode<T> * getNext() const;
 	T & getData();
@@ -28,7 +28,7 @@ class List {
 	~List();
 	void print() const;
 	int getLen() const;
-	void insert(T, T ** t = NULL);
+	void insert(T&, T ** t = NULL);
 	bool exists(T) const;
 	void remove(T);
 	T & getItem(int);
@@ -99,7 +99,7 @@ T List<T>::getItemCopy(int index) {
 
 
 template <typename T>
-void List<T>::insert(T item, T ** itemPtr) {
+void List<T>::insert(T& item, T ** itemPtr) {
     ListNode<T> * node = new ListNode<T>(item);
     if(itemPtr!=NULL)
         *itemPtr = &node->getData();
@@ -160,7 +160,7 @@ bool List<T>::exists(T item) const {
 }
 
 template <typename T>
-ListNode<T>::ListNode(T data):data(data){
+ListNode<T>::ListNode(T& data):data(data){
     // this->data=data;
     this->next = NULL;
 }

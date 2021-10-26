@@ -11,7 +11,7 @@ int main(int argc, char * argv[]) {
     List<Word> myList = List<Word>();
 
 	Word w1("skata1");
-	Word w2("skata2");
+	// Word w2("skata2");
     // HashTable t(2,djb2);
     myList.insert(w1);
     myList.print();
