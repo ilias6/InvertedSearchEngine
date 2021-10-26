@@ -12,6 +12,7 @@ class ListNode {
 	void print() const;
 	ListNode<T> * getNext() const;
 	T & getData();
+    T getDataCopy();
 	void setNext(ListNode<T> *);
 	void setData(T);
 };
@@ -31,6 +32,7 @@ class List {
 	bool exists(T) const;
 	void remove(T);
 	T & getItem(int);
+    T getItemCopy(int);
 
 };
 
@@ -67,16 +69,31 @@ int List<T>::getLen() const {
 
 template <typename T>
 T & List<T>::getItem(int index) {
-    if (index >= this->len) {
-	T t = {0};
-	return t;
-    }
+    // if (index >= this->len) {
+	// T t = {0};
+	// return t;
+    // }
 
     ListNode<T> * lst = this->head;
     for (int i = 0; i <= index; ++i)
-	lst = lst->next;
+	lst = lst->getNext();
 
     return lst->getData();
+
+}
+
+template <typename T>
+T List<T>::getItemCopy(int index) {
+    // if (index >= this->len) {
+	// T t = {0};
+	// return t;
+    // }
+
+    ListNode<T> * lst = this->head;
+    for (int i = 0; i <= index; ++i)
+	lst = lst->getNext();
+
+    return lst->getDataCopy();
 
 }
 
@@ -84,7 +101,8 @@ T & List<T>::getItem(int index) {
 template <typename T>
 void List<T>::insert(T item, T ** itemPtr) {
     ListNode<T> * node = new ListNode<T>(item);
-    *itemPtr = &node->getData();
+    if(itemPtr!=NULL)
+        *itemPtr = &node->getData();
 
     if (this->head == NULL) {
 	this->head = node;
@@ -142,8 +160,8 @@ bool List<T>::exists(T item) const {
 }
 
 template <typename T>
-ListNode<T>::ListNode(T data) {
-    this->data = data;
+ListNode<T>::ListNode(T data){
+    this->data=data;
     this->next = NULL;
 }
 
@@ -172,6 +190,10 @@ T & ListNode<T>::getData() {
     return this->data;
 }
 
+template <typename T>
+T ListNode<T>::getDataCopy() {
+    return this->data;
+}
+
 
 #endif
-

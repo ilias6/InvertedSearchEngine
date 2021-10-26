@@ -4,7 +4,7 @@
     SOURCE : http://www.cse.yorku.ca/~oz/hash.html
                             */
 //djb2 hash
-unsigned long djb2(unsigned char *str)
+unsigned long djb2(const char *str)
     {
         unsigned long hash = 5381;
         int c;
@@ -15,9 +15,9 @@ unsigned long djb2(unsigned char *str)
         return hash;
     }
 //sdbm hash
-unsigned long sdbm(unsigned char*str)
+unsigned long sdbm(const char*str)
     {
-        
+
         unsigned long hash = 0;
         int c;
 
@@ -27,7 +27,7 @@ unsigned long sdbm(unsigned char*str)
         return hash;
     }
 // lose lose
-unsigned long lose_lose(unsigned char *str){
+unsigned long lose_lose(const char *str){
     	unsigned int hash = 0;
     	int c;
 

@@ -22,17 +22,18 @@ class HashTable {
     private:
         int size;
         Bucket * array;
-        unsigned long(*hash_func)(Word & );//pointer to hash function
+        unsigned long(*hash_func)(const char *);//pointer to hash function
     public:
         HashTable();
-        HashTable(int sz,unsigned long (*)(Word &));
+        HashTable(int sz,unsigned long (*h_f)(const char *));
         ~HashTable();
         int getSize(void);
         void setSize(int s);
-        void setHashFunc(unsigned long (*)(Word &));
+        void setHashFunc(unsigned long (*h_f)(const char * ));
         enum htable_retval updateEntryPayload(Entry *,int);
-        enum htable_retval insert(Entry *,int);
+        enum htable_retval insert(Entry *);
         int getEntry(Entry *);
+        void print(void);
 
 
 };

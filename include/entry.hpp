@@ -6,15 +6,17 @@
 
 class Entry {
     private:
-	Word word;	
-	List<int> payload;
+	       Word word;
+	       List<int> payload;
     public:
-	List<int> getPayload();
-	void addToPayload(int);
-	Word getWord() const;
-	Entry(const char *, int);
-	~Entry();
-	bool operator==(const Entry &);
+	       List<int> getPayload();
+	       void addToPayload(int);
+	       Word &getWord();
+	       Entry(const char *, int);
+           Entry(Word &,int);
+	       ~Entry();
+           void print(void);
+           bool operator==(Entry &);
 };
 
 #endif
