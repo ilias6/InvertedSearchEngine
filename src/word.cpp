@@ -8,7 +8,7 @@ Word::Word(const char * s) {
     if (s != NULL) {
     	this->len = strlen(s);
     	this->str = new char[this->len+1];
-    	strncpy(this->str, s, this->len);
+    	strncpy(this->str, s, this->len+1);
     }
     else {
 	    this->len = 0;
@@ -17,17 +17,17 @@ Word::Word(const char * s) {
 }
 
 Word::Word(Word &w) {
-    const char * s=w.getStr();
+    const char * s = w.getStr();
     this->len = strlen(s);
     this->str = new char[this->len+1];
-    strncpy(this->str, s, this->len);
+    strncpy(this->str, s, this->len+1);
 
 }
 
 Word::~Word() {
     if (this->str != NULL){
-        cout <<"Deleting " <<this->str<<endl;
-	    delete this->str;
+        //cout << "Deleting " << this->str << endl;
+	delete[] this->str;
     }
 }
 
@@ -45,30 +45,35 @@ void Word::set(const char * s) {
     }
 }
 
-void Word::print(){
-    cout << str;
+ostream & operator<<(ostream & os, const Word & e) {
+    os << e.str;
+    return os;
 }
 
-int Word::getLen(){
+int Word::getLen() {
     return this->len;
 }
 
-const char * Word::getStr(){
+const char * Word::getStr() {
     return this->str;
 }
 
-bool Word::exactMatch(Word &w){
+bool Word::operator==(Word & w) {
+    return this->exactMatch(w);
+}
+
+bool Word::exactMatch(Word & w) {
     if (this->len != w.getLen())
 	return false;
 
     const char * str = w.getStr();
     for (int i = 0; i < this->len; ++i)
-	if (this->str[i] == str[i])
+	if (this->str[i] != str[i])
 	    return false;
     return true;
 }
 
-int Word::hammingDist(Word &w){
+int Word::hammingDist(Word &w) {
     int counter = 0;
     for (int i = 0; i < this->len; ++i)
 	if (this->str[i] != w.str[i])
@@ -76,7 +81,7 @@ int Word::hammingDist(Word &w){
     return counter;
 }
 
-int Word::editDist(Word &w){
+int Word::editDist(Word &w) {
     int l1 = this->len;
     int l2 = w.len;
     char * str1 = this->str;

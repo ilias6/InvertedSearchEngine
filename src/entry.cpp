@@ -12,23 +12,13 @@ Entry::Entry(const char * w, int val):
     this->addToPayload(val);
 }
 
-Entry::Entry(Word &w,int val):word(w),payload(){
+Entry::~Entry() {}
+
+Entry::Entry(Word & w, int val):word(w),payload() {
     this->addToPayload(val);
 }
 
-
-void Entry::print(void){
-    this->word.print();
-    cout<<" exists in [";
-    int l=payload.getLen();
-    cout<<payload.getItem(0);
-    for(int i=1;i<l;i++)
-        cout<<","<<payload.getItem(i);
-    cout<<"]";
-    return ;
-}
-
-Word &Entry::getWord(){
+Word &Entry::getWord() {
     return this->word;
 }
 
@@ -44,4 +34,15 @@ bool Entry::operator==(Entry & e) {
     if (this->word.exactMatch(e.getWord()))
 	   return true;
     return false;
+}
+
+ostream & operator<<(ostream & os, const Entry & e) {
+    os << e.word;
+    os << " exists in [";
+    //int l = e.payload.getLen();
+    //os << e.payload.getItem(0);
+    //for (int i = 1; i < l; i++)
+    //    os << "," << e.payload.getItem(i);
+    //os << "]";
+    return os;
 }

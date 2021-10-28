@@ -8,18 +8,30 @@
 using namespace std;
 
 int main(int argc, char * argv[]) {
-    List<Word> myList = List<Word>();
-
-	Word w1("skata1");
-	// Word w2("skata2");
-    // HashTable t(2,djb2);
-    myList.insert(w1);
-    myList.print();
-	// cout << w1.editDist(w2) << endl;
-	// cout << w1.hammingDist(w2) << endl;
-    // Entry * e=new Entry(w1,0);
-    // // t.insert(e);
-    // t.print();
+    //List<Word> myList = List<Word>();
+    List<Entry> myList = List<Entry>();
+    HashTable t(3, djb2);
+    for (int i = 0; i < 10000; i++) {	
+	char str[256] = {0};
+	sprintf(str, "%d", i);
+	Word w(str);
+	for (int j = 0; j < 100; ++j) {
+		char str2[256] = {0};
+		sprintf(str2, "%d", (i+1)%(j+1));
+		Word w2(str2);
+		Entry e2(w2, j+100); 
+		myList.remove(e2);
+	}
+	Entry e(w, i+100); 
+	for (int j = 0; j < 1000; j++) {
+		e.addToPayload(j*i+2*(j+1));
+	}
+	Entry * ePtr = NULL; 
+	myList.insert(e, &ePtr);
+//	cout << "Next" << endl;
+    }
+    cout << "END OF LOOP\n";
+    //myList.print();
     return 0;
 
 }

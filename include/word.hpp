@@ -1,6 +1,8 @@
 #ifndef __WORD_HPP__
 #define __WORD_HPP__
 
+#include <iostream>
+using namespace std;
 
 class Word {
     private:
@@ -11,7 +13,8 @@ class Word {
 	void set(const char *);
 	int getLen();
 	const char * getStr();
-	void print();
+	friend ostream & operator<<(ostream &, const Word &);
+	bool operator==(Word &);
 	bool exactMatch(Word &);
 	int hammingDist(Word &);
 	int editDist(Word &);

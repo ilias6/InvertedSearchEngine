@@ -2,17 +2,21 @@
 #define __LIST_HPP__
 
 
+using namespace std;
+
 template <typename T>
 class ListNode {
     private:
 	T data;
 	ListNode<T> * next;
     public:
-	ListNode<T>(T&);
+	ListNode<T>(T &);
+	~ListNode<T>();
+	//ListNode<T>(const ListNode<T> &);
 	void print() const;
 	ListNode<T> * getNext() const;
 	T & getData();
-    T getDataCopy();
+    	T getDataCopy();
 	void setNext(ListNode<T> *);
 	void setData(T);
 };
@@ -25,6 +29,7 @@ class List {
 	ListNode<T> * tail;
     public:
 	List();
+	List(const List &);
 	~List();
 	void print() const;
 	int getLen() const;
@@ -32,7 +37,7 @@ class List {
 	bool exists(T) const;
 	void remove(T);
 	T & getItem(int);
-    T getItemCopy(int);
+    	T getItemCopy(int);
 
 };
 
@@ -44,12 +49,40 @@ List<T>::List() {
 }
 
 template <typename T>
+List<T>::List(const List & lst)
+{
+    // if empty lst is being copied:
+    if (!lst.head)
+    {
+        this->head = NULL;
+	this->tail = NULL;
+        return;
+    }
+
+    // create new root:
+    this->head = new ListNode<T>(lst.head->getData());
+
+    ListNode<T> * lst_currentNode = lst.head;
+    ListNode<T> * this_currentNode = this->head;
+    while (lst_currentNode->getNext()) {
+        // create new successor:
+        ListNode<T> * newNode = new ListNode<T>(lst_currentNode->getNext()->getData());
+        this_currentNode->setNext(newNode);
+        this_currentNode = this_currentNode->getNext();
+        lst_currentNode = lst_currentNode->getNext();
+    }
+    this->tail = lst_currentNode;
+}
+
+template <typename T>
 List<T>::~List() {
     ListNode<T> * lst = this->head;
     while (lst != NULL) {
-	ListNode<T> * t = lst->getNext();
-	delete lst;
-	lst = t;
+	//cout << "Deleting: ";
+	//cout << lst->getData() << endl;
+	ListNode<T> * t = lst;
+	lst = lst->getNext();
+	delete t;
     }
 }
 
@@ -99,7 +132,7 @@ T List<T>::getItemCopy(int index) {
 
 
 template <typename T>
-void List<T>::insert(T& item, T ** itemPtr) {
+void List<T>::insert(T & item, T ** itemPtr) {
     ListNode<T> * node = new ListNode<T>(item);
     if(itemPtr!=NULL)
         *itemPtr = &node->getData();
@@ -137,6 +170,8 @@ void List<T>::remove(T item) {
     while (n2 != NULL) {
 	if (n2->getData() == item) {
 	    n1->setNext(n2->getNext());
+	    if (n2 == this->tail)
+		this->tail = n1;
 	    delete n2;
 	    this->len--;
 	    return;
@@ -165,6 +200,16 @@ ListNode<T>::ListNode(T& data):data(data){
     this->next = NULL;
 }
 
+//template <typename T>
+//ListNode<T>::ListNode(const ListNode<T> & n) {
+  //  this->data = data;
+   // this->next = n->next;
+//}
+
+
+template <typename T>
+ListNode<T>::~ListNode() {}
+
 template <typename T>
 void ListNode<T>::setNext(ListNode<T> * newNode) {
     this->next = newNode;
@@ -177,7 +222,7 @@ void ListNode<T>::setData(T item) {
 
 template <typename T>
 void ListNode<T>::print() const {
-    // std::cout << this->data << std::endl;
+    std::cout << this->data << std::endl;
 }
 
 template <typename T>
