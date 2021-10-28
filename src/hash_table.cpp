@@ -6,9 +6,7 @@
 
 /* BUCKETS START*/
 using namespace std;
-Bucket::Bucket(){
-
-}
+Bucket::Bucket():list() {}
 
 int Bucket::bucketSize(){
     return this->list.getLen();
@@ -38,10 +36,9 @@ Entry * Bucket::getEntry(Entry * e2){
     Entry * e1=NULL;
     for(int i=0;i<list.getLen();i++){
         e1=list.getItem(i);
-        if((e1->getWord()).exactMatch(e2->getWord())){
-            e1=e2;
-            break;
-        }
+        if((e1->getWord()).exactMatch(e2->getWord()))
+            break; 
+	e1 = NULL;
 
     }
     return e1;
@@ -50,6 +47,11 @@ Entry * Bucket::getEntry(Entry * e2){
 void Bucket::print(void){
     list.print();
 }
+
+void Bucket::printAddr(void){
+    list.printAddr();
+}
+
 /* BUCKETS END*/
 /* HashTable START*/
 HashTable::HashTable(int sz,unsigned long (*h_f)(const char *)){
@@ -68,6 +70,14 @@ HashTable::~HashTable(){
         delete[] this->array;
     this->array=NULL;
     this->hash_func=NULL;
+}
+
+int HashTable::getEntry(Entry * e) {	
+    unsigned long hash = this->hash_func((e->getWord()).getStr());
+    int bucket_index = hash%this->size;
+    if (this->array[bucket_index].getEntry(e))
+	return 1;
+    return 0;
 }
 
 int HashTable::getSize(void){
@@ -93,6 +103,7 @@ enum htable_retval HashTable::updateEntryPayload(Entry *e,int payload){
     Entry *to_be_updated=this->array[bucket_index].getEntry(e);
     if(to_be_updated==NULL)
         return FAILURE;
+     
     to_be_updated->addToPayload(payload);
     return SUCCESS;
 }
@@ -103,6 +114,16 @@ void HashTable::print(void){
     for(int i=0;i<this->size;i++){
         cout<<"-BUCKET "<<i<<" -"<<endl;
         this->array[i].print();
+    }
+
+}
+
+void HashTable::printAddr(void){
+    cout<<"::HASHTABLE INFO::"<<endl;
+    cout<<"\tSize: "<<this->size<<endl;
+    for(int i=0;i<this->size;i++){
+        cout<<"-BUCKET "<<i<<" -"<<endl;
+        this->array[i].printAddr();
     }
 
 }

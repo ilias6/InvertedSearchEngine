@@ -12,10 +12,11 @@ class ListNode {
     public:
 	ListNode<T>(T &);
 	~ListNode<T>();
-	//ListNode<T>(const ListNode<T> &);
 	void print() const;
+	void printAddr() const;
 	ListNode<T> * getNext() const;
 	T & getData();
+	T * getDataAddr();
     	T getDataCopy();
 	void setNext(ListNode<T> *);
 	void setData(T);
@@ -32,11 +33,13 @@ class List {
 	List(const List &);
 	~List();
 	void print() const;
+	void printAddr() const;
 	int getLen() const;
 	void insert(T&, T ** t = NULL);
 	bool exists(T) const;
 	void remove(T);
-	T & getItem(int);
+	T & getItem(int) const;
+	T * getItemPtr(int) const;
     	T getItemCopy(int);
 
 };
@@ -49,11 +52,10 @@ List<T>::List() {
 }
 
 template <typename T>
-List<T>::List(const List & lst)
-{
-    // if empty lst is being copied:
-    if (!lst.head)
-    {
+List<T>::List(const List & lst) {
+    this->len = lst.len;
+
+    if (lst.head == NULL) {
         this->head = NULL;
 	this->tail = NULL;
         return;
@@ -64,14 +66,15 @@ List<T>::List(const List & lst)
 
     ListNode<T> * lst_currentNode = lst.head;
     ListNode<T> * this_currentNode = this->head;
-    while (lst_currentNode->getNext()) {
+    while (lst_currentNode->getNext() != NULL) {
         // create new successor:
         ListNode<T> * newNode = new ListNode<T>(lst_currentNode->getNext()->getData());
         this_currentNode->setNext(newNode);
         this_currentNode = this_currentNode->getNext();
         lst_currentNode = lst_currentNode->getNext();
     }
-    this->tail = lst_currentNode;
+    this->tail = this_currentNode;
+    //cout << "List Copied!\n";
 }
 
 template <typename T>
@@ -96,22 +99,37 @@ void List<T>::print() const {
 }
 
 template <typename T>
+void List<T>::printAddr() const {
+    ListNode<T> * lst = this->head;
+    while (lst != NULL) {
+	lst->printAddr();
+	lst = lst->getNext();
+    }
+}
+
+template <typename T>
 int List<T>::getLen() const {
     return this->len;
 }
 
 template <typename T>
-T & List<T>::getItem(int index) {
-    // if (index >= this->len) {
-	// T t = {0};
-	// return t;
-    // }
+T & List<T>::getItem(int index) const {
 
     ListNode<T> * lst = this->head;
-    for (int i = 0; i <= index; ++i)
+    for (int i = 0; i < index; ++i)
 	lst = lst->getNext();
 
     return lst->getData();
+
+}
+
+template <typename T>
+T * List<T>::getItemPtr(int index) const {
+    ListNode<T> * lst = this->head;
+    for (int i = 0; i < index; ++i)
+	lst = lst->getNext();
+
+    return &lst->getData();
 
 }
 
@@ -123,7 +141,7 @@ T List<T>::getItemCopy(int index) {
     // }
 
     ListNode<T> * lst = this->head;
-    for (int i = 0; i <= index; ++i)
+    for (int i = 0; i < index; ++i)
 	lst = lst->getNext();
 
     return lst->getDataCopy();
@@ -134,7 +152,7 @@ T List<T>::getItemCopy(int index) {
 template <typename T>
 void List<T>::insert(T & item, T ** itemPtr) {
     ListNode<T> * node = new ListNode<T>(item);
-    if(itemPtr!=NULL)
+    if(itemPtr != NULL)
         *itemPtr = &node->getData();
 
     if (this->head == NULL) {
@@ -200,19 +218,17 @@ ListNode<T>::ListNode(T& data):data(data){
     this->next = NULL;
 }
 
-//template <typename T>
-//ListNode<T>::ListNode(const ListNode<T> & n) {
-  //  this->data = data;
-   // this->next = n->next;
-//}
-
-
 template <typename T>
 ListNode<T>::~ListNode() {}
 
 template <typename T>
 void ListNode<T>::setNext(ListNode<T> * newNode) {
     this->next = newNode;
+}
+
+template <typename T>
+T * ListNode<T>::getDataAddr() {
+    this->data;
 }
 
 template <typename T>
@@ -223,6 +239,11 @@ void ListNode<T>::setData(T item) {
 template <typename T>
 void ListNode<T>::print() const {
     std::cout << this->data << std::endl;
+}
+
+template <typename T>
+void ListNode<T>::printAddr() const {
+    std::cout << &this->data << std::endl;
 }
 
 template <typename T>

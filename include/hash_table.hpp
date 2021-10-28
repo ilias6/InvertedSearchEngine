@@ -16,6 +16,7 @@ class Bucket{
         Entry * getEntry(Entry *);
         enum htable_retval insert(Entry *);
         void print(void);
+	void printAddr();
 };
 
 class HashTable {
@@ -34,7 +35,7 @@ class HashTable {
         enum htable_retval insert(Entry *);
         int getEntry(Entry *);
         void print(void);
-
+	void printAddr();
 
 };
 

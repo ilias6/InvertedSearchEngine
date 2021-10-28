@@ -11,27 +11,45 @@ int main(int argc, char * argv[]) {
     //List<Word> myList = List<Word>();
     List<Entry> myList = List<Entry>();
     HashTable t(3, djb2);
-    for (int i = 0; i < 10000; i++) {	
+    for (int i = 0; i < 10; i++) {	
 	char str[256] = {0};
 	sprintf(str, "%d", i);
 	Word w(str);
-	for (int j = 0; j < 100; ++j) {
-		char str2[256] = {0};
-		sprintf(str2, "%d", (i+1)%(j+1));
-		Word w2(str2);
-		Entry e2(w2, j+100); 
-		myList.remove(e2);
+	Entry e(w, -1000); 
+	for (int j = 0; j < 10; j++) {
+		e.addToPayload(j*2);
 	}
-	Entry e(w, i+100); 
-	for (int j = 0; j < 1000; j++) {
-		e.addToPayload(j*i+2*(j+1));
+	
+	if (!t.getEntry(&e)) {
+		Entry * ePtr = &e;
+		myList.insert(e, &ePtr);
+		t.insert(ePtr);
 	}
-	Entry * ePtr = NULL; 
-	myList.insert(e, &ePtr);
-//	cout << "Next" << endl;
+	else { 
+		cout << "WHATTT??\n";
+	}
     }
     cout << "END OF LOOP\n";
-    //myList.print();
+    
+   myList.print();
+    for (int i = 0; i < 10; i++) {
+	char str[256] = {0};
+	sprintf(str, "%d", i);
+	Word w(str);
+	Entry e(w, i+100); 
+	if (!t.getEntry(&e)) {
+		cout << "WAHT\n";
+		Entry * ePtr = NULL;
+		myList.insert(e, &ePtr);
+		t.insert(ePtr);
+	}
+	else { 
+		t.updateEntryPayload(&e, -10*i);
+	}
+
+
+    }
+   myList.print();
     return 0;
 
 }

@@ -12,6 +12,9 @@ Entry::Entry(const char * w, int val):
     this->addToPayload(val);
 }
 
+Entry::Entry(Entry & e):
+    word(e.getWord()), payload(e.payload) {}
+
 Entry::~Entry() {}
 
 Entry::Entry(Word & w, int val):word(w),payload() {
@@ -22,7 +25,7 @@ Word &Entry::getWord() {
     return this->word;
 }
 
-List<int> Entry::getPayload() {
+List<int> & Entry::getPayload() {
     return this->payload;
 }
 
@@ -39,10 +42,10 @@ bool Entry::operator==(Entry & e) {
 ostream & operator<<(ostream & os, const Entry & e) {
     os << e.word;
     os << " exists in [";
-    //int l = e.payload.getLen();
-    //os << e.payload.getItem(0);
-    //for (int i = 1; i < l; i++)
-    //    os << "," << e.payload.getItem(i);
-    //os << "]";
+    int l = e.payload.getLen();
+    os << e.payload.getItem(0);
+    for (int i = 1; i < l; i++)
+        os << ", " << e.payload.getItem(i);
+    os << "]";
     return os;
 }

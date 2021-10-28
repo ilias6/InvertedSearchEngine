@@ -11,11 +11,12 @@ class Entry {
 	Word word;
 	List<int> payload;
     public:
-	List<int> getPayload();
+	List<int> & getPayload();
 	void addToPayload(int);
 	Word &getWord();
 	Entry(const char *, int);
 	Entry(Word &, int);
+	Entry(Entry &);
 	~Entry();
 	friend ostream & operator<<(ostream &, const Entry &);
 	bool operator==(Entry &);
