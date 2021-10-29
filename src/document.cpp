@@ -89,7 +89,7 @@ Document::Document(int id, const char * path) {
     this->word[i]=tmp[i];
     delete[] tmp;
     delete[] buffer;
-
+    hashtable.deleteData();
 }
 Document::~Document(){
     delete[] docPath;

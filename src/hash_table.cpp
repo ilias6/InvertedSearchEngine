@@ -18,6 +18,12 @@ enum htable_retval Bucket::insert(Entry * e){
     return SUCCESS;
 }
 
+Entry * Bucket::getEntry(int indx){
+    if(indx>=list.getLen())
+        return NULL;
+    return list.getItem(indx);
+}
+
 Entry * Bucket::getEntry(Word * w){
     //returns NULL if doesn't exist
     Entry * e1=NULL;
@@ -57,6 +63,17 @@ HashTable::~HashTable(){
         delete[] this->array;
     this->array=NULL;
     this->hash_func=NULL;
+}
+
+void HashTable::deleteData(){
+    for(int i=0;i<this->size;i++){
+        Entry * e;
+        int sz=array[i].bucketSize();
+        for(int j=0;j<sz;j++){
+            e=array[i].getEntry(j);
+            delete e;
+        }
+    }
 }
 
 

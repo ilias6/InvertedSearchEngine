@@ -13,6 +13,7 @@ class Bucket{
         // ~Bucket();
         int bucketSize();
         Entry * getEntry(Word *);
+        Entry * getEntry(int);
         enum htable_retval insert(Entry *);
         void print(void);
 	void printAddr();
@@ -34,8 +35,8 @@ class HashTable {
         enum htable_retval insert(Entry *);
         Entry* getEntry(Word *);//ultra fail function
         void print(void);
-	void printAddr();
-
+	    void printAddr();
+        void deleteData();
 };
 
 #endif
