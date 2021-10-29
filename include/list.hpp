@@ -19,7 +19,7 @@ class ListNode {
 	T * getDataAddr();
     	T getDataCopy();
 	void setNext(ListNode<T> *);
-	void setData(T);
+	void setData(T&);
 };
 
 template <typename T>
@@ -36,8 +36,8 @@ class List {
 	void printAddr() const;
 	int getLen() const;
 	void insert(T&, T ** t = NULL);
-	bool exists(T) const;
-	void remove(T);
+	bool exists(T&) const;
+	void remove(T&);
 	T & getItem(int) const;
 	T * getItemPtr(int) const;
     	T getItemCopy(int);
@@ -168,7 +168,7 @@ void List<T>::insert(T & item, T ** itemPtr) {
 }
 
 template <typename T>
-void List<T>::remove(T item) {
+void List<T>::remove(T& item) {
     if (this->head == NULL) {
 	return;
     }
@@ -201,7 +201,7 @@ void List<T>::remove(T item) {
 }
 
 template <typename T>
-bool List<T>::exists(T item) const {
+bool List<T>::exists(T& item) const {
     ListNode<T> * lst = this->head;
     while (lst != NULL) {
 	if (lst->getData() == item)
@@ -232,8 +232,8 @@ T * ListNode<T>::getDataAddr() {
 }
 
 template <typename T>
-void ListNode<T>::setData(T item) {
-    this->data = item;
+void ListNode<T>::setData(T& item){
+    this->data.set(item);
 }
 
 template <typename T>

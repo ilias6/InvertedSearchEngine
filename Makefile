@@ -9,10 +9,10 @@ IDIR 	= ./include/
 BDIR	= ./bin/
 
 
-_OBJ 	= list.o entry.o word.o main.o hash_table.o hash_functions.o
+_OBJ 	= list.o entry.o word.o main.o hash_table.o hash_functions.o document.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
-_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp
+_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 

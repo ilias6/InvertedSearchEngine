@@ -1,26 +1,24 @@
 #ifndef __DOCUMENT_HPP__
 #define __DOCUMENT_HPP__
 
-#include "./word.hpp"
+#include "../include/word.hpp"
 
 class Document {
     private:
-	Word * doc;
-	HashTable hashTable;
-	int id;
-	int cSize;
-	int wSize;
+	       Word ** word;
+           int id;
+           char * docPath;
+	       int wordsInDoc;
     public:
-	Document(int, char *);
-	~Document();
-	int getId();
-	int getWSize();
-	int getCSize();
-	Word * getWord(int);
-}
+	       Document(int, const char *);
+	      ~Document();
+          int getId();
+          int getWordsInDoc();
+          Word * getWord(int);
+          void print();
+};
 
 
 
 
 #endif
-

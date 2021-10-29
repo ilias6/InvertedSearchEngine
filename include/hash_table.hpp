@@ -33,7 +33,7 @@ class HashTable {
         void setHashFunc(unsigned long (*h_f)(const char * ));
         enum htable_retval updateEntryPayload(Entry *,int);
         enum htable_retval insert(Entry *);
-        int getEntry(Entry *);
+        Entry* getEntry(Entry *);//ultra fail function
         void print(void);
 	void printAddr();
 

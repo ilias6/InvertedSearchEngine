@@ -37,7 +37,7 @@ Entry * Bucket::getEntry(Entry * e2){
     for(int i=0;i<list.getLen();i++){
         e1=list.getItem(i);
         if((e1->getWord()).exactMatch(e2->getWord()))
-            break; 
+            break;
 	e1 = NULL;
 
     }
@@ -72,12 +72,12 @@ HashTable::~HashTable(){
     this->hash_func=NULL;
 }
 
-int HashTable::getEntry(Entry * e) {	
+
+// ultra fail function
+Entry * HashTable::getEntry(Entry * e) {
     unsigned long hash = this->hash_func((e->getWord()).getStr());
     int bucket_index = hash%this->size;
-    if (this->array[bucket_index].getEntry(e))
-	return 1;
-    return 0;
+    return this->array[bucket_index].getEntry(e);
 }
 
 int HashTable::getSize(void){
@@ -103,7 +103,7 @@ enum htable_retval HashTable::updateEntryPayload(Entry *e,int payload){
     Entry *to_be_updated=this->array[bucket_index].getEntry(e);
     if(to_be_updated==NULL)
         return FAILURE;
-     
+
     to_be_updated->addToPayload(payload);
     return SUCCESS;
 }
