@@ -65,18 +65,18 @@ Document::Document(int id, const char * path) {
             cerr << "Document contains more words than MAX_DOC_WORDS (" << MAX_DOC_WORDS <<")"<< endl;
             return;
         }
-        // now that we know the size of word array
-        // make a smaller array containing the exact number of words
-        Word **tmp=this->word;
-        this->word=new Word*[wordsInDoc];
-        if(this->word==NULL){
-            cerr << "Failed to allocate memmory to fetch doc words!"<<endl;
-            return;
-        }
-        for(int i=0;i<wordsInDoc;i++)
-            this->word[i]=tmp[i];
-        delete[] tmp;
     }
+    // now that we know the size of word array
+    // make a smaller array containing the exact number of words
+    Word **tmp=this->word;
+    this->word=new Word*[wordsInDoc];
+    if(this->word==NULL){
+        cerr << "Failed to allocate memmory to fetch doc words!"<<endl;
+        return;
+    }
+    for(int i=0;i<wordsInDoc;i++)
+    this->word[i]=tmp[i];
+    delete[] tmp;
     delete[] buffer;
 
 }
