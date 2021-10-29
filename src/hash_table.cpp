@@ -18,18 +18,6 @@ enum htable_retval Bucket::insert(Entry * e){
     return SUCCESS;
 }
 
-bool Bucket::existsInBucket(Entry * e2){
-    Entry * e1;
-    int exists=false;
-    for(int i=0;i<list.getLen();i++){
-        e1=list.getItem(i);
-        if((e1->getWord()).exactMatch(e2->getWord())){
-            exists=true;
-            break;
-        }
-    }
-    return exists;
-}
 
 Entry * Bucket::getEntry(Entry * e2){
     //returns NULL if doesn't exist

@@ -12,8 +12,7 @@ class Bucket{
         Bucket();
         // ~Bucket();
         int bucketSize();
-        bool existsInBucket(Entry *);
-        Entry * getEntry(Entry *);
+        Entry * getEntry(Word *);
         enum htable_retval insert(Entry *);
         void print(void);
 	void printAddr();
@@ -31,9 +30,9 @@ class HashTable {
         int getSize(void);
         void setSize(int s);
         void setHashFunc(unsigned long (*h_f)(const char * ));
-        enum htable_retval updateEntryPayload(Entry *,int);
+        enum htable_retval updateEntryPayload(Word *,int);
         enum htable_retval insert(Entry *);
-        Entry* getEntry(Entry *);//ultra fail function
+        Entry* getEntry(Word *);//ultra fail function
         void print(void);
 	void printAddr();
 

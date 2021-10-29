@@ -25,7 +25,7 @@ Document::Document(int id, const char * path) {
     }
     strcpy(docPath,path);
     // this is for finding duplicates in 0(1)
-    // Hashtable hashtable(3,djb2);
+    Hashtable hashtable(3,djb2);
     // MAYBE CHECK IF FILE IS SMALLER THAN MAX_DOC_LENGTH AND OPEN OR THROW ERROR MESSAGE
     ifstream input(docPath);
 
