@@ -18,13 +18,12 @@ enum htable_retval Bucket::insert(Entry * e){
     return SUCCESS;
 }
 
-
-Entry * Bucket::getEntry(Entry * e2){
+Entry * Bucket::getEntry(Word * w){
     //returns NULL if doesn't exist
     Entry * e1=NULL;
     for(int i=0;i<list.getLen();i++){
         e1=list.getItem(i);
-        if((e1->getWord()).exactMatch(e2->getWord()))
+        if((e1->getWord()).exactMatch(*w))
             break;
 	e1 = NULL;
 
@@ -62,10 +61,10 @@ HashTable::~HashTable(){
 
 
 // ultra fail function
-Entry * HashTable::getEntry(Entry * e) {
-    unsigned long hash = this->hash_func((e->getWord()).getStr());
+Entry * HashTable::getEntry(Word * w) {
+    unsigned long hash = this->hash_func(w->getStr());
     int bucket_index = hash%this->size;
-    return this->array[bucket_index].getEntry(e);
+    return this->array[bucket_index].getEntry(w);
 }
 
 int HashTable::getSize(void){
@@ -85,10 +84,10 @@ enum htable_retval HashTable::insert(Entry * e){
     return this->array[bucket_index].insert(e);
 }
 
-enum htable_retval HashTable::updateEntryPayload(Entry *e,int payload){
-    unsigned long hash= this->hash_func((e->getWord()).getStr());
+enum htable_retval HashTable::updateEntryPayload(Word *w,int payload){
+    unsigned long hash= this->hash_func(w->getStr());
     int bucket_index=hash%this->size;
-    Entry *to_be_updated=this->array[bucket_index].getEntry(e);
+    Entry *to_be_updated=this->array[bucket_index].getEntry(w);
     if(to_be_updated==NULL)
         return FAILURE;
 
