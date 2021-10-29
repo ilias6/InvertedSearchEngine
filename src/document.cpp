@@ -25,7 +25,7 @@ Document::Document(int id, const char * path) {
     }
     strcpy(docPath,path);
     // this is for finding duplicates in 0(1)
-    Hashtable hashtable(3,djb2);
+    HashTable hashtable(3,djb2);
     // MAYBE CHECK IF FILE IS SMALLER THAN MAX_DOC_LENGTH AND OPEN OR THROW ERROR MESSAGE
     ifstream input(docPath);
 
@@ -59,7 +59,18 @@ Document::Document(int id, const char * path) {
             return;
         }
         buffer[buffIndex+1]='\0';//terminate string
-        this->word[this->wordsInDoc]=new Word(buffer);
+        Word * w=new Word(buffer);
+        Entry * e=hashtable.getEntry(w);
+        if(e!=NULL){
+            // means word already exists
+            // cout<<*w<<" already exists!"<<endl;
+            delete w;
+            continue;
+        }
+        //word doen't exist so add it to array and to hashtable
+        this->word[this->wordsInDoc]=w;
+        e=new Entry(*w,this->id);
+        hashtable.insert(e);
         this->wordsInDoc++;
         if(this->wordsInDoc==MAX_DOC_WORDS){
             cerr << "Document contains more words than MAX_DOC_WORDS (" << MAX_DOC_WORDS <<")"<< endl;
