@@ -7,6 +7,7 @@
 #include "../include/hash_functions.hpp"
 #include "../include/document.hpp"
 #include "../include/core.hpp"
+#include "../include/query.hpp"
 using namespace std;
 
 int main(int argc, char * argv[]) {
@@ -53,8 +54,9 @@ int main(int argc, char * argv[]) {
    //
    //  }
    // myList.print();
-   Document doc1(0,"input/doc1");
-   doc1.print();
+   // Document doc1(0,"input/doc1");
+   // doc1.print();
+   Query q1(0,"input/doc1");
     return 0;
 
 }
