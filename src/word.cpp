@@ -113,8 +113,8 @@ int Word::editDist(Word &w) {
 
     int diff = v[l1][l2];
     for (int i = 0; i < l1+1; ++i)
-	delete v[i];
-    delete v;
+	delete[] v[i];
+    delete[] v;
 
     return diff;
 }
