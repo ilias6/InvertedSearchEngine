@@ -78,8 +78,28 @@ int main(int argc, char * argv[]) {
     tree.insert(&w7);
 
     tree.print();
+    cout << "End of Tree\n";
 
+    Word w8("henn");
+    List<Word *> results = tree.search(&w8, 2);
+    for (int i = 0; i < results.getLen(); ++i)
+	    cout << *(results.getItem(i)) << endl;
+    /*
 
+    List<Word *> l1;
+    Word * wPtr = &w;
+    l1.insert(wPtr);
+    wPtr = &w2;
+    l1.insert(wPtr);
+    wPtr = &w3;
+    List<Word *> l2;
+    l2.insert(wPtr);
+    wPtr = &w4;
+    l2.insert(wPtr);
+    l1.append(&l2);
+    for (int i = 0;i < l1.getLen(); ++i)
+	    cout << *(l1.getItem(i)) << endl;
+    */
     return 0;
 
 }

@@ -13,6 +13,20 @@ BKTree::~BKTree() {
     destroy(this->root);
 }
 
+void BKTree::destroy(BKNode * node) {
+   if (node == NULL)
+	return;
+
+    List<BKNode *> & children = node->getChildren();
+    int childrenNum = children.getLen();
+    for (int i = 0; i < childrenNum; ++i) {
+	BKNode * n = children.getItem(i);
+	destroy(n);
+    }
+
+    delete node;
+}
+
 void BKTree::insert(Data * data) {
     insert(&this->root, data, 0);
 }
@@ -73,26 +87,46 @@ void BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
     children.insert(newBranchNode);
 }
 
+List<Data *> BKTree::search(BKNode * node, Data * data, int n) { 
+    List<Data *> results;
+
+    if (node == NULL) {
+	return results; 
+    }
+
+    Data * data2 = node->getData();
+    int d = data->editDist(*data2);
+    if (d <= n)
+	results.insert(data2);
+
+    int lowerBound = d-n;
+    int upperBound = d+n;    
+
+    List<BKNode *> & children = node->getChildren();
+    int childrenNum = children.getLen();
+    for (int i = 0; i < childrenNum; ++i) {
+	BKNode * childNode = children.getItem(i);
+	int childDist = childNode->getDist(); 
+	if ((childDist <= upperBound) && (childDist >= lowerBound)) {
+	    List<Data *> lst(search(childNode, data, n));
+	    results.append(&lst);
+	}
+    }
+
+    return results;
+
+}
+
+List<Data *> BKTree::search(Data * data, int n) {
+    return search(this->root, data, n);
+}
+
 BKNode::BKNode(Data * data, int distance):children() {
     this->data = data;
     this->dist = distance;
 }
 
 BKNode::~BKNode() {};
-
-void BKTree::destroy(BKNode * node) {
-   if (node == NULL)
-	return;
-
-    List<BKNode *> & children = node->getChildren();
-    int childrenNum = children.getLen();
-    for (int i = 0; i < childrenNum; ++i) {
-	BKNode * n = children.getItem(i);
-	destroy(n);
-    }
-
-    delete node;
-}
 
 Data * BKNode::getData() {
     return this->data;

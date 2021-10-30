@@ -36,6 +36,7 @@ class List {
 	void printAddr() const;
 	int getLen() const;
 	void insert(T&, T ** t = NULL);
+	void append(List<T> *);
 	bool exists(T&) const;
 	void remove(T&);
 	T & getItem(int) const;
@@ -148,6 +149,22 @@ T List<T>::getItemCopy(int index) {
 
 }
 
+template <typename T>
+void List<T>::append(List<T> * lst) {
+    /*The dump way*/
+    int len = lst->getLen();
+    for (int i = 0; i < len; ++i) {
+	T & item = lst->getItem(i);
+	this->insert(item);
+    }
+    /*
+    if (lst.head == NULL)
+	return;
+
+    this->tail->setNext(lst.head);
+    this->tail = lst.tail;
+    */
+}
 
 template <typename T>
 void List<T>::insert(T & item, T ** itemPtr) {

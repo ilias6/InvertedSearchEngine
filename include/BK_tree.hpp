@@ -30,10 +30,12 @@ class BKTree {
 	int height;		
 	void insert(BKNode **, Data *, int);
 	void print(BKNode *, int);
+	List<Data *> search(BKNode *, Data *, int);
     public:
 	BKTree();
 	~BKTree();
 	void destroy(BKNode *);
+	List<Data *> search(Data *, int);
 	void insert(Data *);
 	void print();
 };
