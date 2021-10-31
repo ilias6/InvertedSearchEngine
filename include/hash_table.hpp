@@ -35,7 +35,7 @@ class HashTable {
         enum htable_retval insert(Entry *);
         Entry* getEntry(Word *);//ultra fail function
         void print(void);
-	    void printAddr();
+	void printAddr();
         void deleteData();
 };
 

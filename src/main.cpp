@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
     Document doc1(0,"input/doc1");
     doc1.print();
     Query q1(0,"input/doc1");
-    Index index(&myList, BKT);
+    Index index(&myList, &Word::editDist);
     Word w("4265");
     List<Entry *> res = index.search(&w, 1);
 

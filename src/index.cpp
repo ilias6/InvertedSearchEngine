@@ -20,16 +20,17 @@ void Index::insertFromList(List<Entry> * entryList) {
     }
 }
 
-Index::Index(List<Entry> * entryList, indexType type, int tableSize, unsigned long (*h_f)(const char *)):
-	    tree(), hTable() {
-    this->type = type;
-
-    if (this->type == HT) {
-	hTable.setHashFunc(h_f);
-	hTable.setSizeAndAlloc(tableSize);
-	return;
-    }
+Index::Index(List<Entry> * entryList, int (Word::*distFunc)(Word &)):
+	    tree(distFunc), hTable() {
     this->type = BKT;
+    this->insertFromList(entryList);
+}
+
+Index::Index(List<Entry> * entryList, int tableSize, unsigned long (*h_f)(const char *)):
+	    tree(), hTable() {
+    type = HT;
+    hTable.setHashFunc(h_f);
+    hTable.setSizeAndAlloc(tableSize);
     this->insertFromList(entryList);
 }
 

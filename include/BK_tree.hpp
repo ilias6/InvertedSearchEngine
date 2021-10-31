@@ -30,11 +30,12 @@ class BKTree {
     private:
 	BKNode * root;
 	int height;		
+	int(Word::*distanceFunc) (Word &);
 	void insert(BKNode **, Data *, int);
 	void print(BKNode *, int);
 	List<Data *> search(BKNode *, Key *, int);
     public:
-	BKTree();
+	BKTree(int(Word::*distanceFunc) (Word &) = NULL);
 	~BKTree();
 	void destroy(BKNode *);
 	List<Data *> search(Key *, int);

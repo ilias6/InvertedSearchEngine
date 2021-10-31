@@ -15,7 +15,8 @@ class Index {
 	BKTree tree;
 	HashTable hTable;
     public:
-	Index(List<Entry> *, indexType, int tableSize = 0, unsigned long (*h_f)(const char *) = NULL);
+	Index(List<Entry> *, int (Word::*distFunc)(Word &));
+	Index(List<Entry> *, int tableSize, unsigned long (*h_f)(const char *));
 	void insertFromList(List<Entry> *);
 	List<Entry *> search(Word *, int n = 0);
 	~Index();

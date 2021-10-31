@@ -4,9 +4,10 @@
 #include "../include/word.hpp"
 
 
-BKTree::BKTree() {
+BKTree::BKTree(int(Word::*distanceFunc) (Word &)) {
     this->root = NULL;
     this->height = 0;
+    this->distanceFunc = distanceFunc;
 }
 
 BKTree::~BKTree() {
