@@ -14,7 +14,7 @@ class BKNode {
     private:
 	Data * data;
 	int dist;
-	BKNode * parent;
+	//BKNode * parent;
 	List<BKNode *> children;
     public:
 	BKNode(Data *, int);
