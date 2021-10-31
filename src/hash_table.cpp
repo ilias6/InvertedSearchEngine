@@ -87,8 +87,9 @@ Entry * HashTable::getEntry(Word * w) {
 int HashTable::getSize(void){
     return this->size;
 }
-void HashTable::setSize(int s){
-    this->size=s;
+void HashTable::setSizeAndAlloc(int sz){
+    this->size=sz;
+    this->array=new Bucket[sz];
 }
 void HashTable::setHashFunc(unsigned long (*h_f)(const char *)){
     this->hash_func=h_f;

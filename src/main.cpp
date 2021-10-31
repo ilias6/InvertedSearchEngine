@@ -9,16 +9,16 @@
 #include "../include/core.hpp"
 #include "../include/query.hpp"
 #include "../include/BK_tree.hpp"
+#include "../include/index.hpp"
+
 using namespace std;
 
 int main(int argc, char * argv[]) {
-    /*
 
     PRINT_CORE_SETTINGS();
-    List<Word> myList = List<Word>();
     List<Entry> myList = List<Entry>();
-    HashTable t(3, djb2);
-    for (int i = 0; i < 10; i++) {
+    HashTable t(517, djb2);
+    for (int i = 0; i < 10000; i++) {
 	char str[256] = {0};
 	sprintf(str, "%d", i);
 	Word w(str);
@@ -27,7 +27,7 @@ int main(int argc, char * argv[]) {
 	    e.addToPayload(j*2);
 	}
 
-	if (!t.getEntry(&e)) {
+	if (!t.getEntry(&e.getWord())) {
 	    Entry * ePtr = &e;
 	    myList.insert(e, &ePtr);
 	    t.insert(ePtr);
@@ -38,68 +38,32 @@ int main(int argc, char * argv[]) {
     }
     cout << "END OF LOOP\n";
 
-    myList.print();
     for (int i = 0; i < 10; i++) {
 	char str[256] = {0};
 	sprintf(str, "%d", i);
 	Word w(str);
 	Entry e(w, i+100);
-	if (!t.getEntry(&e)) {
+	if (!t.getEntry(&e.getWord())) {
 	    cout << "WAHT\n";
 	    Entry * ePtr = NULL;
 	    myList.insert(e, &ePtr);
 	    t.insert(ePtr);
 	}
 	else {
-	    t.updateEntryPayload(&e, -10*i);
+	    t.updateEntryPayload(&e.getWord(), -10*i);
 	}
 
 
     }
-    myList.print();
     Document doc1(0,"input/doc1");
     doc1.print();
     Query q1(0,"input/doc1");
-    */
-    BKTree tree;
-    Word w("hell");
-    tree.insert(&w);
-    Word w2("help");
-    tree.insert(&w2);
-    Word w3("fall");
-    tree.insert(&w3);
-    Word w4("fell");
-    tree.insert(&w4);
-    Word w5("felt");
-    tree.insert(&w5);
-    Word w6("small");
-    tree.insert(&w6);
-    Word w7("melt");
-    tree.insert(&w7);
+    Index index(&myList, BKT);
+    Word w("4265");
+    List<Entry *> res = index.search(&w, 1);
 
-    tree.print();
-    cout << "End of Tree\n";
-
-    Word w8("henn");
-    List<Word *> results = tree.search(&w8, 2);
-    for (int i = 0; i < results.getLen(); ++i)
-	    cout << *(results.getItem(i)) << endl;
-    /*
-
-    List<Word *> l1;
-    Word * wPtr = &w;
-    l1.insert(wPtr);
-    wPtr = &w2;
-    l1.insert(wPtr);
-    wPtr = &w3;
-    List<Word *> l2;
-    l2.insert(wPtr);
-    wPtr = &w4;
-    l2.insert(wPtr);
-    l1.append(&l2);
-    for (int i = 0;i < l1.getLen(); ++i)
-	    cout << *(l1.getItem(i)) << endl;
-    */
+    for (int i = 0; i < res.getLen(); ++i)
+	cout << res.getItem(i)->getWord() << endl;
     return 0;
 
 }
