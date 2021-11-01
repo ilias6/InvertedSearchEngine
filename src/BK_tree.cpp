@@ -74,7 +74,7 @@ void BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
     Word * word1 = &data->getWord();
     Word * word2 = &(*node)->getData()->getWord();
     //int distWithThisNode = invoke(distanceFunc, *word1, *word2);
-    int distWithThisNode = CALL_MEMBER_FN(*word2, distanceFunc)(*word2);
+    int distWithThisNode = CALL_MEMBER_FN(*word1, distanceFunc)(*word2);
 
     List<BKNode *> & children = (*node)->getChildren();
     int childrenNum = children.getLen();
@@ -102,7 +102,7 @@ List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
     Data * data2 = node->getData();
     Word * word2 = &data2->getWord();
     //int d = invoke(distanceFunc, *word1, *word2);
-    int d = CALL_MEMBER_FN(*word2, distanceFunc)(*word2);
+    int d = CALL_MEMBER_FN(*word1, distanceFunc)(*word2);
     //int d = word1->distanceFunc(*word2);
     if (d <= n)
         results.insert(data2);
