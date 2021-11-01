@@ -13,7 +13,8 @@ using namespace std;
 class Index {
     private:
         MatchType type;
-        BKTree *tree;
+        int numOfTrees;//will be 1 if we have edit distance
+        BKTree **tree;
 	    HashTable *hTable;
         void insertFromList(EntryList &);
     public:
