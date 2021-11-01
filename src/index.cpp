@@ -17,6 +17,7 @@ void Index::insertFromList(List<Entry> * entryList) {
     for (int i = 0; i < entryList->getLen(); ++i) {
 	Entry * e = entryList->getItemPtr(i);
 	this->tree.insert(e);
+	cout << i << endl;
     }
 }
 
