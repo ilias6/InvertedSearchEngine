@@ -12,6 +12,9 @@ int Bucket::bucketSize(){
     return this->list.getLen();
 }
 
+void Bucket::copyBucket(Bucket &b2){
+    this->list.copyList(b2.list);
+}
 
 enum htable_retval Bucket::insert(Entry * e){
     list.insert(e);
@@ -56,6 +59,13 @@ HashTable::HashTable(){
     this->size=0;
     this->array=NULL;
     this->hash_func=NULL;
+}
+HashTable::HashTable(HashTable & ht){
+    this->size=ht.size;
+    this->array=new Bucket[size];
+    for(int i=0;i<size;i++)
+        this->array[i].copyBucket(ht.array[i]);
+    this->hash_func=ht.hash_func;
 }
 HashTable::~HashTable(){
     this->size=0;

@@ -7,13 +7,10 @@
 #include <fstream>
 #include <cstring>
 #include <cerrno>
+#include "../include/utils.hpp"
 
 using namespace std;
-bool charInWhitespaces(char c){
-    if(c=='\n'||c=='\t'||c==' '||c=='\f'||c=='\r')
-        return true;
-    return false;
-}
+
 
 Query::Query(int id, const char * path){
     this->id=id;
@@ -26,7 +23,7 @@ Query::Query(int id, const char * path){
     }
     strcpy(queryPath,path);
     // this is for finding duplicates in 0(1)
-    HashTable hashtable(3,djb2);
+    HashTable hashtable(100003,djb2);
     // MAYBE CHECK IF FILE IS SMALLER THAN MAX_QUERY_LENGTH AND OPEN OR THROW ERROR MESSAGE
     ifstream input(queryPath);
 
@@ -40,7 +37,7 @@ Query::Query(int id, const char * path){
     while (!input.eof()) {
         buffIndex=0;
         input.get(buffer[buffIndex]);
-        while(!charInWhitespaces(buffer[buffIndex]) && !input.eof()){
+        while(!charInWhitespace(buffer[buffIndex]) && !input.eof()){
             //we dont want new lines
             buffIndex++;
             input.get(buffer[buffIndex]);

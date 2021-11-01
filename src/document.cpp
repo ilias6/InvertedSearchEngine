@@ -7,13 +7,10 @@
 #include <fstream>
 #include <cstring>
 #include <cerrno>
+#include "../include/utils.hpp"
 
 using namespace std;
-bool charInWhitespace(char c){
-    if(c=='\n'||c=='\t'||c==' '||c=='\f'||c=='\r')
-        return true;
-    return false;
-}
+
 Document::Document(int id, const char * path) {
     this->id = id;
     this->wordsInDoc=0 ;

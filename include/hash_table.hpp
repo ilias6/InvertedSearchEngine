@@ -12,6 +12,7 @@ class Bucket{
         Bucket();
         // ~Bucket();
         int bucketSize();
+        void copyBucket(Bucket &);
         Entry * getEntry(Word *);
         Entry * getEntry(int);
         enum htable_retval insert(Entry *);
@@ -26,6 +27,7 @@ class HashTable {
         unsigned long(*hash_func)(const char *);//pointer to hash function
     public:
         HashTable();
+        HashTable(HashTable &);
         HashTable(int sz,unsigned long (*h_f)(const char *));
         ~HashTable();
         int getSize(void);

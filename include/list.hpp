@@ -35,6 +35,7 @@ class List {
 	void print() const;
 	void printAddr() const;
 	int getLen() const;
+    void copyList(List &);
 	void insert(T&, T ** t = NULL);
 	void append(List<T> *);
 	bool exists(T&) const;
@@ -54,6 +55,32 @@ List<T>::List() {
 
 template <typename T>
 List<T>::List(const List & lst) {
+    this->len = lst.len;
+
+    if (lst.head == NULL) {
+        this->head = NULL;
+	this->tail = NULL;
+        return;
+    }
+
+    // create new root:
+    this->head = new ListNode<T>(lst.head->getData());
+
+    ListNode<T> * lst_currentNode = lst.head;
+    ListNode<T> * this_currentNode = this->head;
+    while (lst_currentNode->getNext() != NULL) {
+        // create new successor:
+        ListNode<T> * newNode = new ListNode<T>(lst_currentNode->getNext()->getData());
+        this_currentNode->setNext(newNode);
+        this_currentNode = this_currentNode->getNext();
+        lst_currentNode = lst_currentNode->getNext();
+    }
+    this->tail = this_currentNode;
+    //cout << "List Copied!\n";
+}
+
+template <typename T>
+void List<T>::copyList(List & lst) {
     this->len = lst.len;
 
     if (lst.head == NULL) {

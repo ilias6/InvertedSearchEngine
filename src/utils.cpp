@@ -24,3 +24,8 @@ int findNextPrime(int n) {
 
 }
 
+bool charInWhitespace(char c){
+    if(c=='\n'||c=='\t'||c==' '||c=='\f'||c=='\r')
+        return true;
+    return false;
+}

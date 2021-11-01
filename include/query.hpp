@@ -5,18 +5,18 @@
 
 class Query{
     private:
-       Word ** word;
-       int id;
-       char * queryPath;
-       int wordsInQuery;
+        Word ** word;
+        int id;
+        char * queryPath;
+        int wordsInQuery;
    public:
-       Query(int, const char *);
-      ~Query();
-      int getId();
-      int getWordsInQuery();
-      Word * getWord(int);
-      void print();
-
+        Query(int, const char *);
+        Query();
+        ~Query();
+        int getId();
+        int getWordsInQuery();
+        Word * getWord(int);
+        void print();
 
 };
 
