@@ -71,13 +71,13 @@ void BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
 
     Word * word1 = &data->getWord();
     Word * word2 = &(*node)->getData()->getWord();
-    int distWithThisNode = word1->editDist(*word2);
+    int distWithThisNode = word1->distanceFunc(*word2);
 
     List<BKNode *> & children = (*node)->getChildren();
     int childrenNum = children.getLen();
     for (int i = 0; i < childrenNum; ++i) {
         BKNode * n = children.getItem(i);
-        int childDist = n->getDist(); 
+        int childDist = n->getDist();
         if (distWithThisNode == childDist) {
             insert(&n, data, distWithThisNode);
             return;
@@ -89,27 +89,27 @@ void BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
     children.insert(newBranchNode);
 }
 
-List<Data *> BKTree::search(BKNode * node, Key * word1, int n) { 
+List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
     List<Data *> results;
 
     if (node == NULL) {
-        return results; 
+        return results;
     }
 
     Data * data2 = node->getData();
     Word * word2 = &data2->getWord();
-    int d = word1->editDist(*word2);
+    int d = word1->distanceFunc(*word2);
     if (d <= n)
         results.insert(data2);
 
     int lowerBound = d-n;
-    int upperBound = d+n;    
+    int upperBound = d+n;
 
     List<BKNode *> & children = node->getChildren();
     int childrenNum = children.getLen();
     for (int i = 0; i < childrenNum; ++i) {
         BKNode * childNode = children.getItem(i);
-        int childDist = childNode->getDist(); 
+        int childDist = childNode->getDist();
         if ((childDist <= upperBound) && (childDist >= lowerBound)) {
             List<Data *> lst(search(childNode, word1, n));
             results.append(&lst);

@@ -76,7 +76,7 @@ int main(int argc, char * argv[]) {
     // Query q(0,"input/words");
     time_t cur;
     cur=time(NULL);
-    Query q2(1,"input/words2");
+    Query q2(1,"input/words3");
     cur=time(NULL)-cur;
     float elapsed=(float)cur/60;
     cout<<"Query build time: "<<elapsed<<endl;;
@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
     elapsed=(float)cur/60;
     cout<<"Insert time: "<<elapsed<<endl;;
     cur=time(NULL);
-    Index indx(lst,MT_EDIT_DIST);
+    Index indx(lst,MT_HAMMING_DIST);
     cur=time(NULL)-cur;
     elapsed=(float)cur/60;
     cout<<"Index build time: "<<elapsed<<endl;

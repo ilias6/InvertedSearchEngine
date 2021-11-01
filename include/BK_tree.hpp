@@ -1,7 +1,7 @@
 #ifndef __BK_TREE_HPP__
 #define __BK_TREE_HPP__
 
-#include "list.hpp" 
+#include "list.hpp"
 #include "word.hpp"
 #include "entry.hpp"
 
@@ -29,7 +29,7 @@ class BKNode {
 class BKTree {
     private:
 	BKNode * root;
-	int height;		
+	int height;
 	int(Word::*distanceFunc) (Word &);
 	void insert(BKNode **, Data *, int);
 	void print(BKNode *, int);
