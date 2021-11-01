@@ -78,6 +78,9 @@ bool Word::exactMatch(Word & w) {
 }
 
 int Word::hammingDist(Word &w) {
+    if (this->len != w.len)
+	return -1;
+
     int counter = 0;
     for (int i = 0; i < this->len; ++i)
 	if (this->str[i] != w.str[i])
