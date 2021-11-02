@@ -8,7 +8,8 @@ Word::Word(const char * s) {
     if (s != NULL) {
     	this->len = strlen(s);
     	this->str = new char[this->len+1];
-    	strncpy(this->str, s, this->len+1);
+    	strncpy(this->str, s, this->len);
+	this->str[this->len] = '\0';
     }
     else {
 	    this->len = 0;

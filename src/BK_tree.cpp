@@ -126,7 +126,8 @@ List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
 }
 
 List<Data *> BKTree::search(Key * key, int n) {
-    return search(this->root, key, n);
+    List<Data *> res = search(this->root, key, n);
+    return res; 
 }
 
 BKNode::BKNode(Data * data, int distance):children() {

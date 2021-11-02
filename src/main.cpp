@@ -12,37 +12,37 @@
 #include "../include/index.hpp"
 #include "../include/utils.hpp"
 #include "../include/entry_list.hpp"
-
+#include <unistd.h>
+#include <cstring>
 
 using namespace std;
 
 int main(int argc, char * argv[]) {
 
-    time_t cur;
-    cur=time(NULL);
-    Query q2(1,"input/words3");
-    cur=time(NULL)-cur;
-    float elapsed=(float)cur/60;
-    cout<<"Query build time: "<<elapsed<<endl;;
-    EntryList lst;
-    cur=time(NULL);
-    lst.insert(q2);
-    cur=time(NULL)-cur;
-    elapsed=(float)cur/60;
-    cout<<"Insert time: "<<elapsed<<endl;;
-    cur=time(NULL);
-    Index indx(lst,MT_HAMMING_DIST);
-    cur=time(NULL)-cur;
-    elapsed=(float)cur/60;
-    cout<<"Index build time: "<<elapsed<<endl;
-    Word w("abak");
-    cur=time(NULL);
-    List<Entry*> res=indx.search(&w,1);
-    cur=time(NULL)-cur;
-    elapsed=(float)cur/60;
-    cout<<"Search time: "<<elapsed<<endl;
-    for (int i = 0; i < res.getLen(); ++i)
-        cout << res.getItem(i)->getWord() << endl;
-    return 0;
+    const char * p = "input/words3";
+     
+    Query ** qs = makeQueries(&p, 1);
+    EntryList * eList = makeEntryList(qs, 1);
+    Index * idx = makeIndex(MT_HAMMING_DIST, eList);
 
+    int threshold = 2;
+    int numOfWords = 5;
+    Word ** wordsToSearch = new Word*[numOfWords];
+    srand((unsigned)time(NULL) * getpid());  
+    for (int i = 0; i < numOfWords; ++i) {
+	char * str = genRandStr(1+rand()%10);
+	wordsToSearch[i] = new Word(str);
+	delete[] str;
+    }
+
+    multipleSearch(idx, wordsToSearch, numOfWords, threshold);
+    
+    destroyQueries(qs, 1);
+    delete idx;
+    for (int i = 0; i < numOfWords; ++i)
+	delete wordsToSearch[i];
+    delete[] wordsToSearch;
+    delete eList;
+
+    return 0;
 }
