@@ -3,4 +3,9 @@
 bool isPrime(int);
 int findNextPrime(int);
 bool charInWhitespace(char c);
+Query ** makeQuerries(const char **);
+Index * makeIndex(MatchType, EntryList *);
+void multipleSearch(Word **);
+void search(Word *);
+EntryList * makeEntryList(Query **);
 #endif
