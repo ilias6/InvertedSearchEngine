@@ -92,6 +92,12 @@ int Word::hammingDist(Word &w) {
 int Word::editDist(Word &w) {
     int l1 = this->len;
     int l2 = w.len;
+
+    if (l1 == 0)
+	return l2;
+    if (l2 == 0)
+	return l1;
+
     char * str1 = this->str;
     char * str2 = w.str;
     int ** v = new int*[l1+1];
