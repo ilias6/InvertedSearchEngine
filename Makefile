@@ -1,5 +1,5 @@
 ++     	= g++
-CFLAGS 	= -g
+CFLAGS 	= #-g
 LIBS	= -lm
 TESTFLAGS= -pthread
 TESTLIBS= -L ./lib/libgtest_main.a ./lib/libgtest.a 
@@ -22,7 +22,8 @@ _DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.h
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
-program:$(BDIR)out
+all: directories program test
+program: $(BDIR)out
 test:	$(BDIR)test
 
 $(BDIR)test: $(OBJ) $(TESTOBJ) $(ODIR)test_main.o
@@ -37,6 +38,8 @@ $(ODIR)%.o: $(SDIR)%.cpp $(DEPS)
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 	$(++) -c -o $@ $< $(TESTFLAGS)
 
+directories:
+	mkdir -p build; mkdir -p bin
 
 cleanO:
 	rm $(ODIR)*.o
