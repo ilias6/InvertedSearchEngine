@@ -16,8 +16,7 @@ class ListNode {
 	void printAddr() const;
 	ListNode<T> * getNext() const;
 	T & getData();
-	T * getDataAddr();
-    	T getDataCopy();
+    T getDataCopy();
 	void setNext(ListNode<T> *);
 	void setData(T&);
 };
@@ -42,7 +41,7 @@ class List {
 	void remove(T&);
 	T & getItem(int) const;
 	T * getItemPtr(int) const;
-    	T getItemCopy(int);
+    T getItemCopy(int);
 
 };
 
@@ -59,7 +58,7 @@ List<T>::List(const List & lst) {
 
     if (lst.head == NULL) {
         this->head = NULL;
-	this->tail = NULL;
+	    this->tail = NULL;
         return;
     }
 
@@ -81,6 +80,15 @@ List<T>::List(const List & lst) {
 
 template <typename T>
 void List<T>::copyList(List & lst) {
+    if(this->len!=0){
+        ListNode<T> * lst_currentNode = this->head;
+        while(lst_currentNode!=NULL){
+            ListNode<T> * tmp=lst_currentNode->getNext();
+            delete lst_currentNode;
+            lst_currentNode=tmp;
+        }
+    }
+
     this->len = lst.len;
 
     if (lst.head == NULL) {
@@ -181,8 +189,8 @@ void List<T>::append(List<T> * lst) {
     /*The dump way*/
     int len = lst->getLen();
     for (int i = 0; i < len; ++i) {
-	T & item = lst->getItem(i);
-	this->insert(item);
+        T & item = lst->getItem(i);
+	    this->insert(item);
     }
     /*
     if (lst.head == NULL)
@@ -270,10 +278,6 @@ void ListNode<T>::setNext(ListNode<T> * newNode) {
     this->next = newNode;
 }
 
-template <typename T>
-T * ListNode<T>::getDataAddr() {
-    this->data;
-}
 
 template <typename T>
 void ListNode<T>::setData(T& item){
