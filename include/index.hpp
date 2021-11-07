@@ -10,13 +10,15 @@
 
 using namespace std;
 
+enum IndexErrorCode {I_SUCCESS, I_FAIL};
+
 class Index {
     private:
         MatchType type;
         int numOfTrees;//will be 1 if we have edit distance
         BKTree **tree;
-	    HashTable *hTable;
-        void insertFromList(EntryList &);
+	HashTable *hTable;
+        IndexErrorCode insertFromList(EntryList &);
     public:
         Index(EntryList &,MatchType);
         List<Entry *> search(Word *, int n = 0);

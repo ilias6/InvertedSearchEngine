@@ -6,34 +6,57 @@
 
 using namespace std;
 
-void Index::insertFromList(EntryList &entryList) {
+IndexErrorCode Index::insertFromList(EntryList &entryList) {
     if (this->type == MT_EXACT_MATCH) {
-    	   hTable=new HashTable(entryList.getHashTable());
-	       return;
+	try {
+	    hTable=new HashTable(entryList.getHashTable());
+	}
+	catch (bad_alloc & exc) {
+	    return I_FAIL;
+	}
+	return I_SUCCESS;
     }
     int len=entryList.getLen();
     if(this->type==MT_EDIT_DIST){
         this->numOfTrees=1;
-        tree=new BKTree*;
-        tree[0]=new  BKTree(&Word::editDist);
+        try {
+	    tree=new BKTree*;
+	    tree[0]=new  BKTree(&Word::editDist);
+	}
+	catch (bad_alloc & exc) {
+	    return I_FAIL;
+	}
         for (int i = 0; i < len; ++i) {
             Entry * e = entryList.getItemPtr(i);
-            this->tree[0]->insert(e);
+            if (this->tree[0]->insert(e) == BK_FAIL)
+		return I_FAIL;
             // cout << i << endl;
         }
     }else{
         this->numOfTrees=MAX_WORD_LENGTH-MIN_WORD_LENGTH;//one tree for each length (hammingDist)
-        tree=new BKTree*[this->numOfTrees];
+        try {
+	    tree=new BKTree*[this->numOfTrees];
+	}
+	catch (bad_alloc & exc) {
+	    return I_FAIL;
+	}
         for(int i=0;i<this->numOfTrees;i++){
-            tree[i]=new BKTree(&Word::hammingDist);
+            try {
+		tree[i]=new BKTree(&Word::hammingDist);
+	    }
+	    catch (bad_alloc & exc) {
+	    	return I_FAIL;
+	    }
         }
         for (int i = 0; i < len; ++i) {
             Entry * e = entryList.getItemPtr(i);
             int idx=e->getWord().getLen()-MIN_WORD_LENGTH;
-            this->tree[idx]->insert(e);
+            if (this->tree[idx]->insert(e) == BK_FAIL)
+		return I_FAIL;
             // cout << i << endl;
         }
     }
+    return I_SUCCESS;
 }
 
 Index::Index(EntryList & entryList,MatchType type){
