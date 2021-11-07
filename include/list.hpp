@@ -165,8 +165,8 @@ int List<T>::getLen() const {
 
 template <typename T>
 T & List<T>::getItem(int index) const {
-    if (index >= this->len && index >= 0)
-	throw invalid_argument("Index out of range");
+    if (index >= this->len || index < 0)
+	   throw invalid_argument("Index out of range");
 
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)
@@ -178,7 +178,7 @@ T & List<T>::getItem(int index) const {
 
 template <typename T>
 T * List<T>::getItemPtr(int index) const {
-    if (index >= this->len && index >= 0)
+    if (index >= this->len || index < 0)
 	return NULL;
 
     ListNode<T> * lst = this->head;
@@ -191,8 +191,8 @@ T * List<T>::getItemPtr(int index) const {
 
 template <typename T>
 T List<T>::getItemCopy(int index) {
-    if (index >= this->len && index >= 0)
-	throw invalid_argument("Index out of range");
+    if (index >= this->len || index < 0)
+	   throw invalid_argument("Index out of range");
 
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)

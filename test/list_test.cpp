@@ -194,7 +194,7 @@ TEST_F(ListTest,EmptyConstructorTest){
     ASSERT_TRUE(0==empty_list1.getLen());
     EXPECT_THROW({
         try{
-            integer_list->getItem(0);
+            empty_list1.getItem(0);
         }
         catch( const std::invalid_argument& e ){
             // and this tests that it has the correct message
@@ -244,7 +244,7 @@ TEST_F(ListTest,CopyTest){
     ASSERT_TRUE(55==lst.getItem(5));
     EXPECT_THROW({
         try{
-            integer_list->getItem(6);
+            lst.getItem(6);
         }
         catch( const std::invalid_argument& e ){
             // and this tests that it has the correct message
@@ -277,7 +277,7 @@ TEST_F(ListTest,AppendListTest){
     ASSERT_TRUE(55==lst.getItem(8));
     EXPECT_THROW({
         try{
-            integer_list->getItem(9);
+            lst.getItem(9);
         }
         catch( const std::invalid_argument& e ){
             // and this tests that it has the correct message
