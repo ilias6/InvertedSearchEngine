@@ -43,7 +43,8 @@ ostream & operator<<(ostream & os, const Entry & e) {
     os << e.word;
     os << " exists in [";
     int l = e.payload.getLen();
-    os << e.payload.getItem(0);
+    if (l > 0)
+    	os << e.payload.getItem(0);
     for (int i = 1; i < l; i++)
         os << ", " << e.payload.getItem(i);
     os << "]";

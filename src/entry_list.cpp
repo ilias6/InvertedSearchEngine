@@ -4,7 +4,7 @@
 #include "../include/hash_functions.hpp"
 using namespace std;
 
-EntryList::EntryList():hashtable(100003,djb2),list(){
+EntryList::EntryList():hashtable(10003, djb2), list(){
 
 }
 
@@ -36,7 +36,7 @@ Entry * EntryList::getItemPtr(int i) {
 int EntryList::insert(Word *w,int id){
     Entry *e;
     e=hashtable.getEntry(w);
-    //if word doesn;t exist
+    //if word does not exist
     if(e==NULL){
         // add it to list and then to hashtable
         Entry tmp(*w,id);

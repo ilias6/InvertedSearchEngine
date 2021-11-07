@@ -1,6 +1,7 @@
 #ifndef __LIST_HPP__
 #define __LIST_HPP__
 
+#include <stdexcept>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class ListNode {
 	void printAddr() const;
 	ListNode<T> * getNext() const;
 	T & getData();
-    T getDataCopy();
+    	T getDataCopy();
 	void setNext(ListNode<T> *);
 	void setData(T&);
 };
@@ -34,14 +35,14 @@ class List {
 	void print() const;
 	void printAddr() const;
 	int getLen() const;
-    void copyList(List &);
+    	void copyList(List &);
 	void insert(T&, T ** t = NULL);
 	void append(List<T> *);
 	bool exists(T&) const;
 	void remove(T&);
 	T & getItem(int) const;
 	T * getItemPtr(int) const;
-    T getItemCopy(int);
+    	T getItemCopy(int);
 
 };
 
@@ -150,6 +151,8 @@ int List<T>::getLen() const {
 
 template <typename T>
 T & List<T>::getItem(int index) const {
+    if (index >= this->len)
+	throw invalid_argument("Index out of range");
 
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)
@@ -161,6 +164,9 @@ T & List<T>::getItem(int index) const {
 
 template <typename T>
 T * List<T>::getItemPtr(int index) const {
+    if (index >= this->len)
+	return NULL;
+    
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)
 	lst = lst->getNext();
@@ -171,10 +177,8 @@ T * List<T>::getItemPtr(int index) const {
 
 template <typename T>
 T List<T>::getItemCopy(int index) {
-    // if (index >= this->len) {
-	// T t = {0};
-	// return t;
-    // }
+    if (index >= this->len)
+	throw invalid_argument("Index out of range");
 
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)
