@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-enum listErrorCode { L_SUCCESS, L_FAIL, L_EMPTY, L_NOT_EXISTS};
+enum ListErrorCode { L_SUCCESS, L_FAIL, L_EMPTY, L_NOT_EXISTS};
 
 using namespace std;
 
@@ -37,11 +37,11 @@ class List {
 	void print() const;
 	void printAddr() const;
 	int getLen() const;
-    	listErrorCode copyList(List &);
-	listErrorCode insert(T&, T ** t = NULL);
-	listErrorCode append(List<T> *);
+    	ListErrorCode copyList(List &);
+	ListErrorCode insert(T&, T ** t = NULL);
+	ListErrorCode append(List<T> *);
 	bool exists(T&) const;
-	listErrorCode remove(T&);
+	ListErrorCode remove(T&);
 	T & getItem(int) const;
 	T * getItemPtr(int) const;
     	T getItemCopy(int);
@@ -82,7 +82,7 @@ List<T>::List(const List & lst) {
 }
 
 template <typename T>
-listErrorCode List<T>::copyList(List & lst) {
+ListErrorCode List<T>::copyList(List & lst) {
     if(this->len!=0){
         ListNode<T> * lst_currentNode = this->head;
         while(lst_currentNode!=NULL){
@@ -105,7 +105,7 @@ listErrorCode List<T>::copyList(List & lst) {
 	this->head = new ListNode<T>(lst.head->getData());
     }
     catch (bad_alloc & exc) {
-	return L_FAIL; 	
+	return L_FAIL;
     }
 
     ListNode<T> * lst_currentNode = lst.head;
@@ -180,7 +180,7 @@ template <typename T>
 T * List<T>::getItemPtr(int index) const {
     if (index >= this->len && index >= 0)
 	return NULL;
-    
+
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)
 	lst = lst->getNext();
@@ -203,7 +203,7 @@ T List<T>::getItemCopy(int index) {
 }
 
 template <typename T>
-listErrorCode List<T>::append(List<T> * lst) {
+ListErrorCode List<T>::append(List<T> * lst) {
     /*The dump way*/
     int len = lst->getLen();
     for (int i = 0; i < len; ++i) {
@@ -222,11 +222,11 @@ listErrorCode List<T>::append(List<T> * lst) {
 }
 
 template <typename T>
-listErrorCode List<T>::insert(T & item, T ** itemPtr) {
+ListErrorCode List<T>::insert(T & item, T ** itemPtr) {
     ListNode<T> * node = NULL;
     try {
 	node = new ListNode<T>(item);
-    } 
+    }
     catch (bad_alloc & exc) {
 	return L_FAIL;
     }
@@ -248,7 +248,7 @@ listErrorCode List<T>::insert(T & item, T ** itemPtr) {
 }
 
 template <typename T>
-listErrorCode List<T>::remove(T& item) {
+ListErrorCode List<T>::remove(T& item) {
     if (this->head == NULL) {
 	return L_EMPTY;
     }

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "../include/list.hpp"
 #include "../include/word.hpp"
+#include <stdexcept>
 
 
 // class myTestFixture1: public ::testing::Test {
@@ -60,6 +61,7 @@ TEST_F(ListTest,InsertTest){
     ASSERT_TRUE(53==integer_list->getItem(3));
     ASSERT_TRUE(54==integer_list->getItem(4));
     ASSERT_TRUE(55==integer_list->getItem(5));
+
     int *val;
     int new_insert_val=800;
     integer_list->insert(new_insert_val,&val);
@@ -70,38 +72,55 @@ TEST_F(ListTest,InsertTest){
     ASSERT_TRUE(799==integer_list->getItem(6));
     for(int i=0;i<6;i++)
         ASSERT_TRUE(arr[i]==ptr_list->getItem(i));
-
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(7);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 }
 
 TEST_F(ListTest,RemoveTest){
     int to_be_rm=100000;
     ASSERT_TRUE(6==integer_list->getLen());
-    integer_list->remove(to_be_rm);
+    ListErrorCode err_val;
+    err_val=integer_list->remove(to_be_rm);
+    ASSERT_TRUE(err_val==L_NOT_EXISTS);//item doesn't exist
     ASSERT_TRUE(6==integer_list->getLen());
     to_be_rm=50;
-    integer_list->remove(to_be_rm);
+    err_val=integer_list->remove(to_be_rm);
+    ASSERT_TRUE(err_val==L_SUCCESS);//succesful rm
     ASSERT_TRUE(5==integer_list->getLen());
     ASSERT_TRUE(51==integer_list->getItem(0));
     ASSERT_TRUE(52==integer_list->getItem(1));
     to_be_rm=52;
-    integer_list->remove(to_be_rm);
+    err_val=integer_list->remove(to_be_rm);
+    ASSERT_TRUE(err_val==L_SUCCESS);//succesful rm
     ASSERT_TRUE(4==integer_list->getLen());
     ASSERT_TRUE(53==integer_list->getItem(1));
     to_be_rm=55;
-    integer_list->remove(to_be_rm);
+    err_val=integer_list->remove(to_be_rm);
+    ASSERT_TRUE(err_val==L_SUCCESS);//succesful rm
     ASSERT_TRUE(3==integer_list->getLen());
     ASSERT_TRUE(54==integer_list->getItem(2));
     to_be_rm=51;
-    integer_list->remove(to_be_rm);
+    err_val=integer_list->remove(to_be_rm);
+    ASSERT_TRUE(err_val==L_SUCCESS);//succesful rm
     ASSERT_TRUE(2==integer_list->getLen());
     ASSERT_TRUE(53==integer_list->getItem(0));
     ASSERT_TRUE(54==integer_list->getItem(1));
     to_be_rm=53;
-    integer_list->remove(to_be_rm);
+    err_val=integer_list->remove(to_be_rm);
+    ASSERT_TRUE(err_val==L_SUCCESS);//succesful rm
     ASSERT_TRUE(1==integer_list->getLen());
     ASSERT_TRUE(54==integer_list->getItem(0));
     to_be_rm=54;
-    integer_list->remove(to_be_rm);
+    err_val=integer_list->remove(to_be_rm);
+    ASSERT_TRUE(err_val==L_SUCCESS);//succesful rm
     ASSERT_TRUE(0==integer_list->getLen());
 }
 
@@ -118,6 +137,26 @@ TEST_F(ListTest,GetDataRefTest){
     ASSERT_TRUE(NULL==ptr_list->getItem(5));
     ptr_ref=arr[5];
     ASSERT_TRUE(arr[5]==ptr_list->getItem(5));
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(6);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(-1);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 
 }
 
@@ -128,23 +167,44 @@ TEST_F(ListTest,GetDataCopyTest){
     int * ptr_copy=ptr_list->getItemCopy(5);
     ptr_copy=NULL;
     ASSERT_FALSE(NULL==ptr_list->getItem(5));
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(6);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(-1);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 }
 
 TEST_F(ListTest,EmptyConstructorTest){
-    // no error
     List<int> empty_list1;
     ASSERT_TRUE(0==empty_list1.getLen());
-    // error???????????????????????
-    // List<int> empty_list1();
-    // ASSERT_TRUE(0==empty_list1.getLen());
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(0);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 }
 
 TEST_F(ListTest,CopyConstructorTest){
-    //error?????????????????????????????????????????
-    // List<int> empty_list1();
-    // int val=1;
-    // empty_list1.insert(val);
-    //--------------------------
     List<int> empty_list1;
     List<int> empty_list2(empty_list1);
     ASSERT_TRUE(0==empty_list1.getLen());
@@ -156,6 +216,16 @@ TEST_F(ListTest,CopyConstructorTest){
     ASSERT_TRUE(53==lst.getItem(3));
     ASSERT_TRUE(54==lst.getItem(4));
     ASSERT_TRUE(55==lst.getItem(5));
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(6);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 }
 
 TEST_F(ListTest,CopyTest){
@@ -172,6 +242,16 @@ TEST_F(ListTest,CopyTest){
     ASSERT_TRUE(53==lst.getItem(3));
     ASSERT_TRUE(54==lst.getItem(4));
     ASSERT_TRUE(55==lst.getItem(5));
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(6);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 }
 
 TEST_F(ListTest,AppendListTest){
@@ -195,6 +275,16 @@ TEST_F(ListTest,AppendListTest){
     ASSERT_TRUE(53==lst.getItem(6));
     ASSERT_TRUE(54==lst.getItem(7));
     ASSERT_TRUE(55==lst.getItem(8));
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(9);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 }
 
 TEST_F(ListTest,ItemExistTest){
@@ -228,4 +318,14 @@ TEST_F(ListTest,GetDataPtrTest){
     ASSERT_TRUE(NULL==ptr_list->getItem(5));
     *ptr_addr=arr[5];
     ASSERT_TRUE(arr[5]==ptr_list->getItem(5));
+    EXPECT_THROW({
+        try{
+            integer_list->getItem(6);
+        }
+        catch( const std::invalid_argument& e ){
+            // and this tests that it has the correct message
+            EXPECT_STREQ( "Index out of range", e.what() );
+            throw;
+        }
+    },std::invalid_argument);
 }
