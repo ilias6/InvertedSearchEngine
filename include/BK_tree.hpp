@@ -7,6 +7,8 @@
 
 using namespace std;
 
+enum BKErrorCode {BK_SUCCESS, BK_FAIL};
+
 typedef Entry Data;
 typedef Word Key;
 
@@ -31,15 +33,16 @@ class BKTree {
 	BKNode * root;
 	int height;
 	int(Word::*distanceFunc) (Word &);
-	void insert(BKNode **, Data *, int);
+
+	BKErrorCode insert(BKNode **, Data *, int);
 	void print(BKNode *, int);
 	List<Data *> search(BKNode *, Key *, int);
     public:
 	BKTree(int(Word::*distanceFunc) (Word &) = NULL);
 	~BKTree();
-	void destroy(BKNode *);
+	BKErrorCode destroy(BKNode *);
 	List<Data *> search(Key *, int);
-	void insert(Data *);
+	BKErrorCode insert(Data *);
 	void print();
 };
 

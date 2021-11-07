@@ -4,7 +4,7 @@
 #include "word.hpp"
 #include "entry.hpp"
 
-enum HashTabelErrorCode{H_T_SUCCESS, H_T_FAIL};
+enum HashTableErrorCode{H_T_SUCCESS, H_T_FAIL};
 class Bucket{
     private:
         List<Entry*> list; //list of Data
@@ -15,7 +15,7 @@ class Bucket{
         void copyBucket(Bucket &);
         Entry * getEntry(Word *);
         Entry * getEntry(int);
-        enum HashTabelErrorCode insert(Entry *);
+        enum HashTableErrorCode insert(Entry *);
         void print(void);
 	void printAddr();
 };
@@ -33,8 +33,8 @@ class HashTable {
         int getSize(void);
         void setSizeAndAlloc(int s);
         void setHashFunc(unsigned long (*h_f)(const char * ));
-        enum HashTabelErrorCode updateEntryPayload(Word *,int);
-        enum HashTabelErrorCode insert(Entry *);
+        enum HashTableErrorCode updateEntryPayload(Word *,int);
+        enum HashTableErrorCode insert(Entry *);
         Entry* getEntry(Word *);//ultra fail function
         void print(void);
 	void printAddr();

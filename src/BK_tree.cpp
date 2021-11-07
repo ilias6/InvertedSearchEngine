@@ -16,22 +16,24 @@ BKTree::~BKTree() {
     destroy(this->root);
 }
 
-void BKTree::destroy(BKNode * node) {
+BKErrorCode BKTree::destroy(BKNode * node) {
     if (node == NULL)
-        return;
+        return BK_SUCCESS;
 
     List<BKNode *> & children = node->getChildren();
     int childrenNum = children.getLen();
     for (int i = 0; i < childrenNum; ++i) {
         BKNode * n = children.getItem(i);
-        destroy(n);
+        if (destroy(n) == BK_FAIL)
+	    return BK_FAIL;
     }
 
     delete node;
+    return BK_SUCCESS;
 }
 
-void BKTree::insert(Data * data) {
-    insert(&this->root, data, 0);
+BKErrorCode BKTree::insert(Data * data) {
+    return insert(&this->root, data, 0);
 }
 
 void BKTree::print() {
@@ -65,10 +67,15 @@ void BKTree::print(BKNode * node, int tabsNum) {
     cout << "Next branch: " << endl;
 }
 
-void BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
+BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
     if (*node == NULL) {
-        *node = new BKNode(data, distWithParent);
-        return;
+        try {
+	    *node = new BKNode(data, distWithParent);
+	}
+	catch (bad_alloc & exc) {
+	    return BK_FAIL;
+	}
+        return BK_SUCCESS;
     }
 
     Word * word1 = &data->getWord();
@@ -82,14 +89,14 @@ void BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
         BKNode * n = children.getItem(i);
         int childDist = n->getDist();
         if (distWithThisNode == childDist) {
-            insert(&n, data, distWithThisNode);
-            return;
+            return insert(&n, data, distWithThisNode);
         }
     }
 
     BKNode * newBranchNode = NULL;
     insert(&newBranchNode, data, distWithThisNode);
     children.insert(newBranchNode);
+    return BK_SUCCESS;
 }
 
 List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
