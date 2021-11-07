@@ -12,7 +12,7 @@ EntryList::~EntryList(){
 
 }
 
-entryListErrorCode EntryList::insert(Query &q){
+EntryListErrorCode EntryList::insert(Query &q){
     int len=q.getWordsInQuery();
     int id=q.getId();
 
@@ -22,7 +22,7 @@ entryListErrorCode EntryList::insert(Query &q){
     return E_L_SUCCESS;
 }
 
-entryListErrorCode EntryList::remove(Query &q){
+EntryListErrorCode EntryList::remove(Query &q){
     return E_L_SUCCESS;
 }
 
@@ -35,7 +35,7 @@ Entry * EntryList::getItemPtr(int i) {
     return this->list.getItemPtr(i);
 }
 
-entryListErrorCode EntryList::insert(Word *w,int id){
+EntryListErrorCode EntryList::insert(Word *w,int id){
     Entry *e;
     e=hashtable.getEntry(w);
     //if word does not exist
@@ -52,7 +52,7 @@ entryListErrorCode EntryList::insert(Word *w,int id){
     hashtable.updateEntryPayload(w,id);
     return E_L_SUCCESS;
 }
-entryListErrorCode EntryList::remove(Word *,int){
+EntryListErrorCode EntryList::remove(Word *,int){
     return E_L_SUCCESS;
 }
 int EntryList::getLen(){

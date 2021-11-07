@@ -6,20 +6,20 @@
 #include "word.hpp"
 #include "query.hpp"
 
-enum entryListErrorCode {E_L_SUCCESS, E_L_FAIL};
+enum EntryListErrorCode {E_L_SUCCESS, E_L_FAIL};
 
 class EntryList{
     private:
         HashTable hashtable;
         List<Entry> list;
-        entryListErrorCode insert(Word *,int);
-        entryListErrorCode remove(Word *,int);
+        EntryListErrorCode insert(Word *,int);
+        EntryListErrorCode remove(Word *,int);
     public:
         EntryList();
         ~EntryList();
-        entryListErrorCode insert(Query &);
+        EntryListErrorCode insert(Query &);
         Entry * getItemPtr(int);
-        entryListErrorCode remove(Query &);
+        EntryListErrorCode remove(Query &);
         HashTable & getHashTable();
         int getLen();
         void print();
