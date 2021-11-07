@@ -9,6 +9,7 @@ using namespace std;
 BKTree::BKTree(int(Word::*distanceFunc) (Word &)) {
     this->root = NULL;
     this->height = 0;
+    this->size=0;
     this->distanceFunc = distanceFunc;
 }
 
@@ -44,7 +45,9 @@ void printTabs(int tabsNum) {
     for (int i = 0; i < tabsNum; ++i)
         cout << "\t";
 }
-
+int BKTree::getSize(void){
+    return this->size;
+}
 void BKTree::print(BKNode * node, int tabsNum) {
     if (node == NULL)
         return;
@@ -75,6 +78,7 @@ BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
 	catch (bad_alloc & exc) {
 	    return BK_FAIL;
 	}
+        this->size++;
         return BK_SUCCESS;
     }
 
@@ -134,7 +138,7 @@ List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
 
 List<Data *> BKTree::search(Key * key, int n) {
     List<Data *> res = search(this->root, key, n);
-    return res; 
+    return res;
 }
 
 BKNode::BKNode(Data * data, int distance):children() {

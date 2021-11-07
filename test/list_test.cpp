@@ -32,14 +32,17 @@ class ListTest: public ::testing::Test {
         virtual void SetUp(){
             // for constructor assertion
             // for int list
+            ListErrorCode err_val1,err_val2;
             integer_list=new List<int>;
             ptr_list=new List<int*>;
             arr=new int*[6];
             for(int i=0;i<6;i++)
                 arr[i]=new int(50+i);
             for(int i=0;i<6;i++){
-                integer_list->insert(*arr[i]);
-                ptr_list->insert(arr[i]);
+                err_val1=integer_list->insert(*arr[i]);
+                ASSERT_TRUE(err_val1==L_SUCCESS);//succesful rm
+                err_val2=ptr_list->insert(arr[i]);
+                ASSERT_TRUE(err_val2==L_SUCCESS);//succesful rm
             }
         }
 
@@ -61,10 +64,11 @@ TEST_F(ListTest,InsertTest){
     ASSERT_TRUE(53==integer_list->getItem(3));
     ASSERT_TRUE(54==integer_list->getItem(4));
     ASSERT_TRUE(55==integer_list->getItem(5));
-
+    ListErrorCode err_val;
     int *val;
     int new_insert_val=800;
-    integer_list->insert(new_insert_val,&val);
+    err_val=integer_list->insert(new_insert_val,&val);
+    ASSERT_TRUE(err_val==L_SUCCESS);//succesful insert
     ASSERT_TRUE(7==integer_list->getLen());
     ASSERT_TRUE(800==integer_list->getItem(6));
     ASSERT_TRUE(800==*val);
