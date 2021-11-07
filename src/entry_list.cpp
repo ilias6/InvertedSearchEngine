@@ -12,17 +12,18 @@ EntryList::~EntryList(){
 
 }
 
-int EntryList::insert(Query &q){
+entryListErrorCode EntryList::insert(Query &q){
     int len=q.getWordsInQuery();
     int id=q.getId();
 
     for(int i=0;i<len;i++)
-        this->insert(q.getWord(i),id);
-    return 0;
+        if (this->insert(q.getWord(i),id) == FAIL)
+	    return FAIL;
+    return SUCCESS;
 }
 
-int EntryList::remove(Query &q){
-return 0;
+entryListErrorCode EntryList::remove(Query &q){
+    return SUCCESS;
 }
 HashTable & EntryList::getHashTable(){
     return hashtable;
@@ -33,7 +34,7 @@ Entry * EntryList::getItemPtr(int i) {
     return this->list.getItemPtr(i);
 }
 
-int EntryList::insert(Word *w,int id){
+entryListErrorCode EntryList::insert(Word *w,int id){
     Entry *e;
     e=hashtable.getEntry(w);
     //if word does not exist
@@ -42,14 +43,14 @@ int EntryList::insert(Word *w,int id){
         Entry tmp(*w,id);
         list.insert(tmp,&e);
         hashtable.insert(e);
-        return 0;
+        return SUCCESS;
     }
     // else update payload
     hashtable.updateEntryPayload(w,id);
-    return 0;
+    return SUCCESS;
 }
-int EntryList::remove(Word *,int){
-    return 0;
+entryListErrorCode EntryList::remove(Word *,int){
+    return SUCCESS;
 }
 int EntryList::getLen(){
     return list.getLen();
