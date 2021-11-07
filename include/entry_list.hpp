@@ -6,7 +6,7 @@
 #include "word.hpp"
 #include "query.hpp"
 
-enum entryListErrorCode {SUCCESS, FAIL}
+enum entryListErrorCode {E_L_SUCCESS, E_L_FAIL};
 
 class EntryList{
     private:

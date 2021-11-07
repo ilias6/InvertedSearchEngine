@@ -16,9 +16,9 @@ void Bucket::copyBucket(Bucket &b2){
     this->list.copyList(b2.list);
 }
 
-enum htable_retval Bucket::insert(Entry * e){
+enum hashTableErrorCode Bucket::insert(Entry * e){
     list.insert(e);
-    return SUCCESS;
+    return H_T_SUCCESS;
 }
 
 Entry * Bucket::getEntry(int indx){
@@ -105,22 +105,22 @@ void HashTable::setHashFunc(unsigned long (*h_f)(const char *)){
     this->hash_func=h_f;
 }
 
-enum htable_retval HashTable::insert(Entry * e){
+enum hashTableErrorCode HashTable::insert(Entry * e){
     //insert just inserts entry in hashtable
     unsigned long hash= this->hash_func((e->getWord()).getStr());
     int bucket_index=hash%this->size;
     return this->array[bucket_index].insert(e);
 }
 
-enum htable_retval HashTable::updateEntryPayload(Word *w,int payload){
+enum hashTableErrorCode HashTable::updateEntryPayload(Word *w,int payload){
     unsigned long hash= this->hash_func(w->getStr());
     int bucket_index=hash%this->size;
     Entry *to_be_updated=this->array[bucket_index].getEntry(w);
     if(to_be_updated==NULL)
-        return FAILURE;
+        return H_T_FAIL;
 
     to_be_updated->addToPayload(payload);
-    return SUCCESS;
+    return H_T_SUCCESS;
 }
 
 void HashTable::print(void){

@@ -17,14 +17,15 @@ entryListErrorCode EntryList::insert(Query &q){
     int id=q.getId();
 
     for(int i=0;i<len;i++)
-        if (this->insert(q.getWord(i),id) == FAIL)
-	    return FAIL;
-    return SUCCESS;
+        if (this->insert(q.getWord(i),id) == E_L_FAIL)
+	    return E_L_FAIL;
+    return E_L_SUCCESS;
 }
 
 entryListErrorCode EntryList::remove(Query &q){
-    return SUCCESS;
+    return E_L_SUCCESS;
 }
+
 HashTable & EntryList::getHashTable(){
     return hashtable;
 }
@@ -41,16 +42,18 @@ entryListErrorCode EntryList::insert(Word *w,int id){
     if(e==NULL){
         // add it to list and then to hashtable
         Entry tmp(*w,id);
-        list.insert(tmp,&e);
-        hashtable.insert(e);
-        return SUCCESS;
+        if (list.insert(tmp,&e) == L_FAIL)
+	    return E_L_FAIL;
+        if (hashtable.insert(e) == H_T_FAIL)
+	    return E_L_FAIL;
+        return E_L_SUCCESS;
     }
     // else update payload
     hashtable.updateEntryPayload(w,id);
-    return SUCCESS;
+    return E_L_SUCCESS;
 }
 entryListErrorCode EntryList::remove(Word *,int){
-    return SUCCESS;
+    return E_L_SUCCESS;
 }
 int EntryList::getLen(){
     return list.getLen();

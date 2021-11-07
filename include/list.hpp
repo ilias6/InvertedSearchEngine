@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-enum listErrorCode {SUCCESS, FAIL, EMPTY, NOT_EXISTS}
+enum listErrorCode { L_SUCCESS, L_FAIL, L_EMPTY, L_NOT_EXISTS};
 
 using namespace std;
 
@@ -37,7 +37,7 @@ class List {
 	void print() const;
 	void printAddr() const;
 	int getLen() const;
-    	void copyList(List &);
+    	listErrorCode copyList(List &);
 	listErrorCode insert(T&, T ** t = NULL);
 	listErrorCode append(List<T> *);
 	bool exists(T&) const;
@@ -82,7 +82,7 @@ List<T>::List(const List & lst) {
 }
 
 template <typename T>
-void List<T>::copyList(List & lst) {
+listErrorCode List<T>::copyList(List & lst) {
     if(this->len!=0){
         ListNode<T> * lst_currentNode = this->head;
         while(lst_currentNode!=NULL){
@@ -97,22 +97,34 @@ void List<T>::copyList(List & lst) {
     if (lst.head == NULL) {
         this->head = NULL;
 	this->tail = NULL;
-        return;
+        return L_SUCCESS;
     }
 
     // create new root:
-    this->head = new ListNode<T>(lst.head->getData());
+    try {
+	this->head = new ListNode<T>(lst.head->getData());
+    }
+    catch (bad_alloc & exc) {
+	return L_FAIL; 	
+    }
 
     ListNode<T> * lst_currentNode = lst.head;
     ListNode<T> * this_currentNode = this->head;
     while (lst_currentNode->getNext() != NULL) {
         // create new successor:
-        ListNode<T> * newNode = new ListNode<T>(lst_currentNode->getNext()->getData());
+        ListNode<T> * newNode = NULL;
+	try {
+	    newNode = new ListNode<T>(lst_currentNode->getNext()->getData());
+	}
+	catch (bad_alloc & exc) {
+	    return L_FAIL;
+	}
         this_currentNode->setNext(newNode);
         this_currentNode = this_currentNode->getNext();
         lst_currentNode = lst_currentNode->getNext();
     }
     this->tail = this_currentNode;
+    return L_SUCCESS;
     //cout << "List Copied!\n";
 }
 
@@ -196,10 +208,10 @@ listErrorCode List<T>::append(List<T> * lst) {
     int len = lst->getLen();
     for (int i = 0; i < len; ++i) {
         T & item = lst->getItem(i);
-	    if (this->insert(item) == FAIL)
-		return FAIL;
+	    if (this->insert(item) == L_FAIL)
+		return L_FAIL;
     }
-    return SUCCESS;
+    return L_SUCCESS;
     /*
     if (lst.head == NULL)
 	return;
@@ -216,7 +228,7 @@ listErrorCode List<T>::insert(T & item, T ** itemPtr) {
 	node = new ListNode<T>(item);
     } 
     catch (bad_alloc & exc) {
-	return FAIL;
+	return L_FAIL;
     }
 
     if(itemPtr != NULL)
@@ -226,18 +238,19 @@ listErrorCode List<T>::insert(T & item, T ** itemPtr) {
 	this->head = node;
 	this->tail = node;
 	this->len = 1;
-	return SUCCESS;
+	return L_SUCCESS;
     }
 
     this->tail->setNext(node);
     this->tail = node;
     this->len++;
+    return L_SUCCESS;
 }
 
 template <typename T>
 listErrorCode List<T>::remove(T& item) {
     if (this->head == NULL) {
-	return EMPTY;
+	return L_EMPTY;
     }
 
     if (this->head->getData() == item) {
@@ -247,7 +260,7 @@ listErrorCode List<T>::remove(T& item) {
 	this->len--;
 	if (this->len == 0)
 	    this->tail = NULL;
-	return SUCCESS;
+	return L_SUCCESS;
     }
 
     ListNode<T> * n1 = this->head;
@@ -259,12 +272,12 @@ listErrorCode List<T>::remove(T& item) {
 		this->tail = n1;
 	    delete n2;
 	    this->len--;
-	    return SUCCESS;
+	    return L_SUCCESS;
 	}
 	n1 = n2;
 	n2 = n2->getNext();
     }
-    return NOT_EXISTS
+    return L_NOT_EXISTS;
 
 }
 
