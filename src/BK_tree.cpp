@@ -8,7 +8,6 @@ using namespace std;
 
 BKTree::BKTree(int(Word::*distanceFunc) (Word &)) {
     this->root = NULL;
-    this->height = 0;
     this->size=0;
     this->distanceFunc = distanceFunc;
 }
@@ -34,6 +33,17 @@ BKErrorCode BKTree::destroy(BKNode * node) {
 }
 
 BKErrorCode BKTree::insert(Data * data) {
+    //this is useful for hamming dist
+    //ex. if the tree contains words with len 3 and a word of
+    //    bigger len is to be inserted then DONT INSERT
+    if(this->root!=NULL){
+        Word * word1 = &data->getWord();
+        Word * word2 = &root->getData()->getWord();
+        //int distWithThisNode = invoke(distanceFunc, *word1, *word2);
+        int distWithThisNode = CALL_MEMBER_FN(*word1, distanceFunc)(*word2);
+        if(distWithThisNode<0)
+            return BK_FAIL;
+    }
     return insert(&this->root, data, 0);
 }
 
@@ -48,6 +58,8 @@ void printTabs(int tabsNum) {
 int BKTree::getSize(void){
     return this->size;
 }
+
+
 void BKTree::print(BKNode * node, int tabsNum) {
     if (node == NULL)
         return;
@@ -137,6 +149,11 @@ List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
 }
 
 List<Data *> BKTree::search(Key * key, int n) {
+    if(n<0){
+        List<Data *> empty_list;
+        return empty_list;
+    }
+
     List<Data *> res = search(this->root, key, n);
     return res;
 }

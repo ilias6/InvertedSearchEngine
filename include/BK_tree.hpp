@@ -32,7 +32,7 @@ class BKTree {
     private:
         int size;
 	BKNode * root;
-	int height;
+	// int height;
 	int(Word::*distanceFunc) (Word &);
 
 	BKErrorCode insert(BKNode **, Data *, int);

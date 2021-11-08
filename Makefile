@@ -33,10 +33,10 @@ $(BDIR)out: $(OBJ) $(ODIR)main.o
 	$(++) -o $@ $^ $(CFLAGS)
 
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
-	$(++) -c -o $@ $< $(TESTFLAGS)
+	$(++) -Wall -c -o $@ $< $(TESTFLAGS)
 
 $(ODIR)%.o: $(SDIR)%.cpp $(DEPS)
-	$(++) -c -o $@ $< $(CFLAGS)
+	$(++) -Wall -c -o $@ $< $(CFLAGS)
 
 
 directories:
