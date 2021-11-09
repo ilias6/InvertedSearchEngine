@@ -3,6 +3,8 @@
 #include "../include/hash_functions.hpp"
 #include "../include/entry.hpp"
 #include <stdexcept>
+#include <iostream>
+using namespace std;
 
 class HashTableTest: public ::testing::Test {
     protected:
@@ -39,15 +41,61 @@ class HashTableTest: public ::testing::Test {
 };
 
 TEST_F(HashTableTest, InsertTest) {
-    // added int size to tree to hold num of nodes to test insert
-    HashTable hTable(7, djb2);
-    HashTableErrorCode errorVal;
+    //HashTable hTable(7, djb2);
+    //HashTableErrorCode errorVal;
 
     for(int i = 0; i < numOfEntries; i++) {
-        errorVal = hTable.insert(entryPtrs[i]);
-        checkInsert(&hTable, i, entryPtrs, errorVal);
+        //errorVal = hTable.insert(entryPtrs[i]);
+        checkInsert(this->hTable, i, entryPtrs, H_T_SUCCESS);
+    }
+}
+
+TEST_F(HashTableTest, GetEntry) {
+    const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
+    "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
+    
+    HashTable hTable(7, djb2);
+    List<Entry> entryList;
+    for (int i = 0; i < this->numOfEntries; ++i) {
+	Entry e(strArr[i], i);
+	entryList.insert(e);
+	Entry * ePtrOrigin = &entryList.getItem(i);
+	HashTableErrorCode errorVal = hTable.insert(ePtrOrigin);
+        ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
+	Entry * ePtrHTable = hTable.getEntry(&e.getWord());
+	ASSERT_TRUE(ePtrHTable == ePtrOrigin);	
+    }
+
+    const char strArr2[][5]={"aaaa", "ab", "bb", "b", "a", "baba",};
+    for (int i = 0; i < 6; ++i) {
+	Entry e(strArr2[i], i);
+	Entry * ePtrHTable = hTable.getEntry(&e.getWord());
+	ASSERT_TRUE(ePtrHTable == NULL);	
     }
 }
 
 
+TEST_F(HashTableTest, updateEntryPayload) {
+    for (int i = 0; i < this->numOfEntries; ++i) {
+	HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), i+1);
+        ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
+	int n1 = 57;
+	errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), n1);
+        ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
+
+	Entry * ePtrHTable = this->hTable->getEntry(&this->entryPtrs[i]->getWord());
+	List <int> payload2(ePtrHTable->getPayload());
+
+	List <int> payload1;
+	payload1.insert(i);
+	int n2 = i+1;
+	payload1.insert(n2);
+	payload1.insert(n1);
+	int len = payload1.getLen();
+
+	ASSERT_TRUE(len == payload2.getLen());
+	for (int j = 0; j < len; ++j)
+	    ASSERT_TRUE(payload1.getItem(j) == payload2.getItem(j));
+    }
+}
 
