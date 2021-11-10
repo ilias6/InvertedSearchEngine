@@ -50,6 +50,9 @@ TEST_F(HashTableTest, InsertTest) {
     }
 }
 
+/* Bucket::getEntry needs to be tested only*/
+/* 
+
 TEST_F(HashTableTest, GetEntry) {
     const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
@@ -74,6 +77,7 @@ TEST_F(HashTableTest, GetEntry) {
     }
 }
 
+*/
 
 TEST_F(HashTableTest, updateEntryPayload) {
     for (int i = 0; i < this->numOfEntries; ++i) {
@@ -99,3 +103,53 @@ TEST_F(HashTableTest, updateEntryPayload) {
     }
 }
 
+TEST(BucketTest, getEntry) {
+    Bucket b;
+    List<Entry> entryList;
+
+    Word w("test");
+    Entry * ePtrBucket = b.getEntry(&w);
+    ASSERT_TRUE(ePtrBucket == NULL);	
+
+    const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
+    "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
+
+    for (int i = 0; i < 16; ++i) {
+	Entry e(strArr[i], i);
+	Entry * ePtrOrigin = NULL;
+	entryList.insert(e, &ePtrOrigin);
+	HashTableErrorCode errorVal = b.insert(ePtrOrigin);
+        ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
+	ASSERT_TRUE(i+1 == b.bucketSize());
+	Entry * ePtrBucket = b.getEntry(&e.getWord());
+	ASSERT_TRUE(ePtrBucket == ePtrOrigin);	
+    }
+
+    ePtrBucket = b.getEntry(&w);
+    Entry * ePtrOrigin = entryList.getItemPtr(11);
+    ASSERT_TRUE(ePtrBucket == ePtrOrigin);	
+    
+    Word w2("testing");
+    ePtrBucket = b.getEntry(&w2);
+    ASSERT_TRUE(ePtrBucket == NULL);	
+}
+
+TEST(BucketTest, Insert) {
+    Bucket b;
+    List<Entry> entryList;
+
+    const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
+    "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
+
+    for (int i = 0; i < 16; ++i) {
+	Entry e(strArr[i], i);
+	Entry * ePtrOrigin = NULL;
+	entryList.insert(e, &ePtrOrigin);
+	HashTableErrorCode errorVal = b.insert(ePtrOrigin);
+        ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
+	List <Entry *> lst = b.getListCopy();
+	ASSERT_TRUE(i+1 == lst.getLen());
+	Entry * ePtrBucket = lst.getItem(i);
+	ASSERT_TRUE(ePtrBucket == ePtrOrigin);	
+    }
+}

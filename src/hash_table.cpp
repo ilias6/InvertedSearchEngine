@@ -12,6 +12,11 @@ int Bucket::bucketSize(){
     return this->list.getLen();
 }
 
+
+Bucket::Bucket(Bucket & b) {
+    this->list.copyList(b.list);
+}
+
 void Bucket::copyBucket(Bucket &b2){
     this->list.copyList(b2.list);
 }
@@ -19,6 +24,11 @@ void Bucket::copyBucket(Bucket &b2){
 enum HashTableErrorCode Bucket::insert(Entry * e){
     list.insert(e);
     return H_T_SUCCESS;
+}
+
+// used for testing
+List<Entry *> Bucket::getListCopy() {
+    return this->list;
 }
 
 Entry * Bucket::getEntry(int indx){
@@ -86,6 +96,12 @@ void HashTable::deleteData(){
     }
 }
 
+// used for testing
+Bucket HashTable::getBucketCopy(Word * w) { 
+    unsigned long hash = this->hash_func(w->getStr());
+    int bucket_index = hash%this->size;
+    return this->array[bucket_index];
+}
 
 // ultra fail function
 Entry * HashTable::getEntry(Word * w) {

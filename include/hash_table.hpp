@@ -12,7 +12,9 @@ class Bucket{
         Bucket();
         // ~Bucket();
         int bucketSize();
+	Bucket(Bucket &);
         void copyBucket(Bucket &);
+	List<Entry *> getListCopy();
         Entry * getEntry(Word *);
         Entry * getEntry(int);
         enum HashTableErrorCode insert(Entry *);
@@ -35,6 +37,7 @@ class HashTable {
         void setHashFunc(unsigned long (*h_f)(const char * ));
         enum HashTableErrorCode updateEntryPayload(Word *,int);
         enum HashTableErrorCode insert(Entry *);
+	Bucket getBucketCopy(Word *);
         Entry* getEntry(Word *);//ultra fail function
         void print(void);
 	void printAddr();
