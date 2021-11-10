@@ -17,11 +17,22 @@
 
 using namespace std;
 
+#define QUERY_FILES_NUM 10000
+
 int main(int argc, char * argv[]) {
 
-    const char * p = "input/words3";
+    char ** paths = new char*[QUERY_FILES_NUM];
+    for (int i = 0; i < QUERY_FILES_NUM; ++i) {
+	paths[i] = new char[32];
+	sprintf(paths[i], "./input/queries/query_%d\0", i);
+    }
      
-    Query ** qs = makeQueries(&p, 1);
+    Query ** qs = makeQueries(paths, QUERY_FILES_NUM);
+
+    for (int i = 0; i < QUERY_FILES_NUM; ++i)
+	delete[] paths[i];
+    delete[] paths;
+
     EntryList * eList = makeEntryList(qs, 1);
     Index * idx = makeIndex(MT_HAMMING_DIST, eList);
 

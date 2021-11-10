@@ -2,11 +2,11 @@
 #include "../include/entry_list.hpp"
 #include "../include/hash_table.hpp"
 #include "../include/hash_functions.hpp"
+#include "../include/utils.hpp"
+
 using namespace std;
 
-EntryList::EntryList():hashtable(10003, djb2), list(){
-
-}
+EntryList::EntryList(int n):hashtable(findNextPrime(n), djb2), list(){}
 
 EntryList::~EntryList(){
 

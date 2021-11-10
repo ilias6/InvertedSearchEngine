@@ -20,7 +20,7 @@ class Index {
 	HashTable *hTable;
         IndexErrorCode insertFromList(EntryList &);
     public:
-        Index(EntryList &,MatchType);
+        Index(EntryList &, MatchType);
         List<Entry *> search(Word *, int n = 0);
         ~Index();
 };

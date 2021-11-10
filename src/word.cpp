@@ -38,7 +38,7 @@ Word::~Word() {
 
 void Word::set(const char * s) {
     if (this->str != NULL)
-	   delete this->str;
+	   delete[] this->str;
     if (s != NULL) {
 	       this->len = strlen(s);
 	       this->str = new char[this->len+1];

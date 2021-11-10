@@ -12,14 +12,15 @@ class EntryList{
     private:
         HashTable hashtable;
         List<Entry> list;
-        EntryListErrorCode insert(Word *,int);
-        EntryListErrorCode remove(Word *,int);
+
+        EntryListErrorCode insert(Word *, int);
+        EntryListErrorCode remove(Word *, int);
     public:
-        EntryList();
+        EntryList(int);
         ~EntryList();
         EntryListErrorCode insert(Query &);
-        Entry * getItemPtr(int);
         EntryListErrorCode remove(Query &);
+        Entry * getItemPtr(int);
         HashTable & getHashTable();
         int getLen();
         void print();

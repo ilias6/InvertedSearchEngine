@@ -12,7 +12,8 @@
 bool isPrime(int);
 int findNextPrime(int);
 bool charInWhitespace(char c);
-Query ** makeQueries(const char **, int);
+// Query ** makeQueries(const char *);
+Query ** makeQueries(char **, int);
 void destroyQueries(Query **, int);
 Index * makeIndex(MatchType, EntryList *);
 void multipleSearch(Index *, Word **, int, int);

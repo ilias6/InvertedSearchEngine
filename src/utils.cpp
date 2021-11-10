@@ -33,7 +33,13 @@ bool charInWhitespace(char c){
     return false;
 }
 
-Query ** makeQueries(const char ** paths, int pathsNum) {
+/*
+Query ** makeQueries(const char * path) {
+     
+}
+*/
+
+Query ** makeQueries(char ** paths, int pathsNum) {
     Query ** qs = new Query*[pathsNum];
     for (int i = 0; i < pathsNum; ++i)
 	qs[i] = new Query(i, paths[i]);
@@ -51,7 +57,9 @@ EntryList * makeEntryList(Query ** qs, int qNum) {
     time_t cur;
     cur = time(NULL);
     cout << "###########################\nBuilding entry list in: ";
-    EntryList * eList = new EntryList();
+    // This is the correct one
+    //EntryList * eList = new EntryList(qNum*MAX_QUERY_WORDS);
+    EntryList * eList = new EntryList(10000);
     for (int i = 0; i < qNum; ++i)
 	eList->insert(*qs[i]); 
     float elapsed = time(NULL) - cur;
