@@ -21,17 +21,20 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-    char ** paths = new char*[QUERY_FILES_NUM];
+    char * paths[32] = new char*[QUERY_FILES_NUM];
     for (int i = 0; i < QUERY_FILES_NUM; ++i) {
 	paths[i] = new char[32];
 	sprintf(paths[i], "./input/queries/query_%d\0", i);
     }
      
+    cout << "Paths read!\n";
     Query ** qs = makeQueries(paths, QUERY_FILES_NUM);
 
+    /*
     for (int i = 0; i < QUERY_FILES_NUM; ++i)
 	delete[] paths[i];
     delete[] paths;
+    */
 
     EntryList * eList = makeEntryList(qs, 1);
     Index * idx = makeIndex(MT_HAMMING_DIST, eList);
