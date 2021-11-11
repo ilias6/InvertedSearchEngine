@@ -112,7 +112,7 @@ VectorErrorCode Vector<T>::append(Vector<T> * vec) {
     if(this->len!=0)
         memcpy(this->arr,tmp,this->len*sizeof(T));
     if(vec->len!=0)
-        memcpy(&this->arr[this->len],vec->arr,vec->len);
+        memcpy(&this->arr[this->len],vec->arr,vec->len*sizeof(T));
     delete[] tmp;
     this->len+=vec->len;
     return V_SUCCESS;
