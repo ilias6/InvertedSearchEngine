@@ -78,6 +78,9 @@ Index::~Index() {
     }
 }
 
+MatchType Index::getType() {
+    return this->type;
+}
 
 List<Entry *> Index::search(Word * w, int n) {
     List<Entry *> results;

@@ -17,13 +17,13 @@ class BKNode {
 	Data * data;
 	int dist;
 	//BKNode * parent;
-	List<BKNode *> children;
+	Vector<BKNode *> children;
     public:
 	BKNode(Data *, int);
 	~BKNode();
 	Data * getData();
 	int getDist();
-	List<BKNode *> & getChildren();
+	Vector<BKNode *> & getChildren();
 	void print();
 
 };

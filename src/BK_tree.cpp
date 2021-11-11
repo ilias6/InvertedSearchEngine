@@ -20,7 +20,7 @@ BKErrorCode BKTree::destroy(BKNode * node) {
     if (node == NULL)
         return BK_SUCCESS;
 
-    List<BKNode *> & children = node->getChildren();
+    Vector<BKNode *> & children = node->getChildren();
     int childrenNum = children.getLen();
     for (int i = 0; i < childrenNum; ++i) {
         BKNode * n = children.getItem(i);
@@ -64,7 +64,7 @@ void BKTree::print(BKNode * node, int tabsNum) {
     if (node == NULL)
         return;
 
-    List<BKNode *> & children = node->getChildren();
+    Vector<BKNode *> & children = node->getChildren();
     int childrenNum = children.getLen();
     printTabs(tabsNum);
     cout << "Children: " << endl;
@@ -99,7 +99,7 @@ BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
     //int distWithThisNode = invoke(distanceFunc, *word1, *word2);
     int distWithThisNode = CALL_MEMBER_FN(*word1, distanceFunc)(*word2);
 
-    List<BKNode *> & children = (*node)->getChildren();
+    Vector<BKNode *> & children = (*node)->getChildren();
     int childrenNum = children.getLen();
     for (int i = 0; i < childrenNum; ++i) {
         BKNode * n = children.getItem(i);
@@ -133,7 +133,7 @@ List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
     int lowerBound = d-n;
     int upperBound = d+n;
 
-    List<BKNode *> & children = node->getChildren();
+    Vector<BKNode *> & children = node->getChildren();
     int childrenNum = children.getLen();
     for (int i = 0; i < childrenNum; ++i) {
         BKNode * childNode = children.getItem(i);
@@ -173,7 +173,7 @@ int BKNode::getDist() {
     return this->dist;
 }
 
-List<BKNode *> & BKNode::getChildren() {
+Vector<BKNode *> & BKNode::getChildren() {
     return this->children;
 }
 

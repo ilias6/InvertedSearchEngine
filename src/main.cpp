@@ -21,38 +21,43 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-    char * paths[32] = new char*[QUERY_FILES_NUM];
+    char ** paths = new char*[QUERY_FILES_NUM];
     for (int i = 0; i < QUERY_FILES_NUM; ++i) {
 	paths[i] = new char[32];
 	sprintf(paths[i], "./input/queries/query_%d\0", i);
     }
      
-    cout << "Paths read!\n";
     Query ** qs = makeQueries(paths, QUERY_FILES_NUM);
 
-    /*
     for (int i = 0; i < QUERY_FILES_NUM; ++i)
 	delete[] paths[i];
     delete[] paths;
-    */
 
-    EntryList * eList = makeEntryList(qs, 1);
-    Index * idx = makeIndex(MT_HAMMING_DIST, eList);
+    EntryList * eList = makeEntryList(qs, QUERY_FILES_NUM);
+
+    Index * hammingIndex = makeIndex(MT_HAMMING_DIST, eList);
+    Index * editIndex = makeIndex(MT_EDIT_DIST, eList);
+    Index * hashIndex = makeIndex(MT_EXACT_MATCH, eList);
 
     int threshold = 2;
     int numOfWords = 5;
     Word ** wordsToSearch = new Word*[numOfWords];
     srand((unsigned)time(NULL) * getpid());  
-    for (int i = 0; i < numOfWords; ++i) {
+    wordsToSearch[0] = new Word("hel");
+    for (int i = 1; i < numOfWords; ++i) {
 	char * str = genRandStr(1+rand()%10);
 	wordsToSearch[i] = new Word(str);
 	delete[] str;
     }
 
-    multipleSearch(idx, wordsToSearch, numOfWords, threshold);
+    multipleSearch(hashIndex, wordsToSearch, numOfWords, threshold);
+    multipleSearch(editIndex, wordsToSearch, numOfWords, threshold);
+    multipleSearch(hammingIndex, wordsToSearch, numOfWords, threshold);
     
-    destroyQueries(qs, 1);
-    delete idx;
+    destroyQueries(qs, QUERY_FILES_NUM);
+    delete hammingIndex;
+    delete editIndex;
+    delete hashIndex;
     for (int i = 0; i < numOfWords; ++i)
 	delete wordsToSearch[i];
     delete[] wordsToSearch;

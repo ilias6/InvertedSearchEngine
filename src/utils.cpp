@@ -40,9 +40,11 @@ Query ** makeQueries(const char * path) {
 */
 
 Query ** makeQueries(char ** paths, int pathsNum) {
+    cout << "^^^^^^^^^^^^^^^^^^^^^^^^^\nReading queries..." << endl;
     Query ** qs = new Query*[pathsNum];
     for (int i = 0; i < pathsNum; ++i)
 	qs[i] = new Query(i, paths[i]);
+    cout << "Done!\n^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
 
     return qs;
 }
@@ -64,18 +66,23 @@ EntryList * makeEntryList(Query ** qs, int qNum) {
 	eList->insert(*qs[i]); 
     float elapsed = time(NULL) - cur;
     elapsed /= 60;
-    cout << elapsed << " minutes\n###########################\n";
+    cout << elapsed << " minutes\n###########################\n\n";
     return eList;
 }
 
 Index * makeIndex(MatchType type, EntryList * eList) {
     time_t cur;
     cur = time(NULL);
-    cout << "---------------------------\nBuilding index in: ";
+    if (type == MT_HAMMING_DIST)
+    	cout << "---------------------------\nBuilding hamming-distance index in: ";
+    else if (type == MT_EDIT_DIST)
+    	cout << "---------------------------\nBuilding edit-distance index in: ";
+    else
+    	cout << "---------------------------\nBuilding exact-match index in: ";
     Index * index = new Index(*eList, type); 
     float elapsed = time(NULL) - cur;
     elapsed /= 60;
-    cout << elapsed << " minutes\n---------------------------\n";
+    cout << elapsed << " minutes\n---------------------------\n\n";
     return index;
 }
 
@@ -94,6 +101,12 @@ void search(Index * index, Word * word, int threshold) {
 
 void multipleSearch(Index * index, Word ** words, int wordsNum, int threshold) {
 
+    if (index->getType() == MT_HAMMING_DIST)
+    	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in hamming-distance index:\n";
+    else if (index->getType() == MT_EDIT_DIST)
+    	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in edit-distance index:\n";
+    else
+    	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in exact-match index:\n";
     for (int i = 0; i < wordsNum; ++i) {
 	time_t cur;
 	cur = time(NULL);
@@ -103,14 +116,17 @@ void multipleSearch(Index * index, Word ** words, int wordsNum, int threshold) {
 	elapsed /= 60;
 	cout << "In :" << elapsed << " minutes\n***************************\n";
     }
-
+    cout << endl;
 }
 
 char * genRandStr(const int len) {
     static const char alpha[] = "abcdefghijklmnopqrstuvwxyz";
     char * str = new char[len+1];
-
-    for (int i = 0; i < len; ++i) 
+	
+    /* this one is because the query files for input have words staring with a mostly */
+    /* without it search will give empty results */
+    str[0] = 'a'; 
+    for (int i = 1; i < len; ++i) 
         str[i] = alpha[rand() % (sizeof(alpha) - 1)];
     str[len] = '\0';
 
