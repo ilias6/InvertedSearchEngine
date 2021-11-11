@@ -4,7 +4,7 @@
 #include "list.hpp"
 #include "word.hpp"
 #include "entry.hpp"
-
+#include "vector.hpp"
 using namespace std;
 
 enum BKErrorCode {BK_SUCCESS, BK_FAIL};

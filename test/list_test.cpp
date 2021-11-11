@@ -167,10 +167,10 @@ TEST_F(ListTest,GetDataRefTest){
 TEST_F(ListTest,GetDataCopyTest){
     int val_copy=integer_list->getItemCopy(2);
     val_copy=9000;
-    ASSERT_FALSE(9000==integer_list->getItem(2));
+    ASSERT_FALSE(val_copy==integer_list->getItem(2));
     int * ptr_copy=ptr_list->getItemCopy(5);
     ptr_copy=NULL;
-    ASSERT_FALSE(NULL==ptr_list->getItem(5));
+    ASSERT_FALSE(ptr_copy==ptr_list->getItem(5));
     EXPECT_THROW({
         try{
             integer_list->getItem(6);

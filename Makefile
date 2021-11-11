@@ -18,7 +18,7 @@ OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 _TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
-_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp
+_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
