@@ -4,11 +4,12 @@ queriesDirName="queries/"
 mkdir -p $queriesDirName;
 fileName="query_"
 
-for i in {0..10000}; do
-rm "./${queriesDirName}${fileName}${i}";
-done
+#for i in {0..10000}; do
+#rm "./${queriesDirName}${fileName}${i}";
+#done
 rm "./$queriesDirName"*;
 
+totalFiles=$(($2));
 fileCounter=0;
 
 maxWordsInFile=0;
@@ -26,7 +27,10 @@ while read line; do
 	    if [ $(($wordCounter)) -ge $(($maxWordsInFile)) ]; then
 		maxWordsInFile=$(($wordCounter));
 	    fi
-
+	    if [ $(($fileCounter)) -ge $(($totalFiles)) ]; then
+		flag=1;
+		break;
+	    fi
 	    wordCounter=0;
 	fi
 
@@ -37,10 +41,18 @@ while read line; do
 		maxWordsInFile=$(($wordCounter));
 	    fi
 
+	    if [ $(($fileCounter)) -ge $(($totalFiles)) ]; then
+		flag=1;
+		break;
+	    fi
+
 	    wordCounter=0;
 	fi
 	echo $word >> "${queriesDirName}${fileName}${fileCounter-1}" 
     done
+    if [ $(($flag)) -eq 1 ]; then
+	break;
+    fi
 done < $1
 
 echo "Total files: ${fileCounter}";
