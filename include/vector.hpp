@@ -2,6 +2,7 @@
 #define __VECTOR_HPP__
 
 #include <stdexcept>
+#include <cstring>
 
 enum VectorErrorCode { V_SUCCESS, V_FAIL, V_EMPTY, V_NOT_EXISTS};
 
@@ -17,11 +18,12 @@ class Vector {
     	Vector();
     	Vector(const Vector &);
     	~Vector();
+        int getActualMemoryLen() const;
     	void print() const;
     	int getLen() const;
         VectorErrorCode copyVector(Vector &);
     	VectorErrorCode insert(T&);
-    	VectorErrorCode append(Vector<T> *);
+    	// VectorErrorCode append(Vector<T> *);
     	bool exists(T&) const;
     	VectorErrorCode remove(T&);
     	T & getItem(int) const;
@@ -51,12 +53,13 @@ template <typename T>
 VectorErrorCode Vector<T>::copyVector(Vector & vec) {
     if(this->len!=0){
         // delete previous alloc
-        delete arr;
+        delete[] arr;
         arr=NULL;
     }
     this->len=vec.len;
     this->actual_arr_size=vec.actual_arr_size;
-    arr=new T[this->actual_arr_size];
+    if(this->actual_arr_size!=0)
+        arr=new T[this->actual_arr_size];
     for(int i=0;i<vec.len;i++)
         arr[i]=vec.arr[i];
     return V_SUCCESS;
@@ -64,9 +67,10 @@ VectorErrorCode Vector<T>::copyVector(Vector & vec) {
 
 template <typename T>
 Vector<T>::~Vector() {
+    if(this->actual_arr_size!=0)
+        delete[] arr;
     len=0;
     actual_arr_size=0;
-    delete arr;
 }
 
 template <typename T>
@@ -76,12 +80,18 @@ void Vector<T>::print() const {
     cout<<"-----------DATA----------------"<<endl;
     for(int i=0;i<this->len;i++)
         cout<<i<<" : "<<arr[i]<<endl;
+    cout<<"-------------------------------"<<endl;
+
 }
 
 
 template <typename T>
 int Vector<T>::getLen() const {
     return this->len;
+}
+template <typename T>
+int Vector<T>::getActualMemoryLen() const {
+    return this->actual_arr_size;
 }
 
 template <typename T>
@@ -100,23 +110,30 @@ T Vector<T>::getItemCopy(int index) {
 
 }
 
-template <typename T>
-VectorErrorCode Vector<T>::append(Vector<T> * vec) {
-    if(vec->actual_arr_size==0)
-        return V_SUCCESS;
-
-
-    this->actual_arr_size+=vec->actual_arr_size;
-    T* tmp=this->arr;
-    this->arr=new T[this->actual_arr_size];
-    if(this->len!=0)
-        memcpy(this->arr,tmp,this->len*sizeof(T));
-    if(vec->len!=0)
-        memcpy(&this->arr[this->len],vec->arr,vec->len*sizeof(T));
-    delete[] tmp;
-    this->len+=vec->len;
-    return V_SUCCESS;
-}
+// template <typename T>
+// VectorErrorCode Vector<T>::append(Vector<T> * vec) {
+// Not needed
+//     if(vec->actual_arr_size==0)
+//         return V_SUCCESS;
+//
+//     if(this->len+vec->len<=this->actual_arr_size){
+//         memcpy(this->arr,tmp,this->len*sizeof(T));
+//         return V_SUCCESS;
+//     }else if(this->len+vec->len<=vec->actual_arr_size){
+//         this->actual_arr_size=vec->actual_arr_size;
+//     }else{
+//         this->actual_arr_size+=vec->actual_arr_size;
+//     }
+//     T* tmp=this->arr;
+//     this->arr=new T[this->actual_arr_size];
+//     if(this->len!=0)
+//         memcpy(this->arr,tmp,this->len*sizeof(T));
+//     if(vec->len!=0)
+//         memcpy(&this->arr[this->len],vec->arr,vec->len*sizeof(T));
+//     delete[] tmp;
+//     this->len+=vec->len;
+//     return V_SUCCESS;
+// }
 
 template <typename T>
 VectorErrorCode Vector<T>::insert(T & item) {
@@ -151,21 +168,26 @@ VectorErrorCode Vector<T>::remove(T& item) {
             break;
         }
     if(exists){
-        if(this->len+1==this->actual_arr_size/2){
-            this->len--;
+        this->len--;
+        if(this->len==this->actual_arr_size/2&&this->len!=1){
+            this->actual_arr_size=this->len;
             T * tmp=arr;
-            this->actual_arr_size/=2;
             this->arr=new T[this->actual_arr_size];
             for(int i=0;i<indx;i++)
                 this->arr[i]=tmp[i];
             int start=indx+1;
             int end=this->actual_arr_size+1;
             for(int i=start;i<end;i++)
-                this->arr[i]=tmp[i];
-            delete tmp;
+                this->arr[i-1]=tmp[i];
+            delete[] tmp;
             return V_SUCCESS;
+        }else if(this->len==0){
+            this->actual_arr_size=0;
+            delete[] this->arr;
+            this->arr=NULL;
+            return V_SUCCESS;
+
         }
-        this->len--;
         for(int i=indx;i<this->len;i++)
             this->arr[i]=this->arr[i+1];
         return V_SUCCESS;
