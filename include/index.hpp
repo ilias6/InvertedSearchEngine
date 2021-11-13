@@ -17,10 +17,10 @@ class Index {
         MatchType type;
         int numOfTrees;//will be 1 if we have edit distance
         BKTree **tree;
-	HashTable *hTable;
+	    HashTable *hTable;
         IndexErrorCode insertFromList(EntryList &);
     public:
-	MatchType getType();
+	    MatchType getType();
         Index(EntryList &, MatchType);
         List<Entry *> search(Word *, int n = 0);
         ~Index();

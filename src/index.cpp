@@ -23,15 +23,15 @@ IndexErrorCode Index::insertFromList(EntryList &entryList) {
 	    tree=new BKTree*;
 	    tree[0]=new  BKTree(&Word::editDist);
 	}
-	catch (bad_alloc & exc) {
-	    return I_FAIL;
-	}
-        for (int i = 0; i < len; ++i) {
-            Entry * e = entryList.getItemPtr(i);
-            if (this->tree[0]->insert(e) == BK_FAIL)
-		return I_FAIL;
-            // cout << i << endl;
-        }
+    	catch (bad_alloc & exc) {
+    	    return I_FAIL;
+    	}
+            for (int i = 0; i < len; ++i) {
+                Entry * e = entryList.getItemPtr(i);
+                if (this->tree[0]->insert(e) == BK_FAIL)
+    		return I_FAIL;
+                // cout << i << endl;
+            }
     }else{
         this->numOfTrees=MAX_WORD_LENGTH-MIN_WORD_LENGTH;//one tree for each length (hammingDist)
         try {
@@ -76,6 +76,7 @@ Index::~Index() {
             delete tree[i];
         delete[] tree;
     }else{
+        delete tree[0];
         delete tree;
     }
 }

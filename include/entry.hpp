@@ -12,8 +12,8 @@ class Entry {
 	List<int> payload;
     public:
 	List<int> & getPayload();
-	void addToPayload(int);
-	void removeFromPayload(int);
+	ListErrorCode addToPayload(int);
+	ListErrorCode removeFromPayload(int);
 	Word &getWord();
 	Entry(const char *, int);
 	Entry(Word &, int);

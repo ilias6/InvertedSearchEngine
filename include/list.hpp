@@ -255,13 +255,13 @@ ListErrorCode List<T>::remove(T& item) {
     }
 
     if (this->head->getData() == item) {
-	ListNode<T> * t = this->head;
-	this->head = this->head->getNext();
-	delete t;
-	this->len--;
-	if (this->len == 0)
-	    this->tail = NULL;
-	return L_SUCCESS;
+        ListNode<T> * t = this->head;
+        this->head = this->head->getNext();
+        delete t;
+        this->len--;
+        if (this->len == 0)
+            this->tail = NULL;
+        return L_SUCCESS;
     }
 
     ListNode<T> * n1 = this->head;

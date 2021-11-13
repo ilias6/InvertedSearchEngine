@@ -20,7 +20,7 @@ using namespace std;
 
 
 int main(int argc, char * argv[]) {
-    int numOfQueries = 100;
+    int numOfQueries = 10000;
     char ** paths = new char*[numOfQueries];
     for (int i = 0; i < numOfQueries; ++i) {
     	paths[i] = new char[32];
@@ -39,6 +39,9 @@ int main(int argc, char * argv[]) {
     Query ** qs = makeQueries(*vec, numOfQueries);
     */
     Query ** qs = makeQueries(paths, numOfQueries);
+    for(int i=0;i<numOfQueries;i++)
+        delete[] paths[i];
+    delete[] paths;
     EntryList * eList = makeEntryList(qs, numOfQueries);
 
     Index * hammingIndex = makeIndex(MT_HAMMING_DIST, eList);
@@ -51,9 +54,9 @@ int main(int argc, char * argv[]) {
     srand((unsigned)time(NULL) * getpid());
     wordsToSearch[0] = new Word("hel");
     for (int i = 1; i < numOfWords; ++i) {
-	char * str = genRandStr(1+rand()%10);
-	wordsToSearch[i] = new Word(str);
-	delete[] str;
+	       char * str = genRandStr(1+rand()%10);
+	       wordsToSearch[i] = new Word(str);
+	       delete[] str;
     }
 
     multipleSearch(hashIndex, wordsToSearch, numOfWords, threshold);

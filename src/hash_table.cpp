@@ -97,11 +97,11 @@ void HashTable::deleteData(){
 }
 
 // used for testing
-Bucket HashTable::getBucketCopy(Word * w) { 
-    unsigned long hash = this->hash_func(w->getStr());
-    int bucket_index = hash%this->size;
-    return this->array[bucket_index];
-}
+// Bucket HashTable::getBucketCopy(Word * w) { 
+//     unsigned long hash = this->hash_func(w->getStr());
+//     int bucket_index = hash%this->size;
+//     return this->array[bucket_index];
+// }
 
 Entry * HashTable::getEntry(Word * w) {
     unsigned long hash = this->hash_func(w->getStr());

@@ -14,9 +14,9 @@ class HashTableTest: public ::testing::Test {
 
         virtual void SetUp() {
             this->hTable = new HashTable(7, djb2);
-	    ASSERT_TRUE(this->hTable->getSize() == 7);
-            this->entryPtrs = new Entry*[16];
+	        ASSERT_TRUE(this->hTable->getSize() == 7);
             this->numOfEntries = 16;
+            this->entryPtrs = new Entry*[this->numOfEntries];
             HashTableErrorCode errorVal;
             const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
 		"bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
@@ -29,7 +29,7 @@ class HashTableTest: public ::testing::Test {
 
         void checkInsert(HashTable * hTable, int indx, Entry ** entryPtrs, HashTableErrorCode errorVal) {
             ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-	    Entry * res = this->hTable->getEntry(&entryPtrs[indx]->getWord());
+	        Entry * res = this->hTable->getEntry(&entryPtrs[indx]->getWord());
             ASSERT_TRUE(entryPtrs[indx] == res);
         }
 
@@ -45,24 +45,24 @@ TEST_F(HashTableTest, CopyConstructorTest) {
     HashTable t(*this->hTable);
 
     for(int i = 0; i < numOfEntries; i++) {
-	Entry * res1 = this->hTable->getEntry(&entryPtrs[i]->getWord());
-	Entry * res2 = t.getEntry(&entryPtrs[i]->getWord());
-	ASSERT_TRUE(res1 == res2);
+        Entry * res1 = this->hTable->getEntry(&entryPtrs[i]->getWord());
+        Entry * res2 = t.getEntry(&entryPtrs[i]->getWord());
+        ASSERT_TRUE(res1 == res2);
     }
 }
 
 TEST_F(HashTableTest, InsertTest) {
     for(int i = 0; i < numOfEntries; i++)
-        checkInsert(this->hTable, i, entryPtrs, H_T_SUCCESS); 
+        checkInsert(this->hTable, i, entryPtrs, H_T_SUCCESS);
 }
 
 /* Bucket::getEntry needs to be tested only*/
-/* 
+/*
 
-TEST_F(HashTableTest, GetEntry) {
+TEST_F(HashTableTest, GetEntry) {	Bucket getBucketCopy(Word *);
     const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
-    
+
     HashTable hTable(7, djb2);
     List<Entry> entryList;
     for (int i = 0; i < this->numOfEntries; ++i) {
@@ -72,14 +72,14 @@ TEST_F(HashTableTest, GetEntry) {
 	HashTableErrorCode errorVal = hTable.insert(ePtrOrigin);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
 	Entry * ePtrHTable = hTable.getEntry(&e.getWord());
-	ASSERT_TRUE(ePtrHTable == ePtrOrigin);	
+	ASSERT_TRUE(ePtrHTable == ePtrOrigin);
     }
 
     const char strArr2[][5]={"aaaa", "ab", "bb", "b", "a", "baba",};
     for (int i = 0; i < 6; ++i) {
 	Entry e(strArr2[i], i);
 	Entry * ePtrHTable = hTable.getEntry(&e.getWord());
-	ASSERT_TRUE(ePtrHTable == NULL);	
+	ASSERT_TRUE(ePtrHTable == NULL);
     }
 }
 
@@ -115,7 +115,7 @@ TEST(BucketTest, getEntry) {
 
     Word w("test");
     Entry * ePtrBucket = b.getEntry(&w);
-    ASSERT_TRUE(ePtrBucket == NULL);	
+    ASSERT_TRUE(ePtrBucket == NULL);
 
     const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
@@ -128,16 +128,16 @@ TEST(BucketTest, getEntry) {
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
 	ASSERT_TRUE(i+1 == b.bucketSize());
 	Entry * ePtrBucket = b.getEntry(&e.getWord());
-	ASSERT_TRUE(ePtrBucket == ePtrOrigin);	
+	ASSERT_TRUE(ePtrBucket == ePtrOrigin);
     }
 
     ePtrBucket = b.getEntry(&w);
     Entry * ePtrOrigin = entryList.getItemPtr(11);
-    ASSERT_TRUE(ePtrBucket == ePtrOrigin);	
-    
+    ASSERT_TRUE(ePtrBucket == ePtrOrigin);
+
     Word w2("testing");
     ePtrBucket = b.getEntry(&w2);
-    ASSERT_TRUE(ePtrBucket == NULL);	
+    ASSERT_TRUE(ePtrBucket == NULL);
 }
 
 TEST(BucketTest, Insert) {
@@ -156,6 +156,7 @@ TEST(BucketTest, Insert) {
 	List <Entry *> lst = b.getListCopy();
 	ASSERT_TRUE(i+1 == lst.getLen());
 	Entry * ePtrBucket = lst.getItem(i);
-	ASSERT_TRUE(ePtrBucket == ePtrOrigin);	
+	ASSERT_TRUE(ePtrBucket == ePtrOrigin);
     }
 }
+//in other words bucket is just a list....

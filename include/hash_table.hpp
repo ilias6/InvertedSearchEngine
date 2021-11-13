@@ -37,7 +37,7 @@ class HashTable {
         enum HashTableErrorCode setHashFunc(unsigned long (*h_f)(const char * ));
         enum HashTableErrorCode updateEntryPayload(Word *,int);
         enum HashTableErrorCode insert(Entry *);
-	Bucket getBucketCopy(Word *);
+        Bucket getBucketCopy(Word *);
         Entry* getEntry(Word *);
         void print(void);
 	void printAddr();

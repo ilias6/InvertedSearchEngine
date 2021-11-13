@@ -29,14 +29,14 @@ List<int> & Entry::getPayload() {
     return this->payload;
 }
 
-void Entry::addToPayload(int q) {
-    this->payload.insert(q);
+ListErrorCode Entry::addToPayload(int q) {
+    return this->payload.insert(q);
 }
 
-void Entry::removeFromPayload(int q) {
-    this->payload.remove(q);
+ListErrorCode Entry::removeFromPayload(int q) {
+    return this->payload.remove(q);
 }
-
+//equal operator just check exactMatch of words
 bool Entry::operator==(Entry & e) {
     if (this->word.exactMatch(e.getWord()))
 	   return true;
