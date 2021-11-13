@@ -17,3 +17,11 @@ As you can see above the project has the following directories:
    | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: 
      skata	| skata | sk | Entry | Word  | Entry  | Entry | BKTree
         sk | sku | skun | skunk | skunky | Vector BKT | me | choco
+        
+        
+        
+Left aligned Header | Right aligned Header | Center aligned Header
+| :--- | ---: | :---:
+Content Cell  | Content Cell | Content Cell
+Content Cell  | Content Cell | Content Cell
+
