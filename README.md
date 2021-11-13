@@ -1,5 +1,5 @@
-# ***Inverted Search Engine*** (SIGMOD 2013)
-## *sdi1700072* & *sdi1700055*
+# **Inverted Search Engine** *(SIGMOD 2013)*
+## **sdi1700072** & **sdi1700055**
 
 ## Structure of the project:
 As you can see above the project has the following directories:
