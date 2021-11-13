@@ -71,10 +71,12 @@ Index::Index(EntryList & entryList,MatchType type){
 Index::~Index() {
     if(this->type==MT_EXACT_MATCH){
         delete hTable;
-    }else{
+    }else if (this->type==MT_HAMMING_DIST){
         for(int i=0;i<this->numOfTrees;i++)
             delete tree[i];
         delete[] tree;
+    }else{
+        delete tree;
     }
 }
 

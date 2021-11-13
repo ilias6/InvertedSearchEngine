@@ -18,7 +18,7 @@ extern "C" {
 #define MIN_WORD_LENGTH 1
 
 /// Maximum number of words in a query.
-#define MAX_QUERY_WORDS 4000000
+#define MAX_QUERY_WORDS 5
 
 #define     MAX_DOC_WORDS     ((MAX_DOC_LENGTH)/(MIN_WORD_LENGTH))
 /// Maximum query length in characters.

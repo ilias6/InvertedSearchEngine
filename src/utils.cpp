@@ -55,19 +55,19 @@ Vector<char> * countQueries(ifstream & inFile, int * counter) {
 
 
 	/*
-Query ** makeQueries(Vector<char> & vec, int numOfQueries) {     
+Query ** makeQueries(Vector<char> & vec, int numOfQueries) {
     cout << "^^^^^^^^^^^^^^^^^^^^^^^^^\nReading queries..." << endl;
-    
+
     Query ** qs = new Query*[numOfQueries];
     int i = 0;
 
     int start = 0;
     int end = 0;
     while (i < numOfQueries) {
-	if (vec.getItem(end) == '\n' && ((vec.getItem(end+1) == 'e') 
+	if (vec.getItem(end) == '\n' && ((vec.getItem(end+1) == 'e')
 				          || (vec.getItem(end+1) == 'r'))
 					  || (vec.getItem(end+1) == 'm')) {
-	   
+
 	    cout << "Not a query skipped\n";
 	    while (vec.getItem(end) != '\n' && vec.getItem(end+1) != 's')
 		end++;
@@ -111,9 +111,9 @@ EntryList * makeEntryList(Query ** qs, int qNum) {
     cout << "###########################\nBuilding entry list in: ";
     // This is the correct one
     EntryList * eList = new EntryList(qNum*MAX_QUERY_WORDS);
-    //EntryList * eList = new EntryList(10000);
+    // EntryList * eList = new EntryList(10000);
     for (int i = 0; i < qNum; ++i)
-	eList->insert(*qs[i]); 
+	eList->insert(*qs[i]);
     float elapsed = time(NULL) - cur;
     elapsed /= 60;
     cout << elapsed << " minutes\n###########################\n\n";
@@ -129,7 +129,7 @@ Index * makeIndex(MatchType type, EntryList * eList) {
     	cout << "---------------------------\nBuilding edit-distance index in: ";
     else
     	cout << "---------------------------\nBuilding exact-match index in: ";
-    Index * index = new Index(*eList, type); 
+    Index * index = new Index(*eList, type);
     float elapsed = time(NULL) - cur;
     elapsed /= 60;
     cout << elapsed << " minutes\n---------------------------\n\n";
@@ -172,11 +172,11 @@ void multipleSearch(Index * index, Word ** words, int wordsNum, int threshold) {
 char * genRandStr(const int len) {
     static const char alpha[] = "abcdefghijklmnopqrstuvwxyz";
     char * str = new char[len+1];
-	
+
     /* this one is because the query files for input have words staring with a mostly */
     /* without it search will give empty results */
-    str[0] = 'a'; 
-    for (int i = 1; i < len; ++i) 
+    str[0] = 'a';
+    for (int i = 1; i < len; ++i)
         str[i] = alpha[rand() % (sizeof(alpha) - 1)];
     str[len] = '\0';
 

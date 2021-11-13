@@ -20,11 +20,11 @@ using namespace std;
 
 
 int main(int argc, char * argv[]) {
-    int numOfQueries = 10000;
+    int numOfQueries = 100;
     char ** paths = new char*[numOfQueries];
     for (int i = 0; i < numOfQueries; ++i) {
     	paths[i] = new char[32];
-    	sprintf(paths[i], "./input/queries/query_%d\0", i);
+    	sprintf(paths[i], "./input/queries/query_%d", i);
     }
 
 /*
@@ -48,7 +48,7 @@ int main(int argc, char * argv[]) {
     int threshold = 2;
     int numOfWords = 5;
     Word ** wordsToSearch = new Word*[numOfWords];
-    srand((unsigned)time(NULL) * getpid());  
+    srand((unsigned)time(NULL) * getpid());
     wordsToSearch[0] = new Word("hel");
     for (int i = 1; i < numOfWords; ++i) {
 	char * str = genRandStr(1+rand()%10);
@@ -59,7 +59,7 @@ int main(int argc, char * argv[]) {
     multipleSearch(hashIndex, wordsToSearch, numOfWords, threshold);
     multipleSearch(editIndex, wordsToSearch, numOfWords, threshold);
     multipleSearch(hammingIndex, wordsToSearch, numOfWords, threshold);
-    
+
     destroyQueries(qs, numOfQueries);
     delete hammingIndex;
     delete editIndex;
