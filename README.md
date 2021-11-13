@@ -12,13 +12,15 @@ As you can see above the project has the following directories:
  7) test       -->   the source files for unit-testing
 
 ## Structure of the project (on level of classes)
-        
+
+Our basic classes:
 Word | ListNode\<T\> | List\<T\> | Vector\<T\>
 | :---: | :---: | :---: | :---:
 char * string | T data | ListNode<T> * head | T[Actual Size]
 int length | ListNode\<T\> * next | ListNode<T> * tail | int length
 _  | _ | int length | int actual_size |
- 
+
+And the composite ones:
 Entry | Bucket | HashTable | Query | BKNode | BKTree | EntryList | Index
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
 Word w | List\<Entry\*\> | Bucket * array | Word \*\* | Entry * e | metric | List\<Entry\> list | MatchType
