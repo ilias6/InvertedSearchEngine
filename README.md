@@ -22,6 +22,6 @@ As you can see above the project has the following directories:
         
 Word | List\<T\> | Vector\<T\> | HashTable | Query | BKTree | EntryList | Index
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
-_  | Content Cell | Content Cell | Content Cell | Content Cell | Content Cell | Content Cell | Content Cell
+_  | _ | _ | List\<Entry \*\> | Word \*\* | Vector\<BKTreeNode \*\> | Content Cell | Content Cell
 Content Cell  | Content Cell | Content Cell | Content Cell | Content Cell | Content Cell | Content Cell | Content Cell
 
