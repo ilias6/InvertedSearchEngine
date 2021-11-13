@@ -1,5 +1,4 @@
-# **Inverted Search Engine**
-(SIGMOD 2013)
+# ***Inverted Search Engine*** (SIGMOD 2013)
 ## *sdi1700072* & *sdi1700055*
 
 ## Structure of the project:
