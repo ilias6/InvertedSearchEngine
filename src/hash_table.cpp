@@ -103,7 +103,6 @@ Bucket HashTable::getBucketCopy(Word * w) {
     return this->array[bucket_index];
 }
 
-// ultra fail function
 Entry * HashTable::getEntry(Word * w) {
     unsigned long hash = this->hash_func(w->getStr());
     int bucket_index = hash%this->size;
@@ -113,12 +112,26 @@ Entry * HashTable::getEntry(Word * w) {
 int HashTable::getSize(void){
     return this->size;
 }
-void HashTable::setSizeAndAlloc(int sz){
+
+enum HashTableErrorCode HashTable::setSizeAndAlloc(int sz){
+    if (this->size == 0) {
+    	this->size=sz;
+    	this->array=new Bucket[sz];
+	return H_T_SUCCESS;
+    }
+
+    if(this->array!=NULL)
+        delete[] this->array;
+    else
+	cout << "Weird things happened!\n";
     this->size=sz;
     this->array=new Bucket[sz];
+    return H_T_SUCCESS;
 }
-void HashTable::setHashFunc(unsigned long (*h_f)(const char *)){
+
+enum HashTableErrorCode HashTable::setHashFunc(unsigned long (*h_f)(const char *)){
     this->hash_func=h_f;
+    return H_T_SUCCESS;
 }
 
 enum HashTableErrorCode HashTable::insert(Entry * e){

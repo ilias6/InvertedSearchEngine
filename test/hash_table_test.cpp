@@ -14,6 +14,7 @@ class HashTableTest: public ::testing::Test {
 
         virtual void SetUp() {
             this->hTable = new HashTable(7, djb2);
+	    ASSERT_TRUE(this->hTable->getSize() == 7);
             this->entryPtrs = new Entry*[16];
             this->numOfEntries = 16;
             HashTableErrorCode errorVal;
@@ -22,7 +23,7 @@ class HashTableTest: public ::testing::Test {
             for(int i = 0; i < numOfEntries; i++) {
                 this->entryPtrs[i] = new Entry(strArr[i], i);
                 errorVal = this->hTable->insert(entryPtrs[i]);
-                ASSERT_TRUE(errorVal == H_T_FAIL);//succesful insert
+                ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
             }
         }
 
@@ -40,15 +41,19 @@ class HashTableTest: public ::testing::Test {
         }
 };
 
-
-TEST_F(HashTableTest, InsertTest) {
-    //HashTable hTable(7, djb2);
-    //HashTableErrorCode errorVal;
+TEST_F(HashTableTest, CopyConstructorTest) {
+    HashTable t(*this->hTable);
 
     for(int i = 0; i < numOfEntries; i++) {
-        //errorVal = hTable.insert(entryPtrs[i]);
-        checkInsert(this->hTable, i, entryPtrs, H_T_SUCCESS);
+	Entry * res1 = this->hTable->getEntry(&entryPtrs[i]->getWord());
+	Entry * res2 = t.getEntry(&entryPtrs[i]->getWord());
+	ASSERT_TRUE(res1 == res2);
     }
+}
+
+TEST_F(HashTableTest, InsertTest) {
+    for(int i = 0; i < numOfEntries; i++)
+        checkInsert(this->hTable, i, entryPtrs, H_T_SUCCESS); 
 }
 
 /* Bucket::getEntry needs to be tested only*/

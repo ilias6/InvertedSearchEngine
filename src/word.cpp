@@ -12,8 +12,8 @@ Word::Word(const char * s) {
 	this->str[this->len] = '\0';
     }
     else {
-	    this->len = 0;
-	    this->str = NULL;
+	this->len = 0;
+	this->str = NULL;
     }
 }
 Word::Word() {
@@ -37,7 +37,7 @@ Word::Word(Word &w) {
 Word::~Word() {
     if (this->str != NULL){
         //cout << "Deleting " << this->str << endl;
-	       delete[] this->str;
+	delete[] this->str;
     }
 }
 

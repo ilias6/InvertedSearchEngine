@@ -33,12 +33,12 @@ class HashTable {
         HashTable(int sz,unsigned long (*h_f)(const char *));
         ~HashTable();
         int getSize(void);
-        void setSizeAndAlloc(int s);
-        void setHashFunc(unsigned long (*h_f)(const char * ));
+        enum HashTableErrorCode setSizeAndAlloc(int s);
+        enum HashTableErrorCode setHashFunc(unsigned long (*h_f)(const char * ));
         enum HashTableErrorCode updateEntryPayload(Word *,int);
         enum HashTableErrorCode insert(Entry *);
 	Bucket getBucketCopy(Word *);
-        Entry* getEntry(Word *);//ultra fail function
+        Entry* getEntry(Word *);
         void print(void);
 	void printAddr();
         void deleteData();
