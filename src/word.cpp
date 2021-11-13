@@ -39,7 +39,8 @@ Word::~Word() {
 void Word::set(const char * s) {
     if (this->str != NULL)
 	   delete[] this->str;
-    if (s != NULL) {
+
+    if (s != NULL && strlen(s) != 0) {
 	       this->len = strlen(s);
 	       this->str = new char[this->len+1];
 	       strncpy(this->str, s, this->len);

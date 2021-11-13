@@ -1,6 +1,63 @@
 #include <gtest/gtest.h>
 #include "../include/word.hpp"
 
+TEST(ConstructorTest, EmptyString) {
+    Word w;
+    ASSERT_EQ(0, w.getLen());
+    ASSERT_EQ(NULL, w.getStr());
+
+    Word w2("");
+    ASSERT_EQ(0, w2.getLen());
+    ASSERT_EQ(NULL, w2.getStr());
+}
+
+TEST(ConstructorTest, NotEmptyString) {
+    Word w("abcdefg");
+    ASSERT_EQ(7, w.getLen());
+    ASSERT_EQ(0, strcmp(w.getStr(), "abcdefg"));
+}
+
+Test(CopyConstructor, EmptyWord) {
+    Word w;
+    Word w2(w);
+    ASSERT_EQ(0, w2.getLen());
+    ASSERT_EQ(NULL, w2.getStr());
+}
+
+Test(CopyConstructor, NotEmptyWord) {
+    Word w("abcdefg");
+    Word w2(w);
+    ASSERT_EQ(7, w.getLen());
+    ASSERT_EQ(0, strcmp(w.getStr(), "abcdefg"));
+}
+
+TEST(SetTest, EmptyEmpty) {
+    Word w;
+    w.set("");
+    ASSERT_EQ(0, w.getLen());
+    ASSERT_EQ(NULL, w.getStr());
+}
+
+TEST(SetTest, EmptyNotEmpty) {
+    Word w;
+    w.set("abcdefghijk");
+    ASSERT_EQ(11, w.getLen());
+    ASSERT_EQ(0, strcmp(w.getStr(), "abcdefghijk"));
+}
+
+TEST(SetTest, NotEmptyEmpty) {
+    Word w("abcd");
+    w.set("");
+    ASSERT_EQ(0, w.getLen());
+    ASSERT_EQ(NULL, w.getStr());
+}
+
+TEST(SetTest, NotEmptyNotEmpty) {
+    Word w("abcd");
+    w.set("abcdefghijk");
+    ASSERT_EQ(11, w.getLen());
+    ASSERT_EQ(0, strcmp(w.getStr(), "abcdefghijk"));
+}
 
 TEST(ExactMatchTest, ExactMatchNotEqual) {
     Word w1("a");

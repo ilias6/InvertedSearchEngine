@@ -18,7 +18,7 @@ class Word {
 	bool exactMatch(Word &);
 	int hammingDist(Word &);
 	int editDist(Word &);
-    Word();
+    	Word();
         Word(Word&);
         Word(const char *);
         ~Word();
