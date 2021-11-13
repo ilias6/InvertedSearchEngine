@@ -13,7 +13,7 @@ As you can see above the project has the following directories:
 
 ## Structure of the project (on level of classes)
 
-   Word              |List\<T\>               |Vector\<T\>                | HashTable         |   Query  |   BKTree  | EntryList |  Index
---------- | -------- | --------- | --------- | -------- | --------- | --------- | --------
-    _	  |     _    |     _     |  Entry *  |  Word ** |   Entry * |
+   Word | List\<T\> | Vector\<T\> | HashTable | Query | BKTree | EntryList | Index
+   | :---: | :---: | :---: | | :---: | :---: | :---: | :---: | :---: | :---:
+    _	  |     _    |     _     |  Entry *  |  Word ** |   Entry * | Entry | BKTree
     _     |     _    |     _     |     _     |     _    |Vector BKT |            | ----
