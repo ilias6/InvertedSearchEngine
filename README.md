@@ -3,21 +3,21 @@
 
 ## Structure of the project:
 As you can see above the project has the following directories:
-\t 1) bin
-\t 2) build
-\t 3) input
-\t 4) src
-\t 5) include
-\t 6) lib
-\t 7) test
+ 1) bin
+ 2) build
+ 3) input
+ 4) src
+ 5) include
+ 6) lib
+ 7) test
 
 Each directory includes:
-\t 1) the binary files
-\t 2) the object files (.o)
-\t 3) the input files to run the program
-\t 4) the source files (.cpp)
-\t 5) the header files (.hpp)
-\t 6) the source files for unit-testing
+ 1) the binary files
+ 2) the object files (.o)
+ 3) the input files to run the program
+ 4) the source files (.cpp)
+ 5) the header files (.hpp)
+ 6) the source files for unit-testing
 
 ## Structure of the project (on level of classes)
 
