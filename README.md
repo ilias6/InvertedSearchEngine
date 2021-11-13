@@ -16,13 +16,13 @@ As you can see above the project has the following directories:
 Our basic classes:
 Word | ListNode\<T\> | List\<T\> | Vector\<T\>
 | :---: | :---: | :---: | :---:
-char \* string | T data | ListNode\<T\> \* head | T[Actual Size]
-int length | ListNode\<T\> * next | ListNode\<T\> \* tail | int length
+char\* string | T data | ListNode\<T\>\* head | T[Actual Size]
+int length | ListNode\<T\>* next | ListNode\<T\>\* tail | int length
 _  | _ | int length | int actual_size |
 
 And the composite ones:
 Entry | Bucket | HashTable | Query | BKNode | BKTree | EntryList | Index
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
-Word w | List\<Entry\*\> | Bucket \* array | Word \*\* | Entry \* e | metric | List\<Entry\> list | MatchType
-List\<int\> | _ | int size | int id | int distance | BKNode \* root | HashTable t | BKTree \*\* trees (multiple trees for manhattan distance)
-_ | _ | hash function | int numOfWords | Vector\<BKTreeNode \*\> children | int size | _ | HashTable \*
+Word w | List\<Entry\*\> | Bucket\* array | Word\*\* | Entry\* e | metric | List\<Entry\> list | MatchType
+List\<int\> | _ | int size | int id | int distance | BKNode\* root | HashTable t | BKTree\*\* trees (multiple trees for manhattan distance)
+_ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int size | _ | HashTable \*
