@@ -14,6 +14,6 @@ As you can see above the project has the following directories:
 ## Structure of the project (on level of classes)
 
   Word | List\<T\> | Vector\<T\> | HashTable | Query | BKTree | EntryList | Index
-  | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: 
-    skata	| skata | sk | Entry | Word  | Entry  | Entry | BKTree
-    sk | sku | skun | skunk | skunky | Vector BKT | me | choco
+   | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: 
+     skata	| skata | sk | Entry | Word  | Entry  | Entry | BKTree
+        sk | sku | skun | skunk | skunky | Vector BKT | me | choco
