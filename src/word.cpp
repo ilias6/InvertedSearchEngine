@@ -5,7 +5,7 @@
 using namespace std;
 
 Word::Word(const char * s) {
-    if (s != NULL) {
+    if (s != NULL && strlen(s) != 0) {
     	this->len = strlen(s);
     	this->str = new char[this->len+1];
     	strncpy(this->str, s, this->len);
@@ -23,6 +23,11 @@ Word::Word() {
 
 Word::Word(Word &w) {
     const char * s = w.getStr();
+    if (s == NULL || strlen(s) == 0) {
+    	this->len = 0;
+	this->str = NULL;
+    	return;
+    }
     this->len = strlen(s);
     this->str = new char[this->len+1];
     strncpy(this->str, s, this->len+1);
