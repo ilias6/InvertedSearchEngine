@@ -12,16 +12,15 @@ As you can see above the project has the following directories:
  7) test       -->   the source files for unit-testing
 
 ## Structure of the project (on level of classes)
-
-  Word | List\<T\> | Vector\<T\> | HashTable | Query | BKTree | EntryList | Index
-  | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: 
-  skata	| skata | sk | Entry | Word  | Entry  | Entry | BKTree
-  sk | sku | skun | skunk | skunky | Vector BKT | me | choco
         
-        
-        
-Word | List\<T\> | Vector\<T\> | HashTable | Query | BKTree | EntryList | Index
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
-_  | _ | _ | List\<Entry \*\> | Word \*\* | Vector\<BKTreeNode \*\> | List\<Entry\> | HashTable
-_  | _ | _ | _ | _ | Word * | _ | BKTree
-
+Word | ListNode\<T\> | List\<T\> | Vector\<T\>
+| :---: | :---: | :---: | :---:
+char * string | T data | ListNode<T> * head | T[Actual Size]
+int length | ListNode\<T\> * next | ListNode<T> * tail | int length
+_  | _ | int length | int actual_size |
+ 
+Bucket | HashTable | Query | BKTree | EntryList | Index
+| :---: | :---: | :---: | :---: | :---: | :---:
+List\<Entry\*\> | Bucket * array | Word \*\* | Vector\<BKTreeNode \*\> | List\<Entry\> | HashTable
+_ | _ | _ | Word * | _ | BKTree
+_ | _ | _ | Word * | _ | BKTree
