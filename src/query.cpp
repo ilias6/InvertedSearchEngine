@@ -11,6 +11,77 @@
 
 using namespace std;
 
+/*
+Query::Query(int id, Vector<char> & vec, int start, int end) {
+    this->id=id;
+    this->wordsInQuery=0;
+    this->word=new Word*[MAX_QUERY_WORDS];
+    if(this->word==NULL){
+        cerr << "Failed to allocate memmory to fetch query words!"<<endl;
+        return;
+    }
+    HashTable hashtable(findNextPrime(MAX_QUERY_WORDS), djb2);
+
+    char * buffer = new char[MAX_WORD_LENGTH+1];
+    for (int i = start; i < end+1;) {
+        int buffIndex=0;
+        buffer[buffIndex] = vec.getItem(i);
+	++i;
+        while(!charInWhitespace(buffer[buffIndex]) && i < end){
+            //we dont want new lines
+            buffIndex++;
+	    buffer[buffIndex] = vec.getItem(i);
+	    ++i;
+            if(buffIndex==MAX_WORD_LENGTH){
+                cout<<buffer<<endl;
+                cerr << "Query contains words with len exceeding MAX_WORD_LENGTH (" << MAX_WORD_LENGTH <<")"<< endl;
+                return;
+            }
+
+        }
+
+
+        if(buffIndex==0)
+            continue;
+        // we dont want space char or any whitspace
+        buffIndex--;
+        if(buffIndex<MIN_WORD_LENGTH-1){
+            cerr << "Query contains words with len smaller than MIN_WORD_LENGTH (" << MIN_WORD_LENGTH <<")"<< endl;
+            return;
+        }
+        buffer[buffIndex+1]='\0';//terminate string
+        Word * w=new Word(buffer);
+        Entry * e=hashtable.getEntry(w);
+        if(e!=NULL){
+            // means word already exists
+            // cout<<*w<<" already exists!"<<endl;
+            delete w;
+            continue;
+        }
+        //word doen't exist so add it to array and to hashtable
+        this->word[this->wordsInQuery]=w;
+        e=new Entry(*w,this->id);
+        hashtable.insert(e);
+        this->wordsInQuery++;
+        if(this->wordsInQuery>MAX_QUERY_WORDS){
+            cerr << "Document contains more words than MAX_DOC_WORDS (" << MAX_QUERY_WORDS <<")"<< endl;
+            return;
+        }
+    }
+    // now that we know the size of word array
+    // make a smaller array containing the exact number of words
+    Word **tmp=this->word;
+    this->word=new Word*[wordsInQuery];
+    if(this->word==NULL){
+        cerr << "Failed to allocate memmory to fetch query words!"<<endl;
+        return;
+    }
+    for(int i=0;i<wordsInQuery;i++)
+    this->word[i]=tmp[i];
+    delete[] tmp;
+    delete[] buffer;
+    hashtable.deleteData();
+}*/
 
 Query::Query(int id, const char * path){
     this->id=id;
@@ -91,7 +162,6 @@ Query::Query(int id, const char * path){
 }
 
 Query::~Query(){
-    delete[] queryPath;
     for(int i=0;i<wordsInQuery;i++)
         delete this->word[i];
     delete[] this->word;
@@ -114,7 +184,6 @@ Word * Query::getWord(int indx){
 
 void Query::print(){
     cout<<"------------------------"<<endl;
-    cout<<"QueryPath: "<<queryPath<<endl;
     cout<<"Id: "<<this->id<<endl;
     cout<<"WordsInQuery: "<<wordsInQuery<<endl;
     for(int i=0;i<wordsInQuery;i++)

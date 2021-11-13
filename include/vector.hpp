@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <cstring>
+#include <iostream>
 
 enum VectorErrorCode { V_SUCCESS, V_FAIL, V_EMPTY, V_NOT_EXISTS};
 
@@ -16,6 +17,7 @@ class Vector {
         T*arr;
     public:
     	Vector();
+	Vector(int);
     	Vector(const Vector &);
     	~Vector();
         int getActualMemoryLen() const;
@@ -36,6 +38,13 @@ Vector<T>::Vector() {
     this->len = 0;
     this->actual_arr_size=0;
     arr=NULL;
+}
+
+template <typename T>
+Vector<T>::Vector(int size) {
+    this->len = 0;
+    this->actual_arr_size=size;
+    arr=new T[size];
 }
 
 template <typename T>

@@ -1,5 +1,6 @@
 #ifndef __ENTRY_LIST_HPP__
 #define __ENTRY_LIST_HPP__
+
 #include "hash_table.hpp"
 #include "list.hpp"
 #include "entry.hpp"

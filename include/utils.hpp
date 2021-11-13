@@ -7,12 +7,15 @@
 #include "entry_list.hpp"
 #include "core.hpp"
 #include "query.hpp"
+#include "vector.hpp"
+#include <fstream>
 
 
 bool isPrime(int);
 int findNextPrime(int);
 bool charInWhitespace(char c);
-// Query ** makeQueries(const char *);
+Query ** makeQueries(Vector<char> &, int);
+Vector<char> * countQueries(ifstream &, int *);
 Query ** makeQueries(char **, int);
 void destroyQueries(Query **, int);
 Index * makeIndex(MatchType, EntryList *);
@@ -20,4 +23,5 @@ void multipleSearch(Index *, Word **, int, int);
 void search(Index *, Word *, int);
 EntryList * makeEntryList(Query **, int);
 char * genRandStr(const int);
+
 #endif

@@ -10,33 +10,33 @@ class IndexTest: public ::testing::Test {
 	Index * hammingIndex = NULL;
 	Index * exactIndex = NULL;
         int numOfEntries;
-        Entry ** entryPtrs;//data for HashTable insertion
+	EntryList * eList;
 
         virtual void SetUp() {
-            this->hTable = new HashTable(7, djb2);
-            this->entryPtrs = new Entry*[16];
             this->numOfEntries = 16;
-            HashTableErrorCode errorVal;
             const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
 		"bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
+	    this->eList = new EntryList(7);
             for(int i = 0; i < numOfEntries; i++) {
-                this->entryPtrs[i] = new Entry(strArr[i], i);
-                errorVal = this->hTable->insert(entryPtrs[i]);
-                ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
+                Entry e(strArr[i], i);
+                this->eList->insert(e);
             }
-        }
-
-        void checkInsert(HashTable * hTable, int indx, Entry ** entryPtrs, HashTableErrorCode errorVal) {
-            ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-	    Entry * res = this->hTable->getEntry(&entryPtrs[indx]->getWord());
-            ASSERT_TRUE(entryPtrs[indx] == res);
+            this->editIndex = new Index(*eList, MT_EDIT_DIST);
+            this->hammingIndex = new Index(*eList, MT_HAMMING_DIST);
+            this->exactIndex = new Index(*eList, MT_EXACT_MATCH);
+            IndexErrorCode errorVal;
         }
 
         virtual void TearDown() {
-            delete this->hTable;
-            for(int i = 0; i < numOfEntries; i++)
-                delete entryPtrs[i];
-            delete[] entryPtrs;
+            delete this->editIndex;
+            delete this->hammingIndex;
+            delete this->exactIndex;
+            delete eList;
         }
 };
 
+TEST(IndexTest, EmptyIndex) {
+    EntryList eList(17);
+    Index editIndex(eList, MT_EDIT_DIST);
+
+}

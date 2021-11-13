@@ -2,6 +2,7 @@
 #define __LIST_HPP__
 
 #include <stdexcept>
+#include <iostream>
 
 enum ListErrorCode { L_SUCCESS, L_FAIL, L_EMPTY, L_NOT_EXISTS};
 

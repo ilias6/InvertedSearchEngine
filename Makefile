@@ -15,7 +15,7 @@ TDIR	= ./test/
 _OBJ 	= list.o entry.o word.o hash_table.o hash_functions.o document.o query.o BK_tree.o index.o utils.o entry_list.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
-_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o
+_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o #index_test.o entry_list_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
 _DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp
@@ -27,16 +27,16 @@ program: $(BDIR)out
 all_tests:$(BDIR)tests
 
 $(BDIR)tests: $(TESTOBJ) $(OBJ)
-	$(++) -o $@ $^ $(TESTFLAGS) $(TESTLIBS)
+	$(++) -Wall -o $@ $^ $(TESTFLAGS) $(TESTLIBS)
 
 $(BDIR)out: $(OBJ) $(ODIR)main.o
-	$(++) -o $@ $^ $(CFLAGS)
+	$(++) -Wall -o $@ $^ $(CFLAGS)
 
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
-	$(++) -Wall -c -o $@ $< $(TESTFLAGS)
+	$(++) -c -o $@ $< $(TESTFLAGS)
 
 $(ODIR)%.o: $(SDIR)%.cpp $(DEPS)
-	$(++) -Wall -c -o $@ $< $(CFLAGS)
+	$(++) -c -o $@ $< $(CFLAGS)
 
 
 directories:

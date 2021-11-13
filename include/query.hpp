@@ -2,15 +2,21 @@
 #define __QUERY_HPP__
 
 #include "../include/word.hpp"
+#include "../include/vector.hpp"
 
 class Query{
     private:
         Word ** word;
         int id;
-        char * queryPath;
         int wordsInQuery;
+	char * queryPath;
+	//MatchType type;
+	//bool active;
+	//unsigned int matchDist;
    public:
-        Query(int, const char *);
+	//static long int lastCharRead = 0;
+	Query(int, const char *);
+	//Query(int, Vector<char> &, int);
         Query();
         ~Query();
         int getId();

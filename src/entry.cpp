@@ -33,6 +33,10 @@ void Entry::addToPayload(int q) {
     this->payload.insert(q);
 }
 
+void Entry::removeFromPayload(int q) {
+    this->payload.remove(q);
+}
+
 bool Entry::operator==(Entry & e) {
     if (this->word.exactMatch(e.getWord()))
 	   return true;

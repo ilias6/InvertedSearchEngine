@@ -13,6 +13,7 @@ class Entry {
     public:
 	List<int> & getPayload();
 	void addToPayload(int);
+	void removeFromPayload(int);
 	Word &getWord();
 	Entry(const char *, int);
 	Entry(Word &, int);

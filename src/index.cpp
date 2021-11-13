@@ -91,10 +91,11 @@ List<Entry *> Index::search(Word * w, int n) {
 	       return results;
     }
 
-    if(this->type== MT_EDIT_DIST){
+    if(this->type == MT_EDIT_DIST) {
         List<Entry *> res = this->tree[0]->search(w, n);
         results.append(&res);
-    }else{
+    }
+    else {
         // haming dist
         int idx=w->getLen()-MIN_WORD_LENGTH;
         List<Entry *> res = this->tree[idx]->search(w, n);

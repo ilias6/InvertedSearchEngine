@@ -1,8 +1,9 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <fstream>
 #include "../include/utils.hpp"
-
+#include "../include/entry_list.hpp"
 
 using namespace std;
 
@@ -33,11 +34,60 @@ bool charInWhitespace(char c){
     return false;
 }
 
-/*
-Query ** makeQueries(const char * path) {
-     
+Vector<char> * countQueries(ifstream & inFile, int * counter) {
+    cout << "Counting queries...\n";
+    Vector<char> * vec = new Vector<char>();
+    *counter = 0;
+    char c;
+    while (!inFile.eof()) {
+    	inFile.get(c);
+	if (c == '\n') {
+            vec->insert(c);
+    	    inFile.get(c);
+	    if (c == 's')
+	        (*counter)++;
+	}
+        vec->insert(c);
+    }
+    cout << "Done---->Total queries: " << *counter << "\n";
+    return vec;
 }
-*/
+
+
+	/*
+Query ** makeQueries(Vector<char> & vec, int numOfQueries) {     
+    cout << "^^^^^^^^^^^^^^^^^^^^^^^^^\nReading queries..." << endl;
+    
+    Query ** qs = new Query*[numOfQueries];
+    int i = 0;
+
+    int start = 0;
+    int end = 0;
+    while (i < numOfQueries) {
+	if (vec.getItem(end) == '\n' && ((vec.getItem(end+1) == 'e') 
+				          || (vec.getItem(end+1) == 'r'))
+					  || (vec.getItem(end+1) == 'm')) {
+	   
+	    cout << "Not a query skipped\n";
+	    while (vec.getItem(end) != '\n' && vec.getItem(end+1) != 's')
+		end++;
+	    start = end++ +2;
+	    continue;
+	}
+	while (vec.getItem(end) != '\n' || vec.getItem(end+1) != 's')
+	    end++;
+	cout << "start: " <<  start << " end: " << end << endl;
+	qs[i] = new Query(i, vec, start);
+	qs[i]->print();
+	++i;
+	start = end++ +2;
+    }
+
+    cout << "Done!\n^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+
+    return qs;
+}
+	*/
 
 Query ** makeQueries(char ** paths, int pathsNum) {
     cout << "^^^^^^^^^^^^^^^^^^^^^^^^^\nReading queries..." << endl;
@@ -60,8 +110,8 @@ EntryList * makeEntryList(Query ** qs, int qNum) {
     cur = time(NULL);
     cout << "###########################\nBuilding entry list in: ";
     // This is the correct one
-    //EntryList * eList = new EntryList(qNum*MAX_QUERY_WORDS);
-    EntryList * eList = new EntryList(10000);
+    EntryList * eList = new EntryList(qNum*MAX_QUERY_WORDS);
+    //EntryList * eList = new EntryList(10000);
     for (int i = 0; i < qNum; ++i)
 	eList->insert(*qs[i]); 
     float elapsed = time(NULL) - cur;

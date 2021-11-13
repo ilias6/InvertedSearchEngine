@@ -14,26 +14,32 @@
 #include "../include/entry_list.hpp"
 #include <unistd.h>
 #include <cstring>
+#include <fstream>
 
 using namespace std;
 
-#define QUERY_FILES_NUM 10000
 
 int main(int argc, char * argv[]) {
-
-    char ** paths = new char*[QUERY_FILES_NUM];
-    for (int i = 0; i < QUERY_FILES_NUM; ++i) {
-	paths[i] = new char[32];
-	sprintf(paths[i], "./input/queries/query_%d\0", i);
+    int numOfQueries = 10000;
+    char ** paths = new char*[numOfQueries];
+    for (int i = 0; i < numOfQueries; ++i) {
+    	paths[i] = new char[32];
+    	sprintf(paths[i], "./input/queries/query_%d\0", i);
     }
-     
-    Query ** qs = makeQueries(paths, QUERY_FILES_NUM);
 
-    for (int i = 0; i < QUERY_FILES_NUM; ++i)
-	delete[] paths[i];
-    delete[] paths;
+/*
+    char path[] = "./input/small_test.txt";
+    ifstream inFile(path);
+    if (!inFile.is_open()) {
+        cerr << "Failed to open file."<<strerror(errno)<<":" << path << endl;
+        return -1;
+    }
 
-    EntryList * eList = makeEntryList(qs, QUERY_FILES_NUM);
+    Vector<char> * vec = countQueries(inFile, &numOfQueries);
+    Query ** qs = makeQueries(*vec, numOfQueries);
+    */
+    Query ** qs = makeQueries(paths, numOfQueries);
+    EntryList * eList = makeEntryList(qs, numOfQueries);
 
     Index * hammingIndex = makeIndex(MT_HAMMING_DIST, eList);
     Index * editIndex = makeIndex(MT_EDIT_DIST, eList);
@@ -54,7 +60,7 @@ int main(int argc, char * argv[]) {
     multipleSearch(editIndex, wordsToSearch, numOfWords, threshold);
     multipleSearch(hammingIndex, wordsToSearch, numOfWords, threshold);
     
-    destroyQueries(qs, QUERY_FILES_NUM);
+    destroyQueries(qs, numOfQueries);
     delete hammingIndex;
     delete editIndex;
     delete hashIndex;
