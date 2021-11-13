@@ -20,8 +20,8 @@ As you can see above the project has the following directories:
         
         
         
-Left aligned Header | Right aligned Header | Center aligned Header
-| :--- | ---: | :---:
+Word | List\<T\> | Vector\<T\>
+| :---: | :---: | :---:
 Content Cell  | Content Cell | Content Cell
 Content Cell  | Content Cell | Content Cell
 
