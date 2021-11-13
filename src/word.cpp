@@ -30,8 +30,8 @@ Word::Word(Word &w) {
     }
     this->len = strlen(s);
     this->str = new char[this->len+1];
-    strncpy(this->str, s, this->len+1);
-
+    strncpy(this->str, s, this->len);
+    this->str[this->len] = '\0';
 }
 
 Word::~Word() {
@@ -46,13 +46,14 @@ void Word::set(const char * s) {
 	   delete[] this->str;
 
     if (s != NULL && strlen(s) != 0) {
-	       this->len = strlen(s);
-	       this->str = new char[this->len+1];
-	       strncpy(this->str, s, this->len);
+	this->len = strlen(s);
+	this->str = new char[this->len+1];
+       	strncpy(this->str, s, this->len);
+	this->str[this->len] = '\0';
     }
     else {
-	       this->len = 0;
-	       this->str = NULL;
+       this->len = 0;
+       this->str = NULL;
     }
 }
 

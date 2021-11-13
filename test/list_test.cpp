@@ -22,12 +22,8 @@
 class ListTest: public ::testing::Test {
     protected:
         List<int> *integer_list;
-        // List<Word> *integer_list;
         int **arr;
         List<int *> *ptr_list;
-        // ListTest(){
-        //
-        // }
 
         virtual void SetUp(){
             // for constructor assertion
