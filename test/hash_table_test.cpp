@@ -22,7 +22,7 @@ class HashTableTest: public ::testing::Test {
             for(int i = 0; i < numOfEntries; i++) {
                 this->entryPtrs[i] = new Entry(strArr[i], i);
                 errorVal = this->hTable->insert(entryPtrs[i]);
-                ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
+                ASSERT_TRUE(errorVal == H_T_FAIL);//succesful insert
             }
         }
 
@@ -39,6 +39,7 @@ class HashTableTest: public ::testing::Test {
             delete[] entryPtrs;
         }
 };
+
 
 TEST_F(HashTableTest, InsertTest) {
     //HashTable hTable(7, djb2);

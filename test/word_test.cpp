@@ -17,14 +17,14 @@ TEST(ConstructorTest, NotEmptyString) {
     ASSERT_EQ(0, strcmp(w.getStr(), "abcdefg"));
 }
 
-Test(CopyConstructor, EmptyWord) {
+TEST(CopyConstructor, EmptyWord) {
     Word w;
     Word w2(w);
     ASSERT_EQ(0, w2.getLen());
     ASSERT_EQ(NULL, w2.getStr());
 }
 
-Test(CopyConstructor, NotEmptyWord) {
+TEST(CopyConstructor, NotEmptyWord) {
     Word w("abcdefg");
     Word w2(w);
     ASSERT_EQ(7, w.getLen());
