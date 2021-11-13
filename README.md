@@ -19,8 +19,8 @@ char * string | T data | ListNode<T> * head | T[Actual Size]
 int length | ListNode\<T\> * next | ListNode<T> * tail | int length
 _  | _ | int length | int actual_size |
  
-Bucket | HashTable | Query | BKTree | EntryList | Index
-| :---: | :---: | :---: | :---: | :---: | :---:
-List\<Entry\*\> | Bucket * array | Word \*\* | Vector\<BKTreeNode \*\> | List\<Entry\> | HashTable
-_ | _ | _ | Word * | _ | BKTree
-_ | _ | _ | Word * | _ | BKTree
+Entry | Bucket | HashTable | Query | BKTree | EntryList | Index
+| :---: | :---: | :---: | :---: | :---: | :---: | :---:
+Word w | List\<Entry\*\> | Bucket * array | Word \*\* | Vector\<BKTreeNode \*\> | List\<Entry\> | HashTable
+List\<int\> | _ | int size | _ | Word * | _ | BKTree
+_ | _ | hash function | _ | Word * | _ | BKTree
