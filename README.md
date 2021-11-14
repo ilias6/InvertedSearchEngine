@@ -37,7 +37,7 @@ The script (make_query_files.sh) is located in the input directory. Also, a file
 ```bash
 ./input/make_query_files.sh ./input/words 10000
 ```
-The second parameter stands for the number of files to be made.\
+The second parameter stands for the number of files to be made.
 
 ### For the main program, run the Makefile first:
 ```bash
