@@ -49,7 +49,7 @@ $(ODIR)index.o: $(SDIR)index.cpp $(IDIR)index.hpp $(IDIR)core.hpp $(IDIR)word.hp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)main.o: $(SDIR)main.cpp $(DEPS)
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)vector.hpp
+$(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)vector.hpp $(IDIR)core.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)

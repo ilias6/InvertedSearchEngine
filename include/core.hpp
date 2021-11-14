@@ -1,5 +1,40 @@
-#ifndef __CORE_HPP__
-#define __CORE_HPP__
+/*
+ * core.h version 1.0
+ * Copyright (c) 2013 KAUST - InfoCloud Group (All Rights Reserved)
+ * Authors: Amin Allam, Fuad Jamour
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Current version: 1.1 (Feb 13, 2013)
+ *
+ * Version history:
+ *  - 1.1 (Feb 13, 2013)
+ *    * Fixed C incompatibility in enum definitions
+ *  - 1.0 (Feb 1, 2013)
+ *    * Initial release
+ */
+
+#ifndef __SIGMOD_CORE_H_
+#define __SIGMOD_CORE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,7 +47,7 @@ extern "C" {
 #define MAX_DOC_LENGTH (1<<22)
 
 /// Maximum word length in characters.
-#define MAX_WORD_LENGTH 50
+#define MAX_WORD_LENGTH 31
 
 /// Minimum word length in characters.
 #define MIN_WORD_LENGTH 1
@@ -20,19 +55,9 @@ extern "C" {
 /// Maximum number of words in a query.
 #define MAX_QUERY_WORDS 5
 
-// #define     MAX_DOC_WORDS     ((MAX_DOC_LENGTH)/(MIN_WORD_LENGTH))
 /// Maximum query length in characters.
 #define MAX_QUERY_LENGTH ((MAX_WORD_LENGTH+1)*MAX_QUERY_WORDS)
-#define SHOW_DEFINE(x) printf("%s=%d\n", #x,x);
-#define PRINT_CORE_SETTINGS()\
-{\
-    SHOW_DEFINE(MAX_DOC_LENGTH)\
-    SHOW_DEFINE(MAX_WORD_LENGTH)\
-    SHOW_DEFINE(MIN_WORD_LENGTH)\
-    SHOW_DEFINE(MAX_QUERY_WORDS)\
-    SHOW_DEFINE(MAX_DOC_WORDS)\
-    SHOW_DEFINE(MAX_QUERY_LENGTH)\
-}
+
 
 /// Query ID type.
 typedef unsigned int QueryID;
