@@ -6,7 +6,7 @@
 
 using namespace std;
 
-EntryList::EntryList(int n):hashtable(findNextPrime(n), djb2), list(){}
+EntryList::EntryList(int n):hashtable(n, djb2), list(){}
 
 EntryList::~EntryList(){
 
@@ -18,7 +18,7 @@ EntryListErrorCode EntryList::insert(Query &q){
 
     for(int i=0;i<len;i++)
         if (this->insert(q.getWord(i),id) == E_L_FAIL)
-	    return E_L_FAIL;
+	       return E_L_FAIL;
     return E_L_SUCCESS;
 }
 

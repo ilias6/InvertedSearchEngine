@@ -22,8 +22,9 @@ class EntryList{
         EntryListErrorCode insert(Query &);
         EntryListErrorCode remove(Query &);
         Entry * getItemPtr(int);
+        //just for unit test
         HashTable & getHashTable();
-        int getLen();
+        int getLen();//return size of list
         void print();
 
 };
