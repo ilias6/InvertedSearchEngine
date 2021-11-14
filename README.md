@@ -11,7 +11,7 @@ As you can see above the project has the following directories:
  6) lib        -->   the libraries that are required (only gtest)
  7) test       -->   the source files for unit-testing
 
-## Structure of the project (on level of classes)
+## Structure of the project (class diagram)
 
 ### Our basic classes:
 Word | ListNode\<T\> | List\<T\> | Vector\<T\>
