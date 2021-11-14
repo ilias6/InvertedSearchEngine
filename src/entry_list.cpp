@@ -18,11 +18,7 @@ EntryListErrorCode EntryList::insert(Query &q){
 
     for(int i=0;i<len;i++)
         if (this->insert(q.getWord(i),id) == E_L_FAIL)
-<<<<<<< HEAD
 	       return E_L_FAIL;
-=======
-            return E_L_FAIL;
->>>>>>> 10974ee2ba43b56665c741472bbe03880a2eba09
     return E_L_SUCCESS;
 }
 
@@ -47,9 +43,9 @@ EntryListErrorCode EntryList::insert(Word *w,int id){
         // add it to list and then to hashtable
         Entry tmp(*w,id);
         if (list.insert(tmp,&e) == L_FAIL)
-            return E_L_FAIL;
+	    return E_L_FAIL;
         if (hashtable.insert(e) == H_T_FAIL)
-            return E_L_FAIL;
+	    return E_L_FAIL;
         return E_L_SUCCESS;
     }
     // else update payload

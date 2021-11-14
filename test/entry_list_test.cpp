@@ -65,10 +65,17 @@ TEST_F(EntryListTest,InsertTest){
     // get word "a"
     Entry *e=eList->getItemPtr(0);
     // check if Payload contains 0 and 3
-    Word * w2=new Word(test_words[i]);
+    Word * w2=new Word(test_words[0]);
     // check if word is "a"
     ASSERT_TRUE(e->getWord().exactMatch(*w2));
-    List<Entry> list=e->
+
+    List<int> list=e->getPayload();
+    ASSERT_TRUE(2==list.getLen());
+    int v=0;
+    ASSERT_TRUE(list.exists(v));
+    v=3;
+    ASSERT_TRUE(list.exists(v));
+
     delete w2;
     for(int i=1;i<13;i++){
         Word * w2=new Word(test_words[i]);
