@@ -1,5 +1,8 @@
 #!/bin/bash
-
+if [ $(($#)) -ne 3 ]; then
+    echo "Usage: $0 numOfFiles MaxWordsInFile";
+    exit 1;
+fi
 queriesDirName="queries/"
 mkdir -p $queriesDirName;
 fileName="query_"
@@ -10,18 +13,19 @@ fileName="query_"
 rm "./$queriesDirName"*;
 
 totalFiles=$(($2));
+maxWords=$(($3));
 fileCounter=0;
 
 maxWordsInFile=0;
 wordCounter=0;
-
-touch "${queriesDirName}${fileName}${fileCounter}";
-fileCounter=$(($fileCounter + 1));
+flagg=0;
+# touch "${queriesDirName}${fileName}${fileCounter}";
+# fileCounter=$(($fileCounter + 1));
 
 while read line; do
     for word in $line; do
 	wordCounter=$(($wordCounter + 1));
-	if [ $(($RANDOM % 5)) -eq 0 ]; then
+	if [ $(($RANDOM % $maxWords)) -eq 0 ] && [ $(($flagg)) -ne 0 ]; then
 	    touch "${queriesDirName}${fileName}${fileCounter}"
 	    fileCounter=$(($fileCounter + 1));
 	    if [ $(($wordCounter)) -ge $(($maxWordsInFile)) ]; then
@@ -33,8 +37,8 @@ while read line; do
 	    fi
 	    wordCounter=0;
 	fi
-
-	if [ $(($wordCounter)) -ge 5 ]; then
+    flagg=1;
+	if [ $(($wordCounter)) -ge $(($maxWords)) ]; then
 	    touch "${queriesDirName}${fileName}${fileCounter}"
 	    fileCounter=$(($fileCounter + 1));
 	    if [ $(($wordCounter)) -ge $(($maxWordsInFile)) ]; then
@@ -48,7 +52,7 @@ while read line; do
 
 	    wordCounter=0;
 	fi
-	echo $word >> "${queriesDirName}${fileName}${fileCounter-1}" 
+	echo $word >> "${queriesDirName}${fileName}${fileCounter-1}"
     done
     if [ $(($flag)) -eq 1 ]; then
 	break;
