@@ -87,6 +87,7 @@ TEST_F(BKTreeTest, EmptySearchTest) {
     Word * w = new Word("");
     List<Data *> lst = edit_tree->search(w, 0);
     ASSERT_TRUE(lst.getLen() == 0);
+    delete w;
 }
 
 TEST_F(BKTreeTest,SearchTest){

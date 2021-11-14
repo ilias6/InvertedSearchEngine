@@ -9,8 +9,8 @@ TEST(isPrimeTest, NotPrime) {
 }
 
 TEST(isPrimeTest, Prime) {
-    int nums[] = {0, 3, 7, 83, 7919};
-    for (int i = 0; i < 5; ++i)
+    int nums[] = {3, 7, 83, 7919};
+    for (int i = 0; i < 4; ++i)
 	ASSERT_TRUE(true == isPrime(nums[i]));
 }
 
