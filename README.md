@@ -3,13 +3,13 @@
 
 ## Structure of the project:
 As you can see above the project has the following directories:
- 1) bin        -->   the binary files
- 2) build      -->   the object files (.o)
- 3) input      -->   the input files to run the program
- 4) src        -->   the source files (.cpp)
- 5) include    -->   the header files (.hpp)
- 6) lib        -->   the libraries that are required (only gtest)
- 7) test       -->   the source files for unit-testing
+ 1) bin        →   the binary files
+ 2) build      →   the object files (.o)
+ 3) input      →   the input files to run the program
+ 4) src        →   the source files (.cpp)
+ 5) include    →   the header files (.hpp)
+ 6) lib        →   the libraries that are required (only gtest)
+ 7) test       →   the source files for unit-testing
 
 ## Structure of the project (class diagram)
 
