@@ -32,7 +32,7 @@ _ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int s
 For this first part of the project, the input to test our program has the following struct: one file represents one query. The query file
 has five words at maximum (whatever whitespaces are skipped).\
 So a bash script is written that for a given file of words, produces files with >=5 words.\
-The script (make_query_files.sh) is located in the input directory. Also, a file that contains a lot of words is provided for this purpose.\
+The script (make_query_files.sh) is located in the input directory. Also, a file that contains a lot of words is provided for this purpose.
 ### Execution example:
 ```bash
 ./input/make_query_files.sh ./input/words 10000
