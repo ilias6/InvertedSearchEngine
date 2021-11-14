@@ -8,19 +8,19 @@ using namespace std;
 
 class Entry {
     private:
-	Word word;
-	List<int> payload;
+        Word word;
+        List<int> payload;
     public:
-	List<int> & getPayload();
-	ListErrorCode addToPayload(int);
-	ListErrorCode removeFromPayload(int);
-	Word &getWord();
-	Entry(const char *, int);
-	Entry(Word &, int);
-	Entry(Entry &);
-	~Entry();
-	friend ostream & operator<<(ostream &, const Entry &);
-	bool operator==(Entry &);
+        List<int> & getPayload();
+        ListErrorCode addToPayload(int);
+        ListErrorCode removeFromPayload(int);
+        Word &getWord();
+        Entry(const char *, int);
+        Entry(Word &, int);
+        Entry(Entry &);
+        ~Entry();
+        friend ostream & operator<<(ostream &, const Entry &);
+        bool operator==(Entry &);
 };
 
 #endif

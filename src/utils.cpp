@@ -11,11 +11,11 @@ using namespace std;
 
 bool isPrime(int n) {
     if (n % 2 == 0)
-	return false;
+        return false;
 
     for (int i = 3; i < n/2; i += 2)
-	if (n % i == 0)
-	    return false;
+        if (n % i == 0)
+            return false;
 
     return true;
 
@@ -24,7 +24,7 @@ bool isPrime(int n) {
 int findNextPrime(int n) {
     int canditatePrime = n;
     while (!isPrime(canditatePrime))
-	canditatePrime++;
+        canditatePrime++;
     return canditatePrime;
 
 }
@@ -41,13 +41,13 @@ Vector<char> * countQueries(ifstream & inFile, int * counter) {
     *counter = 0;
     char c;
     while (!inFile.eof()) {
-    	inFile.get(c);
-	if (c == '\n') {
+        inFile.get(c);
+        if (c == '\n') {
             vec->insert(c);
-    	    inFile.get(c);
-	    if (c == 's')
-	        (*counter)++;
-	}
+            inFile.get(c);
+            if (c == 's')
+                (*counter)++;
+        }
         vec->insert(c);
     }
     cout << "Done---->Total queries: " << *counter << "\n";
@@ -55,7 +55,7 @@ Vector<char> * countQueries(ifstream & inFile, int * counter) {
 }
 
 
-	/*
+        /*
 Query ** makeQueries(Vector<char> & vec, int numOfQueries) {
     cout << "^^^^^^^^^^^^^^^^^^^^^^^^^\nReading queries..." << endl;
 
@@ -65,36 +65,36 @@ Query ** makeQueries(Vector<char> & vec, int numOfQueries) {
     int start = 0;
     int end = 0;
     while (i < numOfQueries) {
-	if (vec.getItem(end) == '\n' && ((vec.getItem(end+1) == 'e')
-				          || (vec.getItem(end+1) == 'r'))
-					  || (vec.getItem(end+1) == 'm')) {
+        if (vec.getItem(end) == '\n' && ((vec.getItem(end+1) == 'e')
+                                          || (vec.getItem(end+1) == 'r'))
+                                          || (vec.getItem(end+1) == 'm')) {
 
-	    cout << "Not a query skipped\n";
-	    while (vec.getItem(end) != '\n' && vec.getItem(end+1) != 's')
-		end++;
-	    start = end++ +2;
-	    continue;
-	}
-	while (vec.getItem(end) != '\n' || vec.getItem(end+1) != 's')
-	    end++;
-	cout << "start: " <<  start << " end: " << end << endl;
-	qs[i] = new Query(i, vec, start);
-	qs[i]->print();
-	++i;
-	start = end++ +2;
+            cout << "Not a query skipped\n";
+            while (vec.getItem(end) != '\n' && vec.getItem(end+1) != 's')
+                end++;
+            start = end++ +2;
+            continue;
+        }
+        while (vec.getItem(end) != '\n' || vec.getItem(end+1) != 's')
+            end++;
+        cout << "start: " <<  start << " end: " << end << endl;
+        qs[i] = new Query(i, vec, start);
+        qs[i]->print();
+        ++i;
+        start = end++ +2;
     }
 
     cout << "Done!\n^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
 
     return qs;
 }
-	*/
+        */
 
 Query ** makeQueries(char ** paths, int pathsNum) {
     cout << "^^^^^^^^^^^^^^^^^^^^^^^^^\nReading queries..." << endl;
     Query ** qs = new Query*[pathsNum];
     for (int i = 0; i < pathsNum; ++i)
-	qs[i] = new Query(i, paths[i]);
+        qs[i] = new Query(i, paths[i]);
     cout << "Done!\n^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
 
     return qs;
@@ -102,7 +102,7 @@ Query ** makeQueries(char ** paths, int pathsNum) {
 
 void destroyQueries(Query ** qs, int qNum) {
     for (int i = 0; i < qNum; ++i)
-	delete qs[i];
+        delete qs[i];
     delete[] qs;
 }
 
@@ -117,7 +117,7 @@ EntryList * makeEntryList(Query ** qs, int qNum) {
     EntryList * eList = new EntryList(qNum*MAX_QUERY_WORDS);
     // EntryList * eList = new EntryList(10000);
     for (int i = 0; i < qNum; ++i)
-	eList->insert(*qs[i]);
+        eList->insert(*qs[i]);
     gettimeofday(&tp, NULL);
     long int elapsed= tp.tv_sec * 1000 + tp.tv_usec / 1000 -cur;
     // float elapsed = time(NULL) - cur;
@@ -130,11 +130,11 @@ Index * makeIndex(MatchType type, EntryList * eList) {
     time_t cur;
     cur = time(NULL);
     if (type == MT_HAMMING_DIST)
-    	cout << "---------------------------\nBuilding hamming-distance index in: ";
+        cout << "---------------------------\nBuilding hamming-distance index in: ";
     else if (type == MT_EDIT_DIST)
-    	cout << "---------------------------\nBuilding edit-distance index in: ";
+        cout << "---------------------------\nBuilding edit-distance index in: ";
     else
-    	cout << "---------------------------\nBuilding exact-match index in: ";
+        cout << "---------------------------\nBuilding exact-match index in: ";
     Index * index = new Index(*eList, type);
     float elapsed = time(NULL) - cur;
     // elapsed /= 60;
@@ -146,11 +146,11 @@ void search(Index * index, Word * word, int threshold) {
     List<Entry *> res = index->search(word, threshold);
     int len = res.getLen();
     for (int i = 0; i < len; ++i) {
-	if (i > 0 && !(i % 10))
-	    cout << endl;
-	cout << res.getItem(i)->getWord().getStr();
-	if (i < len-1)
-	    cout << ", ";
+        if (i > 0 && !(i % 10))
+            cout << endl;
+        cout << res.getItem(i)->getWord().getStr();
+        if (i < len-1)
+            cout << ", ";
     }
     cout << endl;
 }
@@ -158,25 +158,25 @@ void search(Index * index, Word * word, int threshold) {
 void multipleSearch(Index * index, Word ** words, int wordsNum, int threshold) {
 
     if (index->getType() == MT_HAMMING_DIST)
-    	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in hamming-distance index:\n";
+        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in hamming-distance index:\n";
     else if (index->getType() == MT_EDIT_DIST)
-    	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in edit-distance index:\n";
+        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in edit-distance index:\n";
     else
-    	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in exact-match index:\n";
+        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in exact-match index:\n";
     cout<<"THRESHOLD: "<<threshold<<endl;
     for (int i = 0; i < wordsNum; ++i) {
         struct timeval tp;
         gettimeofday(&tp, NULL);
         long int cur = tp.tv_sec * 1000 + tp.tv_usec / 1000;
         // time_t cur;
-    	// cur = time(NULL);
-    	cout << "***************************\nSearching for : " << words[i]->getStr() << endl << "Results:\n";
-    	search(index, words[i], threshold);
+        // cur = time(NULL);
+        cout << "***************************\nSearching for : " << words[i]->getStr() << endl << "Results:\n";
+        search(index, words[i], threshold);
         gettimeofday(&tp, NULL);
         long int elapsed= tp.tv_sec * 1000 + tp.tv_usec / 1000 -cur;
-    	// float elapsed = time(NULL) - cur;
-    	// elapsed /= 60;
-    	cout << "In :" << elapsed << " milliseconds\n***************************\n";
+        // float elapsed = time(NULL) - cur;
+        // elapsed /= 60;
+        cout << "In :" << elapsed << " milliseconds\n***************************\n";
     }
     cout << endl;
 }

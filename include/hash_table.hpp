@@ -12,14 +12,14 @@ class Bucket{
         Bucket();
         // ~Bucket();
         int bucketSize();
-	Bucket(Bucket &);
+        Bucket(Bucket &);
         void copyBucket(Bucket &);
-	List<Entry *> getListCopy();
+        List<Entry *> getListCopy();
         Entry * getEntry(Word *);
         Entry * getEntry(int);
         enum HashTableErrorCode insert(Entry *);
         void print(void);
-	void printAddr();
+        void printAddr();
 };
 
 class HashTable {
@@ -40,7 +40,7 @@ class HashTable {
         Bucket getBucketCopy(Word *);
         Entry* getEntry(Word *);
         void print(void);
-	void printAddr();
+        void printAddr();
         void deleteData();
 };
 

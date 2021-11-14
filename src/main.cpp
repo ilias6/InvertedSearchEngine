@@ -29,11 +29,11 @@ int main(int argc, char * argv[]) {
     int l = strlen(argv[1]);
     char ** paths = new char*[numOfQueries];
     for (int i = 0; i < numOfQueries; ++i) {
-    	paths[i] = new char[32];
-	if (argv[1][l-1] == '/')
-	    sprintf(paths[i], "%squery_%d", argv[1], i);
-	else
-	    sprintf(paths[i], "%s/query_%d", argv[1], i);
+        paths[i] = new char[32];
+        if (argv[1][l-1] == '/')
+            sprintf(paths[i], "%squery_%d", argv[1], i);
+        else
+            sprintf(paths[i], "%s/query_%d", argv[1], i);
     }
 
 /*
@@ -63,9 +63,9 @@ int main(int argc, char * argv[]) {
     srand((unsigned)time(NULL) * getpid());
     wordsToSearch[0] = new Word("hel");
     for (int i = 1; i < numOfWords; ++i) {
-	       char * str = genRandStr(1+rand()%10);
-	       wordsToSearch[i] = new Word(str);
-	       delete[] str;
+               char * str = genRandStr(1+rand()%10);
+               wordsToSearch[i] = new Word(str);
+               delete[] str;
     }
 
     multipleSearch(hashIndex, wordsToSearch, numOfWords);
@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
     delete editIndex;
     delete hashIndex;
     for (int i = 0; i < numOfWords; ++i)
-	delete wordsToSearch[i];
+        delete wordsToSearch[i];
     delete[] wordsToSearch;
     delete eList;
 

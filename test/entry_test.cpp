@@ -6,20 +6,20 @@ using namespace std;
 
 class EntryTest: public ::testing::Test {
     protected:
-	Entry * e;
+        Entry * e;
     int size;
-	int * payload;
+        int * payload;
         virtual void SetUp() {
-    	    Word w("abcd");
-    	    e = new Entry(w, 0);
-    	    ASSERT_TRUE(1 == e->getPayload().getLen());
-    	    ASSERT_TRUE(0 == e->getPayload().getItem(0));
+            Word w("abcd");
+            e = new Entry(w, 0);
+            ASSERT_TRUE(1 == e->getPayload().getLen());
+            ASSERT_TRUE(0 == e->getPayload().getItem(0));
             size=1000;
-    	    payload = new int[size];
-    	    for (int i = 0; i < size; ++i) {
+            payload = new int[size];
+            for (int i = 0; i < size; ++i) {
                 payload[i] = i+10;
                 e->addToPayload(payload[i]);
-    	    }
+            }
         }
 
         virtual void TearDown() {

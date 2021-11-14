@@ -9,14 +9,14 @@ class Query{
         Word ** word;
         int id;
         int wordsInQuery;
-	char * queryPath;
-	//MatchType type;
-	//bool active;
-	//unsigned int matchDist;
+        char * queryPath;
+        //MatchType type;
+        //bool active;
+        //unsigned int matchDist;
    public:
-	//static long int lastCharRead = 0;
-	Query(int, const char *);
-	//Query(int, Vector<char> &, int);
+        //static long int lastCharRead = 0;
+        Query(int, const char *);
+        //Query(int, Vector<char> &, int);
         Query();
         ~Query();
         int getId();

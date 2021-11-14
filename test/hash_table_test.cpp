@@ -8,18 +8,18 @@ using namespace std;
 
 class HashTableTest: public ::testing::Test {
     protected:
-	HashTable * hTable = NULL;
+        HashTable * hTable = NULL;
         int numOfEntries;
         Entry ** entryPtrs;//data for HashTable insertion
 
         virtual void SetUp() {
             this->hTable = new HashTable(7, djb2);
-	        ASSERT_TRUE(this->hTable->getSize() == 7);
+                ASSERT_TRUE(this->hTable->getSize() == 7);
             this->numOfEntries = 16;
             this->entryPtrs = new Entry*[this->numOfEntries];
             HashTableErrorCode errorVal;
             const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
-		"bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
+                "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
             for(int i = 0; i < numOfEntries; i++) {
                 this->entryPtrs[i] = new Entry(strArr[i], i);
                 errorVal = this->hTable->insert(entryPtrs[i]);
@@ -29,7 +29,7 @@ class HashTableTest: public ::testing::Test {
 
         void checkInsert(HashTable * hTable, int indx, Entry ** entryPtrs, HashTableErrorCode errorVal) {
             ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-	        Entry * res = this->hTable->getEntry(&entryPtrs[indx]->getWord());
+                Entry * res = this->hTable->getEntry(&entryPtrs[indx]->getWord());
             ASSERT_TRUE(entryPtrs[indx] == res);
         }
 
@@ -59,27 +59,27 @@ TEST_F(HashTableTest, InsertTest) {
 /* Bucket::getEntry needs to be tested only*/
 /*
 
-TEST_F(HashTableTest, GetEntry) {	Bucket getBucketCopy(Word *);
+TEST_F(HashTableTest, GetEntry) {       Bucket getBucketCopy(Word *);
     const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
 
     HashTable hTable(7, djb2);
     List<Entry> entryList;
     for (int i = 0; i < this->numOfEntries; ++i) {
-	Entry e(strArr[i], i);
-	entryList.insert(e);
-	Entry * ePtrOrigin = &entryList.getItem(i);
-	HashTableErrorCode errorVal = hTable.insert(ePtrOrigin);
+        Entry e(strArr[i], i);
+        entryList.insert(e);
+        Entry * ePtrOrigin = &entryList.getItem(i);
+        HashTableErrorCode errorVal = hTable.insert(ePtrOrigin);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-	Entry * ePtrHTable = hTable.getEntry(&e.getWord());
-	ASSERT_TRUE(ePtrHTable == ePtrOrigin);
+        Entry * ePtrHTable = hTable.getEntry(&e.getWord());
+        ASSERT_TRUE(ePtrHTable == ePtrOrigin);
     }
 
     const char strArr2[][5]={"aaaa", "ab", "bb", "b", "a", "baba",};
     for (int i = 0; i < 6; ++i) {
-	Entry e(strArr2[i], i);
-	Entry * ePtrHTable = hTable.getEntry(&e.getWord());
-	ASSERT_TRUE(ePtrHTable == NULL);
+        Entry e(strArr2[i], i);
+        Entry * ePtrHTable = hTable.getEntry(&e.getWord());
+        ASSERT_TRUE(ePtrHTable == NULL);
     }
 }
 
@@ -87,25 +87,25 @@ TEST_F(HashTableTest, GetEntry) {	Bucket getBucketCopy(Word *);
 
 TEST_F(HashTableTest, updateEntryPayload) {
     for (int i = 0; i < this->numOfEntries; ++i) {
-	HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), i+1);
+        HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), i+1);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
-	int n1 = 57;
-	errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), n1);
+        int n1 = 57;
+        errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), n1);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
 
-	Entry * ePtrHTable = this->hTable->getEntry(&this->entryPtrs[i]->getWord());
-	List <int> payload2(ePtrHTable->getPayload());
+        Entry * ePtrHTable = this->hTable->getEntry(&this->entryPtrs[i]->getWord());
+        List <int> payload2(ePtrHTable->getPayload());
 
-	List <int> payload1;
-	payload1.insert(i);
-	int n2 = i+1;
-	payload1.insert(n2);
-	payload1.insert(n1);
-	int len = payload1.getLen();
+        List <int> payload1;
+        payload1.insert(i);
+        int n2 = i+1;
+        payload1.insert(n2);
+        payload1.insert(n1);
+        int len = payload1.getLen();
 
-	ASSERT_TRUE(len == payload2.getLen());
-	for (int j = 0; j < len; ++j)
-	    ASSERT_TRUE(payload1.getItem(j) == payload2.getItem(j));
+        ASSERT_TRUE(len == payload2.getLen());
+        for (int j = 0; j < len; ++j)
+            ASSERT_TRUE(payload1.getItem(j) == payload2.getItem(j));
     }
 }
 
@@ -121,14 +121,14 @@ TEST(BucketTest, getEntry) {
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
 
     for (int i = 0; i < 16; ++i) {
-	Entry e(strArr[i], i);
-	Entry * ePtrOrigin = NULL;
-	entryList.insert(e, &ePtrOrigin);
-	HashTableErrorCode errorVal = b.insert(ePtrOrigin);
+        Entry e(strArr[i], i);
+        Entry * ePtrOrigin = NULL;
+        entryList.insert(e, &ePtrOrigin);
+        HashTableErrorCode errorVal = b.insert(ePtrOrigin);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-	ASSERT_TRUE(i+1 == b.bucketSize());
-	Entry * ePtrBucket = b.getEntry(&e.getWord());
-	ASSERT_TRUE(ePtrBucket == ePtrOrigin);
+        ASSERT_TRUE(i+1 == b.bucketSize());
+        Entry * ePtrBucket = b.getEntry(&e.getWord());
+        ASSERT_TRUE(ePtrBucket == ePtrOrigin);
     }
 
     ePtrBucket = b.getEntry(&w);
@@ -148,15 +148,15 @@ TEST(BucketTest, Insert) {
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
 
     for (int i = 0; i < 16; ++i) {
-	Entry e(strArr[i], i);
-	Entry * ePtrOrigin = NULL;
-	entryList.insert(e, &ePtrOrigin);
-	HashTableErrorCode errorVal = b.insert(ePtrOrigin);
+        Entry e(strArr[i], i);
+        Entry * ePtrOrigin = NULL;
+        entryList.insert(e, &ePtrOrigin);
+        HashTableErrorCode errorVal = b.insert(ePtrOrigin);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-	List <Entry *> lst = b.getListCopy();
-	ASSERT_TRUE(i+1 == lst.getLen());
-	Entry * ePtrBucket = lst.getItem(i);
-	ASSERT_TRUE(ePtrBucket == ePtrOrigin);
+        List <Entry *> lst = b.getListCopy();
+        ASSERT_TRUE(i+1 == lst.getLen());
+        Entry * ePtrBucket = lst.getItem(i);
+        ASSERT_TRUE(ePtrBucket == ePtrOrigin);
     }
 }
 //in other words bucket is just a list....
