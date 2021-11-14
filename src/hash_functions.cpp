@@ -1,4 +1,4 @@
-
+#include "../include/hash_functions.hpp"
 /*
 
     SOURCE : http://www.cse.yorku.ca/~oz/hash.html
