@@ -52,11 +52,11 @@ is needed, as we used the gtest framework for unit-testing. The two .a files in 
 As we said before, the bin/ directory contains the "out" and the "test" binary files.\
 Execution example for the first one:
 ```bash
-./bin/out ./queries/
+./bin/out ./queries/ 5000
 ```
 *or*
 ```bash
-./bin/out ./input/queries/
+./bin/out ./input/queries/ 10000
 ```
 The queries directory is made by the script, so check where it is created before running this one.\
 Execution example for the second one:
