@@ -4,6 +4,7 @@
 #include <fstream>
 #include "../include/utils.hpp"
 #include "../include/entry_list.hpp"
+#include <sys/time.h>
 
 using namespace std;
 
@@ -106,17 +107,22 @@ void destroyQueries(Query ** qs, int qNum) {
 }
 
 EntryList * makeEntryList(Query ** qs, int qNum) {
-    time_t cur;
-    cur = time(NULL);
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    long int cur = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+    // time_t cur;
+    // cur = time(NULL);
     cout << "###########################\nBuilding entry list in: ";
     // This is the correct one
     EntryList * eList = new EntryList(qNum*MAX_QUERY_WORDS);
     // EntryList * eList = new EntryList(10000);
     for (int i = 0; i < qNum; ++i)
 	eList->insert(*qs[i]);
-    float elapsed = time(NULL) - cur;
-    elapsed /= 60;
-    cout << elapsed << " minutes\n###########################\n\n";
+    gettimeofday(&tp, NULL);
+    long int elapsed= tp.tv_sec * 1000 + tp.tv_usec / 1000 -cur;
+    // float elapsed = time(NULL) - cur;
+    // elapsed /= 60;
+    cout << (long int)elapsed << " milliseconds\n###########################\n\n";
     return eList;
 }
 
@@ -131,8 +137,8 @@ Index * makeIndex(MatchType type, EntryList * eList) {
     	cout << "---------------------------\nBuilding exact-match index in: ";
     Index * index = new Index(*eList, type);
     float elapsed = time(NULL) - cur;
-    elapsed /= 60;
-    cout << elapsed << " minutes\n---------------------------\n\n";
+    // elapsed /= 60;
+    cout << (long int)elapsed << " seconds\n---------------------------\n\n";
     return index;
 }
 
@@ -157,14 +163,20 @@ void multipleSearch(Index * index, Word ** words, int wordsNum, int threshold) {
     	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in edit-distance index:\n";
     else
     	cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^\nSearching in exact-match index:\n";
+    cout<<"THRESHOLD: "<<threshold<<endl;
     for (int i = 0; i < wordsNum; ++i) {
-	time_t cur;
-	cur = time(NULL);
-	cout << "***************************\nSearching for : " << words[i]->getStr() << endl << "Results:\n";
-	search(index, words[i], threshold);
-	float elapsed = time(NULL) - cur;
-	elapsed /= 60;
-	cout << "In :" << elapsed << " minutes\n***************************\n";
+        struct timeval tp;
+        gettimeofday(&tp, NULL);
+        long int cur = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+        // time_t cur;
+    	// cur = time(NULL);
+    	cout << "***************************\nSearching for : " << words[i]->getStr() << endl << "Results:\n";
+    	search(index, words[i], threshold);
+        gettimeofday(&tp, NULL);
+        long int elapsed= tp.tv_sec * 1000 + tp.tv_usec / 1000 -cur;
+    	// float elapsed = time(NULL) - cur;
+    	// elapsed /= 60;
+    	cout << "In :" << elapsed << " milliseconds\n***************************\n";
     }
     cout << endl;
 }

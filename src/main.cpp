@@ -20,8 +20,10 @@ using namespace std;
 
 
 int main(int argc, char * argv[]) {
-    if (argc < 3)
-	return -1;
+    if (argc < 3){
+        cerr<<"Usage: "<<argv[0]<<" [inputPath] "<<" [queriesNum]"<<endl;
+        return -1;
+    }
 
     int numOfQueries = stoi(argv[2]);
     int l = strlen(argv[1]);
@@ -66,7 +68,7 @@ int main(int argc, char * argv[]) {
 	       delete[] str;
     }
 
-    multipleSearch(hashIndex, wordsToSearch, numOfWords, threshold);
+    multipleSearch(hashIndex, wordsToSearch, numOfWords);
     multipleSearch(editIndex, wordsToSearch, numOfWords, threshold);
     multipleSearch(hammingIndex, wordsToSearch, numOfWords, threshold);
 

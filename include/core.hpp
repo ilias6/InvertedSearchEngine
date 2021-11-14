@@ -20,7 +20,7 @@ extern "C" {
 /// Maximum number of words in a query.
 #define MAX_QUERY_WORDS 5
 
-#define     MAX_DOC_WORDS     ((MAX_DOC_LENGTH)/(MIN_WORD_LENGTH))
+// #define     MAX_DOC_WORDS     ((MAX_DOC_LENGTH)/(MIN_WORD_LENGTH))
 /// Maximum query length in characters.
 #define MAX_QUERY_LENGTH ((MAX_WORD_LENGTH+1)*MAX_QUERY_WORDS)
 #define SHOW_DEFINE(x) printf("%s=%d\n", #x,x);
