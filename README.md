@@ -24,7 +24,7 @@ _  | _ | int length | int actual_size |
 Entry | Bucket | HashTable | Query | BKNode | BKTree | EntryList | Index
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
 Word w | List\<Entry\*\> | Bucket\* array | Word\*\* | Entry\* e | metric | List\<Entry\> list | MatchType
-List\<int\> | _ | int size | int id | int distance | BKNode\* root | HashTable t | BKTree\*\* trees (multiple trees for manhattan distance)
+List\<int\> | _ | int size | int id | int distance (from parent) | BKNode\* root | HashTable t | BKTree\*\* trees (multiple trees for manhattan distance)
 _ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int size | _ | HashTable \*
 
 
