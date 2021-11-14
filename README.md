@@ -15,7 +15,7 @@ As you can see above the project has the following directories:
 
 ### Our basic classes:
 Word | ListNode\<T\> | List\<T\> | Vector\<T\>
- | :---: | :---: | :---: | :---:
+| :---: | :---: | :---: | :---:
 char\* string | T data | ListNode\<T\>\* head | T[Actual Size]
 int length | ListNode\<T\>* next | ListNode\<T\>\* tail | int length
 _  | _ | int length | int actual_size |
