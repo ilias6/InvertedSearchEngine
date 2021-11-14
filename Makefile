@@ -12,7 +12,7 @@ BDIR	= ./bin/
 TDIR	= ./test/
 
 
-_OBJ 	= list.o entry.o word.o hash_table.o hash_functions.o document.o query.o BK_tree.o index.o utils.o entry_list.o
+_OBJ 	=entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
 _TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o #index_test.o entry_list_test.o
@@ -22,7 +22,7 @@ _DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.h
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
-all: apt directories program all_tests
+all:directories program all_tests
 program: $(BDIR)out
 all_tests:$(BDIR)tests
 
@@ -35,15 +35,31 @@ $(BDIR)out: $(OBJ) $(ODIR)main.o
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 	$(++) -c -o $@ $< $(TESTFLAGS)
 
-$(ODIR)%.o: $(SDIR)%.cpp $(DEPS)
+$(ODIR)BK_tree.o: $(SDIR)BK_tree.cpp $(IDIR)BK_tree.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-
-
+$(ODIR)entry_list.o: $(SDIR)entry_list.cpp $(IDIR)entry_list.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)list.hpp $(IDIR)query.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)entry.o: $(SDIR)entry.cpp $(IDIR)entry.hpp $(IDIR)list.hpp $(IDIR)word.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)hash_functions.o: $(SDIR)hash_functions.cpp $(IDIR)hash_functions.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)hash_table.o: $(SDIR)hash_table.cpp $(IDIR)hash_table.hpp $(IDIR)entry.hpp $(IDIR)word.hpp $(IDIR)list.hpp $(IDIR)hash_functions.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)index.o: $(SDIR)index.cpp $(IDIR)index.hpp $(IDIR)core.hpp $(IDIR)word.hpp $(IDIR)entry_list.hpp $(IDIR)hash_table.hpp $(IDIR)entry.hpp $(IDIR)BK_tree.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)main.o: $(SDIR)main.cpp $(DEPS)
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)vector.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
 directories:
 	mkdir -p build; mkdir -p bin
 
-apt:
-	sudo apt-get install libgtest-dev
+# apt:
+# 	sudo apt-get install libgtest-dev
 
 cleanO:
 	rm $(ODIR)*.o
