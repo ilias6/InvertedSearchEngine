@@ -27,6 +27,56 @@ class IndexTest: public ::testing::Test {
             IndexErrorCode errorVal;
         }
 
+	void checkConstructor() {
+	    Word * w = new Word("aa");
+	    /* Edit check */
+	    List<Entry *> lst = editIndex->search(w, 1);
+	    int len = lst.genLen();
+	    ASSERT_EQ(len == 5);
+	    Entry * e = new Entry(w, 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+	    e = new Entry("aaa", 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+	    e = new Entry("aba", 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+	    e = new Entry("baa", 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+	    e = new Entry("aab", 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+
+	    delete w;
+
+	    /* Hamming check */
+	    w = new Word("aj");
+	    lst = hammingIndex->search(w, 1);
+	    int len = lst.genLen();
+	    ASSERT_EQ(len == 2);
+	    e = new Entry("aa", 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+	    e = new Entry("dj", 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+
+	    delete w;
+
+	    /* Exact check */
+	    w = new Word("aaa");
+	    lst = exactIndex->search(w);
+	    int len = lst.genLen();
+	    ASSERT_EQ(len == 1);
+	    e = new Entry("aaa", 0);
+	    ASSERT_EQ(true == lst.exists(e))
+	    delete e;
+
+	    delete w;
+	}
+
         virtual void TearDown() {
             delete this->editIndex;
             delete this->hammingIndex;
@@ -38,5 +88,29 @@ class IndexTest: public ::testing::Test {
 TEST(IndexTest, EmptyIndex) {
     EntryList eList(17);
     Index editIndex(eList, MT_EDIT_DIST);
+    Index hammingIndex(eList, MT_HAMMING_DIST);
+    Index exactIndex(eList, MT_EXACT_DIST);
+    
+    Word * w = new Word("abcd");
+    List<Entry *> lst = editIndex.search(w);
+    int len = lst.getLen();
+    ASSERT_EQ(len == 0);
+    lst = hammingIndex.search(w);
+    len = lst.getLen();
+    ASSERT_EQ(len == 0);
+    lst = exactIndex.search(w);
+    len = lst.getLen();
+    ASSERT_EQ(len == 0);
 
+    delete w;
+    w = new Word("");
+    lst = editIndex.search(w);
+    len = lst.getLen();
+    ASSERT_EQ(len == 0);
+    lst = hammingIndex.search(w);
+    len = lst.getLen();
+    ASSERT_EQ(len == 0);
+    lst = exactIndex.search(w);
+    len = lst.getLen();
+    ASSERT_EQ(len == 0);
 }
