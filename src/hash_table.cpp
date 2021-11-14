@@ -44,7 +44,7 @@ Entry * Bucket::getEntry(Word * w){
         e1=list.getItem(i);
         if((e1->getWord()).exactMatch(*w))
             break;
-	e1 = NULL;
+        e1 = NULL;
 
     }
     return e1;
@@ -115,15 +115,15 @@ int HashTable::getSize(void){
 
 enum HashTableErrorCode HashTable::setSizeAndAlloc(int sz){
     if (this->size == 0) {
-    	this->size=sz;
-    	this->array=new Bucket[sz];
-	return H_T_SUCCESS;
+        this->size=sz;
+        this->array=new Bucket[sz];
+        return H_T_SUCCESS;
     }
 
     if(this->array!=NULL)
         delete[] this->array;
     else
-	cout << "Weird things happened!\n";
+        cout << "Weird things happened!\n";
     this->size=sz;
     this->array=new Bucket[sz];
     return H_T_SUCCESS;

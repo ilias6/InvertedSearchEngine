@@ -25,7 +25,7 @@ BKErrorCode BKTree::destroy(BKNode * node) {
     for (int i = 0; i < childrenNum; ++i) {
         BKNode * n = children.getItem(i);
         if (destroy(n) == BK_FAIL)
-	    return BK_FAIL;
+            return BK_FAIL;
     }
 
     delete node;
@@ -85,11 +85,11 @@ void BKTree::print(BKNode * node, int tabsNum) {
 BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
     if (*node == NULL) {
         try {
-	    *node = new BKNode(data, distWithParent);
-	}
-	catch (bad_alloc & exc) {
-	    return BK_FAIL;
-	}
+            *node = new BKNode(data, distWithParent);
+        }
+        catch (bad_alloc & exc) {
+            return BK_FAIL;
+        }
         this->size++;
         return BK_SUCCESS;
     }
@@ -149,7 +149,7 @@ List<Data *> BKTree::search(BKNode * node, Key * word1, int n) {
 }
 
 List<Data *> BKTree::search(Key * key, int n) {
-    if(n<0){
+    if(n<0 || key == NULL || key->getLen() == 0) {
         List<Data *> empty_list;
         return empty_list;
     }

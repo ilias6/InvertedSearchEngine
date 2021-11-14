@@ -16,19 +16,19 @@ class Vector {
         int actual_arr_size;//2,4,8,16,32 etc..
         T*arr;
     public:
-    	Vector();
-	Vector(int);
-    	Vector(const Vector &);
-    	~Vector();
+        Vector();
+        Vector(int);
+        Vector(const Vector &);
+        ~Vector();
         int getActualMemoryLen() const;
-    	void print() const;
-    	int getLen() const;
+        void print() const;
+        int getLen() const;
         VectorErrorCode copyVector(Vector &);
-    	VectorErrorCode insert(T&);
-    	// VectorErrorCode append(Vector<T> *);
-    	bool exists(T&) const;
-    	VectorErrorCode remove(T&);
-    	T & getItem(int) const;
+        VectorErrorCode insert(T&);
+        // VectorErrorCode append(Vector<T> *);
+        bool exists(T&) const;
+        VectorErrorCode remove(T&);
+        T & getItem(int) const;
         T getItemCopy(int);
 
 };
@@ -106,7 +106,7 @@ int Vector<T>::getActualMemoryLen() const {
 template <typename T>
 T & Vector<T>::getItem(int index) const {
     if (index >= this->len || index < 0)
-	   throw invalid_argument("Index out of range");
+           throw invalid_argument("Index out of range");
     return arr[index];
 }
 
@@ -114,7 +114,7 @@ T & Vector<T>::getItem(int index) const {
 template <typename T>
 T Vector<T>::getItemCopy(int index) {
     if (index >= this->len || index < 0)
-	   throw invalid_argument("Index out of range");
+           throw invalid_argument("Index out of range");
     return arr[index];
 
 }

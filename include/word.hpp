@@ -9,16 +9,16 @@ class Word {
         int len;
         char * str;
     public:
-	/*Basic*/
-	void set(const char *);
-	int getLen();
-	const char * getStr();
-	friend ostream & operator<<(ostream &, const Word &);
-	bool operator==(Word &);
-	bool exactMatch(Word &);
-	int hammingDist(Word &);
-	int editDist(Word &);
-    	Word();
+        /*Basic*/
+        void set(const char *);
+        int getLen();
+        const char * getStr();
+        friend ostream & operator<<(ostream &, const Word &);
+        bool operator==(Word &);
+        bool exactMatch(Word &);
+        int hammingDist(Word &);
+        int editDist(Word &);
+        Word();
         Word(Word&);
         Word(const char *);
         ~Word();
