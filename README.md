@@ -47,7 +47,7 @@ In the Makefile, the command:
 ```bash
 sudo apt-get install libgtest-dev
 ```
-is needed, as we used the gtest framework for unit-testing. The two .a files in lib/ are linked at the compilation of the unit-test binary, so that is the only thing that you must install to your system.
+is needed, as we used the gtest framework for unit-testing. The two .a files in lib/ are linked at the compilation of the unit-test binary, so that is the only thing that you must install to your system.\
 As we said before, the bin/ directory contains the "out" and the "test" binary files.
 Execution example for the first one:
 ```bash
