@@ -22,7 +22,7 @@ _DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.h
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
-all: directories program all_tests
+all: apt directories program all_tests
 program: $(BDIR)out
 all_tests:$(BDIR)tests
 
@@ -41,6 +41,9 @@ $(ODIR)%.o: $(SDIR)%.cpp $(DEPS)
 
 directories:
 	mkdir -p build; mkdir -p bin
+
+apt:
+	sudo apt-get install libgtest-dev
 
 cleanO:
 	rm $(ODIR)*.o

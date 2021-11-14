@@ -20,11 +20,18 @@ using namespace std;
 
 
 int main(int argc, char * argv[]) {
-    int numOfQueries = 10000;
+    if (argc < 3)
+	return -1;
+
+    int numOfQueries = stoi(argv[2]);
+    int l = strlen(argv[1]);
     char ** paths = new char*[numOfQueries];
     for (int i = 0; i < numOfQueries; ++i) {
     	paths[i] = new char[32];
-    	sprintf(paths[i], "./input/queries/query_%d", i);
+	if (argv[1][l-1] == '/')
+	    sprintf(paths[i], "%squery_%d", argv[1], i);
+	else
+	    sprintf(paths[i], "%s/query_%d", argv[1], i);
     }
 
 /*
