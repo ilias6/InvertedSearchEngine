@@ -170,6 +170,8 @@ template <typename T>
 VectorErrorCode Vector<T>::remove(T& item) {
     bool exists=false;
     int indx=-1;
+    if(this->len==0)
+        return V_EMPTY;
     for(int i=0;i<this->len;i++)
         if(arr[i]==item){
             indx=i;

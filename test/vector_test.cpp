@@ -122,7 +122,7 @@ TEST_F(VectorTest,RemoveTest){
     VectorErrorCode err_val1,err_val2;;
     for(int i=0;i<data_size;i++){
         err_val1=empty_vec.remove(*vec_data[i]);
-        ASSERT_TRUE(err_val1==V_NOT_EXISTS);
+        ASSERT_TRUE(err_val1==V_EMPTY);
     }
     int old_actual_len=this->int_vec->getActualMemoryLen();
     for(int i=0;i<data_size;i++){
