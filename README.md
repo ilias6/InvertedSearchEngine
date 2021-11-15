@@ -27,6 +27,25 @@ Word w | List\<Entry\*\> | Bucket\* array | Word\*\* | Entry\* e | metric | List
 List\<int\> payload | _ | int size | int id | int distance (from parent) | BKNode\* root | HashTable t | BKTree\*\* trees (multiple trees for manhattan distance)
 _ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int size | _ | HashTable \*
 
+### *A few words about our basic classes*
+1. **Word**    
+&emsp;We've implemented copy constructor, contsructor with char *, setters, getters and also the metric functions needed (exactMatch,editDist,hammingDist). Also we overloaded the operators \<\< (usefull for printing) and == (useful for template data comparison) that compares using exactMatch. If an empty word is to be constructed then len is 0 and str is set to NULL.  
+3. **ListNode\<T\>**  
+&emsp;We've implemented copy constructor, empty constructor(create empty object and set next to NULL) and getters/setters. ListNode is member of class List and contains data of type T and a pointer to the next ListNode\<T\>.  
+5. **List\<T\>**
+&emsp;We've implemented needed constructors and methods for copying and appending lists. Insert has O(1) time complexity, because insert is done each time in the tail of the list. Lists can be traversed by index and the caller can get node's data reference,copy and data address in memory. If index given is negative or exceeds len of list, then an invalid_argument exception is thrown indicating that index is out of range. It must be noted that remove, removes the first occurence of T object. What's more, ListErrorCode is implemented to indicate success or failure in list operations (L_SUCCESS,L_FAIL,L_EMPTY,L_NOT_EXISTS).
+7. **Vector\<T\>**  
+&emsp;Vector is an array containing data of type T. At the very first insert actual size of array in memory is 2 and when the third item is to be inserted, actual size of array is doubled. As for remove, when for example the previously inserted third item is removed the actual memory is cut in half. In general, when actual size in memory is to be exceeded, array is resized accordingly (doubled or cut in half) and data is copied in the newly created array (operation like realloc in c). One problem with the above is that we can have waste of memory. This vector was created in favor of BKTreeNode to hold its children and access them in O(1). In the next part we consider adding a resize method so as not to waste resources.
+
+### *A few words about our composite classes*
+1. **Entry**
+2. **Bucket**
+3. **HashTable**
+4. **EntryList**
+5. **BKNode**
+6. **BKTree**
+7. **Index**
+8. **Query**
 
 ## Make it run!
 For this first part of the project, the input to test our program has the following struct: one file represents one query. The query file
