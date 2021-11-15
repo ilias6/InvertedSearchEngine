@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/query.hpp"
+#include "../include/gtest.h"
 #include <stdexcept>
 #include <iostream>
 

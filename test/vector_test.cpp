@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/vector.hpp"
+#include "../include/gtest.h"
 #include "../include/hash_functions.hpp"
 #include <stdexcept>
 #include <ctime>

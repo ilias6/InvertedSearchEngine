@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/hash_table.hpp"
+#include "../include/gtest.h"
 #include "../include/hash_functions.hpp"
 #include "../include/entry.hpp"
 #include <stdexcept>

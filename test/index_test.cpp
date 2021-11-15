@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "../include/gtest.h"
 #include "../include/index.hpp"
 #include "../include/core.hpp"
 #include <stdexcept>

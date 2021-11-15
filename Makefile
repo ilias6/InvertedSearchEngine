@@ -58,8 +58,6 @@ $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 directories:
 	mkdir -p build; mkdir -p bin
 
-# apt:
-# 	sudo apt-get install libgtest-dev
 
 cleanO:
 	rm $(ODIR)*.o

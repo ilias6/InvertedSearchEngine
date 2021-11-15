@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/list.hpp"
+#include "../include/gtest.h"
 #include "../include/word.hpp"
 #include <stdexcept>
 

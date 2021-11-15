@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/word.hpp"
+#include "../include/gtest.h"
 
 TEST(ConstructorTest, EmptyString) {
     Word w;

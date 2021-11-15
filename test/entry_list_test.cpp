@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/entry_list.hpp"
+#include "../include/gtest.h"
 #include <stdexcept>
 #include <iostream>
 using namespace std;

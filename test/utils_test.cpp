@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/utils.hpp"
+#include "../include/gtest.h"
 
 
 TEST(isPrimeTest, NotPrime) {

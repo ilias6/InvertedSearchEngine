@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../include/BK_tree.hpp"
+#include "../include/gtest.h"
 #include <stdexcept>
 
 class BKTreeTest: public ::testing::Test {
