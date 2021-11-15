@@ -17,10 +17,6 @@ Query::Query(int id, const char * path){
     this->wordsInQuery=0 ;
     this->queryPath=new char[strlen(path)+1];
     this->word=new Word*[MAX_QUERY_WORDS];
-    if(this->word==NULL || this->queryPath==NULL){
-        cerr << "Failed to allocate memmory to fetch query words!"<<endl;
-        return;
-    }
     strcpy(queryPath,path);
     // this is for finding duplicates in 0(1)
     HashTable hashtable(findNextPrime(MAX_QUERY_WORDS/2),djb2);
@@ -29,7 +25,7 @@ Query::Query(int id, const char * path){
 
     if (!input.is_open()) {
            cerr << "Failed to open file."<<strerror(errno)<<":" << path << endl;
-           return;
+           exit(1);
     }
 
     int buffIndex;
@@ -44,7 +40,7 @@ Query::Query(int id, const char * path){
             if(buffIndex==MAX_WORD_LENGTH){
                 cout<<buffer<<endl;
                 cerr << "Query contains words with len exceeding MAX_WORD_LENGTH (" << MAX_WORD_LENGTH <<")"<< endl;
-                return;
+                exit(1);
             }
 
         }
@@ -54,7 +50,7 @@ Query::Query(int id, const char * path){
         buffIndex--;
         if(buffIndex<MIN_WORD_LENGTH-1){
             cerr << "Query contains words with len smaller than MIN_WORD_LENGTH (" << MIN_WORD_LENGTH <<")"<< endl;
-            return;
+            exit(1);
         }
         buffer[buffIndex+1]='\0';//terminate string
         Word * w=new Word(buffer);
@@ -71,18 +67,14 @@ Query::Query(int id, const char * path){
         hashtable.insert(e);
         this->wordsInQuery++;
         if(this->wordsInQuery>MAX_QUERY_WORDS){
-            cerr << "Document contains more words than MAX_DOC_WORDS (" << MAX_QUERY_WORDS <<")"<< endl;
-            return;
+            cerr << "Query contains more words than MAX_QUERY_WORDS (" << MAX_QUERY_WORDS <<")"<< endl;
+            exit(1);
         }
     }
     // now that we know the size of word array
     // make a smaller array containing the exact number of words
     Word **tmp=this->word;
     this->word=new Word*[wordsInQuery];
-    if(this->word==NULL){
-        cerr << "Failed to allocate memmory to fetch query words!"<<endl;
-        return;
-    }
     for(int i=0;i<wordsInQuery;i++)
     this->word[i]=tmp[i];
     delete[] tmp;

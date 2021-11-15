@@ -33,48 +33,62 @@ class IndexTest: public ::testing::Test {
         }
 
         void checkConstructor() {
-        char test_words[][16]={
-            "a","word","is","here","hel","hll","ello","oop","trooper","shit","mastodon","helps","a","wolves"
-        };
-        //call eddit search with threshold 0 just to check that insert was done
-        //BK_tree search  is already tested
+            ASSERT_TRUE(editIndex->getType()==MT_EDIT_DIST);
+            ASSERT_TRUE(hammingIndex->getType()==MT_HAMMING_DIST);
+            ASSERT_TRUE(exactIndex->getType()==MT_EXACT_MATCH);
+            char test_words[][16]={
+                "a","word","is","here","hel","hll","ello","oop","trooper","shit","mastodon","helps","a","wolves"
+            };
+            //call eddit search with threshold 0 just to check that insert was done
+            //BK_tree search  is already tested
 
-            /* Edit check */
-        for(int i=0;i<14;i++){
-            Word * w = new Word(test_words[i]);
-            Entry * e=new Entry(*w,0);
-            List<Entry *> lst = editIndex->search(w, 0);
+                /* Edit check */
+            for(int i=0;i<14;i++){
+                Word * w = new Word(test_words[i]);
+                Entry * e=new Entry(*w,0);
+                List<Entry *> lst = editIndex->search(w, 0);
+                    int len = lst.getLen();
+                    ASSERT_TRUE(len == 1);
+                ASSERT_TRUE(*e == *lst.getItem(0));
+                delete e;
+                delete w;
+            }
+
+
+                /* Hamming check */
+            for(int i=0;i<14;i++){
+                Word * w = new Word(test_words[i]);
+                Entry * e=new Entry(*w,0);
+                List<Entry *> lst = hammingIndex->search(w, 0);
                 int len = lst.getLen();
                 ASSERT_TRUE(len == 1);
-            ASSERT_TRUE(*e == *lst.getItem(0));
-            delete e;
-            delete w;
-        }
+                ASSERT_TRUE(*e == *lst.getItem(0));
 
-
-            /* Hamming check */
-        for(int i=0;i<14;i++){
-            Word * w = new Word(test_words[i]);
-            Entry * e=new Entry(*w,0);
-            List<Entry *> lst = hammingIndex->search(w, 0);
-            int len = lst.getLen();
-            ASSERT_TRUE(len == 1);
-            ASSERT_TRUE(*e == *lst.getItem(0));
-
-            delete e;
-            delete w;
-        }
-        // exact search
-        for(int i=0;i<14;i++){
-            Word * w = new Word(test_words[i]);
-            Entry * e=new Entry(*w,0);
-            List<Entry *> lst = exactIndex->search(w, 0);
+                delete e;
+                delete w;
+            }
+            {
+                //search a word with bigger len than the biggest word
+                //->must return empty list
+                Word * w = new Word("aaaaaaaaaaaaaaaaaaaaaaa");
+                Entry * e=new Entry(*w,0);
+                List<Entry *> lst = hammingIndex->search(w, 0);
                 int len = lst.getLen();
-                ASSERT_TRUE(len == 1);
-            ASSERT_TRUE(*e == *lst.getItem(0));
-            delete e;
-            delete w;
-        }
+                ASSERT_TRUE(len == 0);
+                delete e;
+                delete w;
+            }
+            // exact search
+            for(int i=0;i<14;i++){
+                Word * w = new Word(test_words[i]);
+                Entry * e=new Entry(*w,0);
+                List<Entry *> lst = exactIndex->search(w, 0);
+                    int len = lst.getLen();
+                    ASSERT_TRUE(len == 1);
+                ASSERT_TRUE(*e == *lst.getItem(0));
+                delete e;
+                delete w;
+            }
 
         }
 

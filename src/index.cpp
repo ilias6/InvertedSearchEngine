@@ -104,6 +104,8 @@ List<Entry *> Index::search(Word * w, int n) {
     else {
         // haming dist
         int idx=w->getLen()-MIN_WORD_LENGTH;
+        if(idx>=this->numOfTrees)
+            return results;
         List<Entry *> res = this->tree[idx]->search(w, n);
         results.append(&res);
     }
