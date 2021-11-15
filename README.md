@@ -69,13 +69,15 @@ is located in the include directory.
 ## Make it run!
 For this first part of the project, the input to test our program has the following struct: one file represents one query. The query file
 has five words at maximum (whatever whitespaces are skipped).\
-So a bash script is written, that for a given file of words, produces files with <6 words.\
+So a bash script is written, that for a given file of words, produces files with < \[maxWords\] words.\
 The script (make_query_files.sh) is located in the input directory. Also, a file that contains a lot of words is provided for this purpose.
 ### Execution example:
 ```bash
-./input/make_query_files.sh ./input/words 10000
+./input/make_query_files.sh ./input/words 10000 5
 ```
-The second parameter stands for the number of files to be made.
+The second parameter stands for the number of files to be made and the third one for the max words.\
+*Execution form:*\
+make_query_files [pathToInputFile] [numOfProducedFiles] [maxWordInFile]
 
 ### For the main program, run the Makefile first:
 ```bash
