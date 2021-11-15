@@ -49,14 +49,22 @@ _ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int s
 5. **EntryList**  
 &emsp;EntryList contains a HashTable and a List\<Entry\>. Public method insert takes a Query as argument and calls private method insert with Word * and int (queryId). Private insert first check existance of word. If word doesn't exist, then insert it in the list (O(1)) and get the address of Entry (in ListNode) and then insert tha address (Entry *) in the hashtable O(1). If word already exists then HashTable::updateEntryPayload updates list of queryIds that word exist. Query class will make sure that no same words are read from a query (duplicate words in query may and preferably not exist), so payload list won't contain a queryId more than once. It should be noted that when we update an Entry * in hashtable, it is also updated in the list (O(1)). HashTable helps as so as not to search the whole list to update an entry's payload in O(n). What's more, HashTableErrorCode is implemented to indicate success or failure in EntryList operations (E_L_SUCCESS,E_L_FAIL).  
 6. **BKNode**
+&emsp;Contains a pointer to an Entry (initially inserted in an EntryList), an integer that represents the distance (by the defined metric)
+and a Vector of pointers to BKNodes that represent the children of this BKNode.
 7. **BKTree**
+&emsp;During the construction of this class, the metric function is defined and the root pointer is initially set to NULL. The insert method takes the Entry *
+parameter and to achieve the recursive insertion in the tree, calls a private insert method on the root BKNode pointer. The search method similarly and returns 
+the results in a List of Entry pointers.
 8. **Index**
-
+&emsp;For a given EntryList and a MatchType, an Index is built. When we search for a word in our index, the MatchType is checked and the corresponding lookup
+is being done.
 
 **For all templates, it is important to say that if the data type is pointer, it's programmer's responsibility to free the memory!** 
 
 ***Gtest was used for unit testing.***
-
+We used the gtest framework for unit-testing. The two .a files in lib/ are linked at the compilation of the unit-test binary. The gtesh.h header file
+is located in the include directory.
+\
 
 ## Make it run!
 For this first part of the project, the input to test our program has the following struct: one file represents one query. The query file
@@ -73,12 +81,6 @@ The second parameter stands for the number of files to be made.
 ```bash
 make
 ```
-In the Makefile, the command:
-```bash
-sudo apt-get install libgtest-dev
-```
-is needed, as we used the gtest framework for unit-testing. The two .a files in lib/ are linked at the compilation of the unit-test binary, so that is the only thing that you must install to your system.\
-\
 As we said before, the bin/ directory contains the "out" and the "test" binary files.\
 Execution examples for the first one:
 ```bash
