@@ -45,7 +45,7 @@ _ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int s
 3. **HashTable**  
 &emsp;Hashtable contains a Bucket array and its size (preferably use a prime number) and a pointer to a hash function (hash functions exist in hash_functions.cpp). Inserting and removing from hashtable is done with the usual method. What's more, HashTableErrorCode is implemented to indicate success or failure in HashTable operations (H_T_SUCCESS,H_T_FAIL).  
 4.**Query**  
-&emsp;Query class constructor opens a file (provided as char * path) which will be treated as a single query (1 file==1 query). Query class holds an array of Word *,its' size, the queries' id and the path to particular file. At first we don't know the actual size of words contained in file. So the word array size is set to MAX_QUERY_WORDS (defined in query.hpp) and later is resized to the actual size. Query constructor makes sure that no duplicates are stored in the array (uses a local hashtable constructed inside for that purpose).
+&emsp;Query class constructor opens a file (provided as char * path) which will be treated as a single query (1 file==1 query). Query class holds an array of Word *,its' size, the queries' id and the path to particular file. At first we don't know the actual size of words contained in file. So the word array size is set to MAX_QUERY_WORDS and later is resized to the actual wordsInQuery size. Query constructor makes sure that no duplicates are stored in the array (uses a local hashtable constructed inside for that purpose).
 5. **EntryList**  
 &emsp;EntryList contains a HashTable and a List\<Entry\>. Public method insert takes a Query as argument and calls private method insert with Word * and int (queryId). Private insert first check existance of word. If word doesn't exist, then insert it in the list (O(1)) and get the address of Entry (in ListNode) and then insert tha address (Entry *) in the hashtable O(1). If word already exists then HashTable::updateEntryPayload updates list of queryIds that word exist. Query class will make sure that no same words are read from a query (duplicate words in query may and preferably not exist), so payload list won't contain a queryId more than once. It should be noted that when we update an Entry * in hashtable, it is also updated in the list (O(1)). HashTable helps as so as not to search the whole list to update an entry's payload in O(n). What's more, HashTableErrorCode is implemented to indicate success or failure in EntryList operations (E_L_SUCCESS,E_L_FAIL).  
 6. **BKNode**
@@ -53,7 +53,10 @@ _ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int s
 8. **Index**
 
 
-For all templates, it is important to say that if the data type is pointer, it's programmer's responsibility to free the memory!
+**For all templates, it is important to say that if the data type is pointer, it's programmer's responsibility to free the memory!** 
+
+***Gtest was used for unit testing.***
+
 
 ## Make it run!
 For this first part of the project, the input to test our program has the following struct: one file represents one query. The query file
