@@ -90,6 +90,7 @@ Query ** makeQueries(Vector<char> & vec, int numOfQueries) {
 }
         */
 
+/*
 Query ** makeQueries(char ** paths, int pathsNum) {
     cout << "^^^^^^^^^^^^^^^^^^^^^^^^^\nReading queries..." << endl;
     Query ** qs = new Query*[pathsNum];
@@ -99,7 +100,7 @@ Query ** makeQueries(char ** paths, int pathsNum) {
 
     return qs;
 }
-
+*/
 void destroyQueries(Query ** qs, int qNum) {
     for (int i = 0; i < qNum; ++i)
         delete qs[i];

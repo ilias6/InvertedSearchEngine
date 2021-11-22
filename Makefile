@@ -1,5 +1,5 @@
 ++     	= g++
-CFLAGS 	= #-g
+CFLAGS 	= -g
 LIBS	= -lm
 TESTFLAGS= -pthread
 TESTLIBS= -L ./lib/libgtest_main.a ./lib/libgtest.a
@@ -12,7 +12,7 @@ BDIR	= ./bin/
 TDIR	= ./test/
 
 
-_OBJ 	=entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o
+_OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
 _TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o #index_test.o entry_list_test.o query_test.o utils_test.o
@@ -53,7 +53,11 @@ $(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)h
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 directories:
 	mkdir -p build; mkdir -p bin

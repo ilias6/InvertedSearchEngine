@@ -11,10 +11,12 @@
 #include <fstream>
 
 
+ErrorCode StartQuery(QueryID, const char *, MatchType, unsigned int);
+
 bool isPrime(int);
 int findNextPrime(int);
 bool charInWhitespace(char c);
-Query ** makeQueries(Vector<char> &, int);
+//Query ** makeQueries(Vector<char> &, int);
 Vector<char> * countQueries(ifstream &, int *);
 Query ** makeQueries(char **, int);
 void destroyQueries(Query **, int);
