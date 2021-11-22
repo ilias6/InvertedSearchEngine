@@ -7,24 +7,27 @@
 #include "../include/core.hpp"
 #define MAX_QUERY_LENGTH ((MAX_WORD_LENGTH+1)*MAX_QUERY_WORDS)
 
+
 class Query{
     private:
-        Word ** word;
-        int id;
+        //char * queryPath;
+
+        Word ** words;
+        QueryID id;
         int wordsInQuery;
-        char * queryPath;
-        //MatchType type;
-        //bool active;
-        //unsigned int matchDist;
+        MatchType type;
+        bool active;
+        unsigned int matchDist;
    public:
-        //static long int lastCharRead = 0;
         Query(int, const char *);
-        //Query(int, Vector<char> &, int);
+        Query(QueryID, const char *, MatchType, unsigned int dist = 0);
         Query();
         ~Query();
-        int getId();
+        QueryID getId();
         int getWordsInQuery();
         Word * getWord(int);
+	MatchType getMatchType();
+        unsigned int getMatchDist();
         void print();
 
 };

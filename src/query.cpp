@@ -11,85 +11,61 @@
 
 using namespace std;
 
+Query::Query(QueryID id, const char * str, MatchType type, unsigned int dist) {
+    this->id = id;
+    this->type = type;
+    this->active = true;
+    this->matchDist = dist;
 
-Query::Query(int id, const char * path){
-    this->id=id;
-    this->wordsInQuery=0 ;
-    this->queryPath=new char[strlen(path)+1];
-    this->word=new Word*[MAX_QUERY_WORDS];
-    strcpy(queryPath,path);
-    // this is for finding duplicates in 0(1)
-    HashTable hashtable(findNextPrime(MAX_QUERY_WORDS/2),djb2);
-    // MAYBE CHECK IF FILE IS SMALLER THAN MAX_QUERY_LENGTH AND OPEN OR THROW ERROR MESSAGE
-    ifstream input(queryPath);
-
-    if (!input.is_open()) {
-           cerr << "Failed to open file."<<strerror(errno)<<":" << path << endl;
-           exit(1);
+    int strLen = strlen(str);
+    int buffIndex = 0;
+    int wordsNum = 0;
+    char * buff = new char[32];
+    Word ** tmp = new Word*[8];
+    for (int i = 0; i < strLen; ++i) {
+	if (i < strLen-1 && charInWhitespace(str[i+1]) && charInWhitespace(str[i]))
+	    continue;
+	if (charInWhitespace(str[i]) && buffIndex == 0)
+	    continue;
+	if (charInWhitespace(str[i])) {
+	    buff[buffIndex] = '\0';
+	    Word * w = new Word(buff);
+	    tmp[wordsNum] = w;
+	    buffIndex = 0;
+	    wordsNum++;
+	    continue;
+	}
+	else if (strLen == i+1) {
+	    buff[buffIndex] = str[i];
+	    buff[buffIndex+1] = '\0';
+	    Word * w = new Word(buff);
+	    tmp[wordsNum] = w;
+	    buffIndex = 0;
+	    wordsNum++;
+	    continue;
+	}
+	buff[buffIndex] = str[i];
+	buffIndex++;
     }
-
-    int buffIndex;
-    char * buffer = new char[MAX_WORD_LENGTH+1];
-    while (!input.eof()) {
-        buffIndex=0;
-        input.get(buffer[buffIndex]);
-        while(!charInWhitespace(buffer[buffIndex]) && !input.eof()){
-            //we dont want new lines
-            buffIndex++;
-            input.get(buffer[buffIndex]);
-            if(buffIndex==MAX_WORD_LENGTH){
-                cout<<buffer<<endl;
-                cerr << "Query contains words with len exceeding MAX_WORD_LENGTH (" << MAX_WORD_LENGTH <<")"<< endl;
-                exit(1);
-            }
-
-        }
-        if(buffIndex==0)
-            continue;
-        // we dont want space char or any whitspace
-        buffIndex--;
-        if(buffIndex<MIN_WORD_LENGTH-1){
-            cerr << "Query contains words with len smaller than MIN_WORD_LENGTH (" << MIN_WORD_LENGTH <<")"<< endl;
-            exit(1);
-        }
-        buffer[buffIndex+1]='\0';//terminate string
-        Word * w=new Word(buffer);
-        Entry * e=hashtable.getEntry(w);
-        if(e!=NULL){
-            // means word already exists
-            // cout<<*w<<" already exists!"<<endl;
-            delete w;
-            continue;
-        }
-        //word doen't exist so add it to array and to hashtable
-        this->word[this->wordsInQuery]=w;
-        e=new Entry(*w,this->id);
-        hashtable.insert(e);
-        this->wordsInQuery++;
-        if(this->wordsInQuery>MAX_QUERY_WORDS){
-            cerr << "Query contains more words than MAX_QUERY_WORDS (" << MAX_QUERY_WORDS <<")"<< endl;
-            exit(1);
-        }
+    delete[] buff;
+    this->wordsInQuery = wordsNum;
+    if(this->wordsInQuery>MAX_QUERY_WORDS){
+	cerr << "Query contains more words than MAX_QUERY_WORDS (" << MAX_QUERY_WORDS <<")"<< endl;
+	exit(1);
     }
-    // now that we know the size of word array
-    // make a smaller array containing the exact number of words
-    Word **tmp=this->word;
-    this->word=new Word*[wordsInQuery];
-    for(int i=0;i<wordsInQuery;i++)
-    this->word[i]=tmp[i];
+    this->words = new Word*[wordsNum];
+    for (int i = 0; i < wordsNum; ++i)
+	this->words[i] = tmp[i];
     delete[] tmp;
-    delete[] buffer;
-    hashtable.deleteData();
 }
 
 Query::~Query(){
-    delete[] queryPath;
     for(int i=0;i<wordsInQuery;i++)
-        delete this->word[i];
-    delete[] this->word;
+	delete this->words[i];
+    delete[] this->words;
 }
 
-int Query::getId(){
+QueryID Query::getId(){
     return this->id;
 }
 
@@ -99,18 +75,27 @@ int Query::getWordsInQuery(){
 
 Word * Query::getWord(int indx){
     if(indx<this->wordsInQuery){
-        return word[indx];
+	return words[indx];
     }
     return NULL;
 }
 
+MatchType Query::getMatchType() {
+    return this->type;
+}
+
+unsigned int Query::getMatchDist() {
+    return this->matchDist;
+}
+
 void Query::print(){
     cout<<"------------------------"<<endl;
-    cout<<"QueryPath: "<<queryPath<<endl;
     cout<<"Id: "<<this->id<<endl;
+    cout<<"Match type: "<<this->type<<endl;
+    cout<<"Match distance: "<<this->matchDist<<endl;
     cout<<"WordsInQuery: "<<wordsInQuery<<endl;
     for(int i=0;i<wordsInQuery;i++)
-        cout<<"\t"<<*word[i]<<" "<<word[i]->getLen()<<endl;
+	cout<<"\t"<<*words[i]<<" "<<words[i]->getLen()<<endl;
 
     return ;
 }

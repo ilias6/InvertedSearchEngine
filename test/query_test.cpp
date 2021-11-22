@@ -9,7 +9,7 @@ class QueryTest: public ::testing::Test {
     protected:
         Query * q;
         virtual void SetUp() {
-            q = new Query(0, "./input/test_queries/query_0");
+            q = new Query(0, "   a   word   here   ", MT_EXACT_MATCH, 0);
         }
 
         virtual void TearDown() {
@@ -17,9 +17,11 @@ class QueryTest: public ::testing::Test {
         }
 };
 
-TEST_F(QueryTest, ConstructorTest) {
-    ASSERT_TRUE(q->getWordsInQuery() == 4);
+TEST_F(QueryTest, ConstructorTestNormal) {
+    ASSERT_TRUE(q->getWordsInQuery() == 3);
     ASSERT_TRUE(q->getId() == 0);
+    ASSERT_TRUE(q->getMatchType() == MT_EXACT_MATCH);
+    ASSERT_TRUE(q->getMatchDist() == 0);
     const char strArr[][8] = {"a", "word", "is", "here"};
     for (int i = 0; i < 4; ++i) {
         Word * w = q->getWord(i);
