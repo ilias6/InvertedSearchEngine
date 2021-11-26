@@ -59,10 +59,11 @@ $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
+
 directories:
 	mkdir -p build; mkdir -p bin
 
-unit-test:
+unit-test: directories
 	make all_tests; ./bin/tests
 
 cleanO:
