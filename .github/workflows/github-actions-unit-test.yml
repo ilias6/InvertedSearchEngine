@@ -6,4 +6,5 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            - run: ../../make unit-test
+            - run: ls -a
+            - run: make unit-test
