@@ -65,7 +65,6 @@ directories:
 unit-test:
 	make all_tests; ./bin/tests
 
-
 cleanO:
 	rm $(ODIR)*.o
 
