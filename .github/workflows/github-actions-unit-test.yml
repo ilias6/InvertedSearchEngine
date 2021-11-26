@@ -6,5 +6,6 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
+            - name: Make Unit Test
               uses: actions/checkout@v2
             - run: make unit-test
