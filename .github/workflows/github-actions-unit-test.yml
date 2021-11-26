@@ -8,4 +8,5 @@ jobs:
         steps:
             - name: Make Unit Test
               uses: actions/checkout@v2
+            - run: apt install libgtest-dev
             - run: make unit-test
