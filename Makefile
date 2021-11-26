@@ -62,6 +62,9 @@ $(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.hpp
 directories:
 	mkdir -p build; mkdir -p bin
 
+unit-test:
+	make all_tests; ./bin/tests
+
 
 cleanO:
 	rm $(ODIR)*.o
