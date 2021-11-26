@@ -7,3 +7,4 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - run: ls -a
+            - run: make unit-test
