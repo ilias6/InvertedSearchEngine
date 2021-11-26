@@ -6,5 +6,5 @@ jobs:
     Explore-GitHub-Actions:
         runs-on: ubuntu-latest
         steps:
-            - run: ls -a
+            - run: ls -a ${{ github.workspace }}
             - run: make unit-test
