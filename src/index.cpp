@@ -6,66 +6,66 @@
 
 using namespace std;
 
-IndexErrorCode Index::insertFromList(EntryList &entryList) {
+
+Index::Index(MatchType tp){
+    this->type=tp;
     if (this->type == MT_EXACT_MATCH) {
-        try {
-            hTable=new HashTable(entryList.getHashTable());
-        }
-        catch (bad_alloc & exc) {
-            return I_FAIL;
-        }
-        return I_SUCCESS;
+        this->numOfTrees=0;
+        this->tree=NULL;
+        this->hTable=new HashTable();
+        return;
     }
-    int len=entryList.getLen();
     if(this->type==MT_EDIT_DIST){
         this->numOfTrees=1;
-        try {
-            tree=new BKTree*;
-            tree[0]=new  BKTree(&Word::editDist);
-        }
-        catch (bad_alloc & exc) {
-            return I_FAIL;
-        }
-            for (int i = 0; i < len; ++i) {
-                Entry * e = entryList.getItemPtr(i);
-                if (this->tree[0]->insert(e) == BK_FAIL)
-                return I_FAIL;
-                // cout << i << endl;
-            }
+        this->tree=new BKTree*;
+        this->tree[0]=new  BKTree(&Word::editDist);
     }else{
         this->numOfTrees=MAX_WORD_LENGTH-MIN_WORD_LENGTH;//one tree for each length (hammingDist)
-        try {
-            tree=new BKTree*[this->numOfTrees];
-        }
-        catch (bad_alloc & exc) {
-            return I_FAIL;
-        }
-        for(int i=0;i<this->numOfTrees;i++){
-            try {
-                tree[i]=new BKTree(&Word::hammingDist);
-            }
-            catch (bad_alloc & exc) {
+        tree=new BKTree*[this->numOfTrees];
+
+        for(int i=0;i<this->numOfTrees;i++)
+            tree[i]=new BKTree(&Word::hammingDist);
+    }
+    // also make hashtable for searching if something exists as is in index
+    this->hTable=new HashTable();
+    return ;
+}
+
+// insert takes argument null terminated array
+//of Entry * (its the query converted in entries *)
+IndexErrorCode Index::insert(Entry ** arr){
+    //first check if Entry exists in hashTable as is
+    for(int i=0;arr[i]!=NULL;i++){
+        Entry * e=hTable->getEntry(arr[i]->getWord());
+        IndexErrorCode i_err;
+        HashTableErrorCode h_err;
+        if(e==NULL){
+            h_err=hTable->insert(e);
+            if(h_err==H_T_FAIL)
                 return I_FAIL;
-            }
+            i_err=this->insert(e);
+            if(i_err==I_FAIL)
+                return I_FAIL;
         }
-        for (int i = 0; i < len; ++i) {
-            Entry * e = entryList.getItemPtr(i);
+    }
+}
+
+IndexErrorCode Index::insert(Entry *e){
+    switch(this->type){
+        case MT_EXACT_MATCH://already inserted from caller
+            break;
+        case MT_EDIT_DIST:
+            if (this->tree[0]->insert(e) == BK_FAIL)
+                return I_FAIL;
+            break;
+        case MT_HAMMING_DIST:
             int idx=e->getWord().getLen()-MIN_WORD_LENGTH;
             if (this->tree[idx]->insert(e) == BK_FAIL)
                 return I_FAIL;
-            // cout << i << endl;
-        }
+            break;
     }
     return I_SUCCESS;
 }
-
-Index::Index(EntryList & entryList,MatchType type){
-    this->type = type;
-    this->tree=NULL;
-    this->hTable=NULL;
-    this->insertFromList(entryList);
-}
-
 
 
 Index::~Index() {
