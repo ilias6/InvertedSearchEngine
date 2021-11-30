@@ -141,14 +141,14 @@ enum HashTableErrorCode HashTable::insert(Entry * e){
     return this->array[bucket_index].insert(e);
 }
 
-enum HashTableErrorCode HashTable::updateEntryPayload(Word *w,int payload){
+enum HashTableErrorCode HashTable::updateEntryPayload(Word *w, PayloadEntry & pE){
     unsigned long hash= this->hash_func(w->getStr());
     int bucket_index=hash%this->size;
     Entry *to_be_updated=this->array[bucket_index].getEntry(w);
     if(to_be_updated==NULL)
         return H_T_FAIL;
 
-    to_be_updated->addToPayload(payload);
+    to_be_updated->addToPayload(pE);
     return H_T_SUCCESS;
 }
 

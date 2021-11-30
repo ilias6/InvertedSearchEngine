@@ -14,7 +14,7 @@ class EntryList{
         HashTable hashtable;
         List<Entry> list;
 
-        EntryListErrorCode insert(Word *, int);
+        EntryListErrorCode insert(Word *, PayloadEntry &);
         EntryListErrorCode remove(Word *, int);
     public:
         EntryList(int);

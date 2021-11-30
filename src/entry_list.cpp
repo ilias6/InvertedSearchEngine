@@ -15,9 +15,12 @@ EntryList::~EntryList(){
 EntryListErrorCode EntryList::insert(Query &q){
     int len=q.getWordsInQuery();
     int id=q.getId();
+    MatchType type = q.getType();
+    unsigned int dist = q.getMatchDist();
+    PayloadEntry pE(id, type, dist);
 
     for(int i=0;i<len;i++)
-        if (this->insert(q.getWord(i),id) == E_L_FAIL)
+        if (this->insert(q.getWord(i), pE) == E_L_FAIL)
 	       return E_L_FAIL;
     return E_L_SUCCESS;
 }
@@ -35,13 +38,13 @@ Entry * EntryList::getItemPtr(int i) {
     return this->list.getItemPtr(i);
 }
 
-EntryListErrorCode EntryList::insert(Word *w,int id){
+EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE){
     Entry *e;
     e=hashtable.getEntry(w);
     //if word does not exist
     if(e==NULL){
         // add it to list and then to hashtable
-        Entry tmp(*w,id);
+        Entry tmp(*w,pE);
         if (list.insert(tmp,&e) == L_FAIL)
 	    return E_L_FAIL;
         if (hashtable.insert(e) == H_T_FAIL)
@@ -49,7 +52,7 @@ EntryListErrorCode EntryList::insert(Word *w,int id){
         return E_L_SUCCESS;
     }
     // else update payload
-    hashtable.updateEntryPayload(w,id);
+    hashtable.updateEntryPayload(w, pE);
     return E_L_SUCCESS;
 }
 EntryListErrorCode EntryList::remove(Word *,int){

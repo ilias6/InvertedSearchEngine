@@ -26,7 +26,7 @@ class Query{
         QueryID getId();
         int getWordsInQuery();
         Word * getWord(int);
-	MatchType getMatchType();
+	MatchType getType();
         unsigned int getMatchDist();
         void print();
 

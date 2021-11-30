@@ -35,7 +35,7 @@ class HashTable {
         int getSize(void);
         enum HashTableErrorCode setSizeAndAlloc(int s);
         enum HashTableErrorCode setHashFunc(unsigned long (*h_f)(const char * ));
-        enum HashTableErrorCode updateEntryPayload(Word *,int);
+        enum HashTableErrorCode updateEntryPayload(Word *, PayloadEntry &);
         enum HashTableErrorCode insert(Entry *);
         Bucket getBucketCopy(Word *);
         Entry* getEntry(Word *);

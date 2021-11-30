@@ -3,20 +3,21 @@
 
 #include <iostream>
 #include "./word.hpp"
+#include "./payload_entry.hpp"
 #include "./list.hpp"
 using namespace std;
 
 class Entry {
     private:
         Word word;
-        List<int> payload;
+        List<PayloadEntry> payload;
     public:
-        List<int> & getPayload();
-        ListErrorCode addToPayload(int);
-        ListErrorCode removeFromPayload(int);
+        List<PayloadEntry> & getPayload();
+        ListErrorCode addToPayload(PayloadEntry &);
+        ListErrorCode removeFromPayload(PayloadEntry &);
         Word &getWord();
-        Entry(const char *, int);
-        Entry(Word &, int);
+        Entry(const char *, PayloadEntry &);
+        Entry(Word &, PayloadEntry &);
         Entry(Entry &);
         ~Entry();
         friend ostream & operator<<(ostream &, const Entry &);

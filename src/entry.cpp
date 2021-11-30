@@ -7,9 +7,9 @@
 using namespace std;
 //val is query id
 // and may be used as doc id
-Entry::Entry(const char * w, int val):
+Entry::Entry(const char * w, PayloadEntry & pEntry):
     word(w), payload() {
-    this->addToPayload(val);
+    this->addToPayload(pEntry);
 }
 
 Entry::Entry(Entry & e):
@@ -17,24 +17,25 @@ Entry::Entry(Entry & e):
 
 Entry::~Entry() {}
 
-Entry::Entry(Word & w, int val):word(w),payload() {
-    this->addToPayload(val);
+Entry::Entry(Word & w, PayloadEntry & pEntry):
+	word(w), payload() {
+    this->addToPayload(pEntry);
 }
 
 Word &Entry::getWord() {
     return this->word;
 }
 
-List<int> & Entry::getPayload() {
+List<PayloadEntry> & Entry::getPayload() {
     return this->payload;
 }
 
-ListErrorCode Entry::addToPayload(int q) {
-    return this->payload.insert(q);
+ListErrorCode Entry::addToPayload(PayloadEntry & pEntry) {
+    return this->payload.insert(pEntry);
 }
 
-ListErrorCode Entry::removeFromPayload(int q) {
-    return this->payload.remove(q);
+ListErrorCode Entry::removeFromPayload(PayloadEntry & pEntry) {
+    return this->payload.remove(pEntry);
 }
 //equal operator just check exactMatch of words
 bool Entry::operator==(Entry & e) {

@@ -12,17 +12,17 @@ BDIR	= ./bin/
 TDIR	= ./test/
 
 
-_OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o
+_OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o payload_entry.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
 _TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o #index_test.o entry_list_test.o query_test.o utils_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
-_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp
+_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
-all:directories program all_tests
+all:directories program #all_tests
 program: $(BDIR)out
 all_tests:$(BDIR)tests
 
@@ -35,6 +35,9 @@ $(BDIR)out: $(OBJ) $(ODIR)main.o
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 	$(++) -c -o $@ $< $(TESTFLAGS)
 
+
+$(ODIR)payload_entry.o: $(SDIR)payload_entry.cpp $(IDIR)payload_entry.hpp $(IDIR)core.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)BK_tree.o: $(SDIR)BK_tree.cpp $(IDIR)BK_tree.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)entry_list.o: $(SDIR)entry_list.cpp $(IDIR)entry_list.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)list.hpp $(IDIR)query.hpp

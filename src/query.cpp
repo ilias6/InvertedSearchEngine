@@ -80,7 +80,7 @@ Word * Query::getWord(int indx){
     return NULL;
 }
 
-MatchType Query::getMatchType() {
+MatchType Query::getType() {
     return this->type;
 }
 
