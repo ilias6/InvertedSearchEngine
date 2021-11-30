@@ -13,25 +13,25 @@
 
 class CoreWrapper {
     private:
-	unsigned int Q;
+        unsigned int queryCounter;
+        unsigned int Q;
         EntryList * entryList;
 
-        //		      Index *** 
+        //		      Index ***
         //    	     	  	|
         //       	Index * [3] (MatchType)
-    
+
         /* Index[0] has size=1 and is an exact match index --> a hash table */
         /* For the other two index pointers: */
-        /* We define Max_possible_distances=Max_word_length - Min_word_length. 
+        /* We define Max_possible_distances=Max_word_length - Min_word_length.
            So for i=1,2 we have: Index[i][Max_possible_distances] */
         Index *** indeces;
         Query ** queries;
-        //Document ** docs;    
-	void addToEntryList(MatchType, unsigned int);
+        //Document ** docs;
     public:
 	CoreWrapper(unsigned int);
-	~CoreWrapper(); 
-	void addQuery(QueryID, const char *, MatchType, unsigned int);
+	~CoreWrapper();
+	IndexErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
 };
 
 #endif

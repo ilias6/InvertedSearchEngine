@@ -88,6 +88,23 @@ unsigned int Query::getMatchDist() {
     return this->matchDist;
 }
 
+bool Query::getActive(){
+    return this->active;
+}
+
+bool * Query::getAdressOfActive(){
+    return &active;
+}
+
+
+void Query::Activate(){
+    this->active=true;
+}
+
+void Query::Deactivate(){
+    this->active=false;
+}
+
 void Query::print(){
     cout<<"------------------------"<<endl;
     cout<<"Id: "<<this->id<<endl;

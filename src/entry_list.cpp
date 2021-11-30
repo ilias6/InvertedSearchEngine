@@ -14,15 +14,12 @@ EntryList::~EntryList(){
 
 EntryListErrorCode EntryList::insert(Query &q, Entry *** qEntryPtrs){
     int len=q.getWordsInQuery();
-    int id=q.getId();
-    MatchType type = q.getType();
-    unsigned int dist = q.getMatchDist();
-    PayloadEntry pE(id, type, dist);
-    qEntryPtrs = new Entry**[len+1];
-    qEntryPtrs[len] = NULL;
+    PayloadEntry pE(q.getId(),q.getWordsInQuery(),q.getType(),q.getMatchDist(),q.getAdressOfActive());
+    *qEntryPtrs = new Entry*[len+1];
+    *(*qEntryPtrs+len) = NULL;
 
     for(int i=0;i<len;i++)
-        if (this->insert(q.getWord(i), pE, qEntryPtrs[i]) == E_L_FAIL)
+        if (this->insert(q.getWord(i), pE, *qEntryPtrs+len) == E_L_FAIL)
 	       return E_L_FAIL;
     return E_L_SUCCESS;
 }
@@ -48,10 +45,10 @@ EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE, Entry ** qEntry
         // add it to list and then to hashtable
         Entry tmp(*w,pE);
         if (list.insert(tmp,&e) == L_FAIL)
-	    return E_L_FAIL;
+	       return E_L_FAIL;
         if (hashtable.insert(e) == H_T_FAIL)
-	    return E_L_FAIL;
-	*qEntryPtr = e;
+	       return E_L_FAIL;
+	    *qEntryPtr = e;
         return E_L_SUCCESS;
     }
     // else update payload

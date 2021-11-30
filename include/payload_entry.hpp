@@ -3,23 +3,27 @@
 
 #include <iostream>
 #include "./core.hpp"
+#include "./query.hpp"
 using namespace std;
 
 class PayloadEntry {
     private:
 	QueryID id;
+    unsigned int words_in_query;
 	MatchType type;
 	unsigned int dist;
+    bool * active;//points to bool of original query
     public:
-        PayloadEntry(QueryID, MatchType,unsigned int);
+        PayloadEntry(QueryID,unsigned int,MatchType,unsigned int,bool *);
         PayloadEntry(PayloadEntry &);
         ~PayloadEntry();
-	QueryID getID();
+	QueryID getId();
 	MatchType getType();
 	unsigned int getDist();
-        friend ostream & operator<<(ostream &, const PayloadEntry &);
-        bool operator==(PayloadEntry &);
+    unsigned int getWordsInQuery();
+    bool getActive();
+    friend ostream & operator<<(ostream &, const PayloadEntry &);
+    bool operator==(PayloadEntry &);
 };
 
 #endif
-

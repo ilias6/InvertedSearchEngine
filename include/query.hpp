@@ -26,9 +26,13 @@ class Query{
         QueryID getId();
         int getWordsInQuery();
         Word * getWord(int);
-	MatchType getType();
+        MatchType getType();
         unsigned int getMatchDist();
+        bool getActive();
+        void Activate();
+        void Deactivate();
         void print();
+        bool * getAdressOfActive();
 
 };
 
