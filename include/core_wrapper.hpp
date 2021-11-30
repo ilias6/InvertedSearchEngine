@@ -14,13 +14,6 @@
 class CoreWrapper {
     private:
 	unsigned int Q;
-	unsigned int queryCounter;
-
-        /* Different EntryList[] for each MatchType */
-        /* Different EntryList for each match distance */
-        //		      EntryList *** 
-        //    	     	  	|
-        //       	EntryList * [3] (MatchType)
         EntryList * entryList;
 
         //		      Index *** 
@@ -39,7 +32,6 @@ class CoreWrapper {
 	CoreWrapper(unsigned int);
 	~CoreWrapper(); 
 	void addQuery(QueryID, const char *, MatchType, unsigned int);
-	void makeIndeces();
 };
 
 #endif
