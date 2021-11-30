@@ -14,12 +14,12 @@ class EntryList{
         HashTable hashtable;
         List<Entry> list;
 
-        EntryListErrorCode insert(Word *, PayloadEntry &);
+        EntryListErrorCode insert(Word *, PayloadEntry &, Entry **);
         EntryListErrorCode remove(Word *, int);
     public:
         EntryList(int);
         ~EntryList();
-        EntryListErrorCode insert(Query &);
+        EntryListErrorCode insert(Query &, Entry ***);
         EntryListErrorCode remove(Query &);
         Entry * getItemPtr(int);
         HashTable & getHashTable();

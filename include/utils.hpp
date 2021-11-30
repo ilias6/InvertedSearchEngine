@@ -20,10 +20,12 @@ bool charInWhitespace(char c);
 Vector<char> * countQueries(ifstream &, int *);
 Query ** makeQueries(char **, int);
 void destroyQueries(Query **, int);
+/*
 Index * makeIndex(MatchType, EntryList *);
 void multipleSearch(Index *, Word **, int, int threshold=0);
 void search(Index *, Word *, int threshold=0);
 EntryList * makeEntryList(Query **, int);
+*/
 char * genRandStr(const int);
 
 #endif

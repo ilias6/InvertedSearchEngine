@@ -21,7 +21,7 @@ class CoreWrapper {
         //		      EntryList *** 
         //    	     	  	|
         //       	EntryList * [3] (MatchType)
-        EntryList *** entryLists;
+        EntryList * entryList;
 
         //		      Index *** 
         //    	     	  	|

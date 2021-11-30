@@ -12,15 +12,17 @@ EntryList::~EntryList(){
 
 }
 
-EntryListErrorCode EntryList::insert(Query &q){
+EntryListErrorCode EntryList::insert(Query &q, Entry *** qEntryPtrs){
     int len=q.getWordsInQuery();
     int id=q.getId();
     MatchType type = q.getType();
     unsigned int dist = q.getMatchDist();
     PayloadEntry pE(id, type, dist);
+    qEntryPtrs = new Entry**[len+1];
+    qEntryPtrs[len] = NULL;
 
     for(int i=0;i<len;i++)
-        if (this->insert(q.getWord(i), pE) == E_L_FAIL)
+        if (this->insert(q.getWord(i), pE, qEntryPtrs[i]) == E_L_FAIL)
 	       return E_L_FAIL;
     return E_L_SUCCESS;
 }
@@ -38,7 +40,7 @@ Entry * EntryList::getItemPtr(int i) {
     return this->list.getItemPtr(i);
 }
 
-EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE){
+EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE, Entry ** qEntryPtr){
     Entry *e;
     e=hashtable.getEntry(w);
     //if word does not exist
@@ -49,10 +51,12 @@ EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE){
 	    return E_L_FAIL;
         if (hashtable.insert(e) == H_T_FAIL)
 	    return E_L_FAIL;
+	*qEntryPtr = e;
         return E_L_SUCCESS;
     }
     // else update payload
-    hashtable.updateEntryPayload(w, pE);
+    hashtable.updateEntryPayload(w, pE, &e);
+    *qEntryPtr = e;
     return E_L_SUCCESS;
 }
 EntryListErrorCode EntryList::remove(Word *,int){

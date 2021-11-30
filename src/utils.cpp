@@ -35,6 +35,7 @@ bool charInWhitespace(char c){
     return false;
 }
 
+/*
 Vector<char> * countQueries(ifstream & inFile, int * counter) {
     cout << "Counting queries...\n";
     Vector<char> * vec = new Vector<char>();
@@ -53,7 +54,7 @@ Vector<char> * countQueries(ifstream & inFile, int * counter) {
     cout << "Done---->Total queries: " << *counter << "\n";
     return vec;
 }
-
+*/
 
         /*
 Query ** makeQueries(Vector<char> & vec, int numOfQueries) {
@@ -101,12 +102,14 @@ Query ** makeQueries(char ** paths, int pathsNum) {
     return qs;
 }
 */
+
 void destroyQueries(Query ** qs, int qNum) {
     for (int i = 0; i < qNum; ++i)
         delete qs[i];
     delete[] qs;
 }
 
+/*
 EntryList * makeEntryList(Query ** qs, int qNum) {
     struct timeval tp;
     gettimeofday(&tp, NULL);
@@ -180,7 +183,7 @@ void multipleSearch(Index * index, Word ** words, int wordsNum, int threshold) {
         cout << "In :" << elapsed << " milliseconds\n***************************\n";
     }
     cout << endl;
-}
+}*/
 
 char * genRandStr(const int len) {
     static const char alpha[] = "abcdefghijklmnopqrstuvwxyz";
