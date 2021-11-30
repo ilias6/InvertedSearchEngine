@@ -19,6 +19,7 @@ class Index {
         BKTree **tree;
         HashTable *hTable;
         // IndexErrorCode insertFromList(EntryList &);
+        IndexErrorCode insert(Entry *);
     public:
         MatchType getType();
         // Index(EntryList &, MatchType);

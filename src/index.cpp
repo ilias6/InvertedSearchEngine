@@ -36,7 +36,7 @@ Index::Index(MatchType tp){
 IndexErrorCode Index::insert(Entry ** arr){
     //first check if Entry exists in hashTable as is
     for(int i=0;arr[i]!=NULL;i++){
-        Entry * e=hTable->getEntry(arr[i]->getWord());
+        Entry * e=hTable->getEntry(&arr[i]->getWord());
         IndexErrorCode i_err;
         HashTableErrorCode h_err;
         if(e==NULL){
@@ -48,6 +48,7 @@ IndexErrorCode Index::insert(Entry ** arr){
                 return I_FAIL;
         }
     }
+    return I_SUCCESS;
 }
 
 IndexErrorCode Index::insert(Entry *e){
