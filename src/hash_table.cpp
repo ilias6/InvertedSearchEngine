@@ -1,7 +1,9 @@
 #include <iostream>
 #include "../include/hash_table.hpp"
+#include "../include/utils.hpp"
 #include "../include/hash_functions.hpp"
 #include "../include/entry.hpp"
+#include "../include/vector.hpp"
 
 
 /* BUCKETS START*/
@@ -14,11 +16,11 @@ int Bucket::bucketSize(){
 
 
 Bucket::Bucket(Bucket & b) {
-    this->list.copyList(b.list);
+    this->list.copyVector(b.list);
 }
 
 void Bucket::copyBucket(Bucket &b2){
-    this->list.copyList(b2.list);
+    this->list.copyVector(b2.list);
 }
 
 enum HashTableErrorCode Bucket::insert(Entry * e){
@@ -27,7 +29,7 @@ enum HashTableErrorCode Bucket::insert(Entry * e){
 }
 
 // used for testing
-List<Entry *> Bucket::getListCopy() {
+Vector<Entry *> Bucket::getListCopy() {
     return this->list;
 }
 
@@ -55,13 +57,15 @@ void Bucket::print(void){
 }
 
 void Bucket::printAddr(void){
-    list.printAddr();
+    //list.printAddr();
+    cout << "Bucket::printAddr is not implemented\n";
 }
 
 /* BUCKETS END*/
 /* HashTable START*/
 HashTable::HashTable(int sz,unsigned long (*h_f)(const char *)){
     this->size=sz;
+    this->current_size=0;
     hash_func=h_f;
     this->array=new Bucket[sz];
 }
@@ -72,6 +76,7 @@ HashTable::HashTable(){
 }
 HashTable::HashTable(HashTable & ht){
     this->size=ht.size;
+    this->current_size=ht.current_size;
     this->array=new Bucket[size];
     for(int i=0;i<size;i++)
         this->array[i].copyBucket(ht.array[i]);
@@ -135,10 +140,28 @@ enum HashTableErrorCode HashTable::setHashFunc(unsigned long (*h_f)(const char *
 }
 
 enum HashTableErrorCode HashTable::insert(Entry * e){
+
     //insert just inserts entry in hashtable
     unsigned long hash= this->hash_func((e->getWord()).getStr());
     int bucket_index=hash%this->size;
+    this->current_size++;
     return this->array[bucket_index].insert(e);
+}
+
+void rehashCheck(HashTable * hTable, bool freeMem = true) {
+    if ((float)hTable->current_size/hTable->size < 0.9)
+	return;
+
+    HashTable * newTable = new HashTable(findNextPrime(hTable->size*2),hTable->hash_func);
+    for (int i = 0; i < hTable->size; i++) {
+	Bucket * b = &(hTable->array[i]);		
+	int bSize = b->bucketSize();
+	for (int j = 0; j < bSize; ++j)
+	    newTable->insert(b->getEntry(j));
+    }
+    if (freeMem)
+	delete hTable;
+    hTable = newTable;
 }
 
 enum HashTableErrorCode HashTable::updateEntryPayload(Word *w, PayloadEntry & pE, Entry ** ePtr){

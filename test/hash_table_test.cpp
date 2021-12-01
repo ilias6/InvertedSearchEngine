@@ -163,7 +163,7 @@ TEST(BucketTest, Insert) {
         entryList.insert(e, &ePtrOrigin);
         HashTableErrorCode errorVal = b.insert(ePtrOrigin);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-        List <Entry *> lst = b.getListCopy();
+        Vector<Entry *> lst = b.getListCopy();
         ASSERT_TRUE(i+1 == lst.getLen());
         Entry * ePtrBucket = lst.getItem(i);
         ASSERT_TRUE(ePtrBucket == ePtrOrigin);

@@ -13,9 +13,11 @@ class DocumentTest: public ::testing::Test {
         }
 
         virtual void TearDown() {
+		/*
             for(int i=0;i<size;i++)
                 delete doc_arr[i];
             delete[] doc_arr;
+	    */
         }
 };
 

@@ -7,14 +7,14 @@
 enum HashTableErrorCode{H_T_SUCCESS, H_T_FAIL};
 class Bucket{
     private:
-        List<Entry*> list; //list of Data
+        Vector<Entry*> list; //list of Data
     public:
         Bucket();
         // ~Bucket();
         int bucketSize();
         Bucket(Bucket &);
         void copyBucket(Bucket &);
-        List<Entry *> getListCopy();
+        Vector<Entry *> getListCopy();
         Entry * getEntry(Word *);
         Entry * getEntry(int);
         enum HashTableErrorCode insert(Entry *);
@@ -25,6 +25,7 @@ class Bucket{
 class HashTable {
     private:
         int size;
+	int current_size;
         Bucket * array;
         unsigned long(*hash_func)(const char *);//pointer to hash function
     public:
@@ -33,6 +34,7 @@ class HashTable {
         HashTable(int sz,unsigned long (*h_f)(const char *));
         ~HashTable();
         int getSize(void);
+	friend void rehashCheck(HashTable *, bool);
         enum HashTableErrorCode setSizeAndAlloc(int s);
         enum HashTableErrorCode setHashFunc(unsigned long (*h_f)(const char * ));
         enum HashTableErrorCode updateEntryPayload(Word *, PayloadEntry &, Entry **);
