@@ -5,8 +5,6 @@
 #include "../include/word.hpp"
 #include "../include/vector.hpp"
 #include "../include/core.hpp"
-#define MAX_QUERY_LENGTH ((MAX_WORD_LENGTH+1)*MAX_QUERY_WORDS)
-
 
 class Query{
     private:

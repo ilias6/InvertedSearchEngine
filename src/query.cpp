@@ -21,7 +21,7 @@ Query::Query(QueryID id, const char * str, MatchType type, unsigned int dist) {
     int buffIndex = 0;
     int wordsNum = 0;
     char * buff = new char[32];
-    Word ** tmp = new Word*[8];
+    Word ** tmp = new Word*[MAX_QUERY_WORDS];
     for (int i = 0; i < strLen; ++i) {
 	if (i < strLen-1 && charInWhitespace(str[i+1]) && charInWhitespace(str[i]))
 	    continue;
