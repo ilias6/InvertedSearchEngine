@@ -185,6 +185,49 @@ void multipleSearch(Index * index, Word ** words, int wordsNum, int threshold) {
     cout << endl;
 }*/
 
+/*
+    this function finds the opened fd and count the start queries to know how many queries exist in file
+*/
+// #include <dirent.h>
+// #include <stdio.h>
+// #include <unistd.h>
+// int getNumOfQueriesFromFd(){
+//     char path[100];
+//     sprintf(path,"/proc/%d/fd",getpid());
+//     DIR *d;
+//     int count=0;
+//     struct dirent *dir;
+//     d = opendir(path);
+//     int new_fd;
+//     if(d)
+//         while ((dir = readdir(d)) != NULL)
+//             if(strcmp("0",dir->d_name) && strcmp("1",dir->d_name) &&strcmp(".",dir->d_name) &&strcmp("..",dir->d_name)&&strcmp("2",dir->d_name)){
+//                 new_fd=dup(atoi(dir->d_name));
+//                 char c;
+//                 int bytes_read;
+//                 while((bytes_read=read(new_fd,&c,1))==1){
+//                     // printf("ok: %d\n",bytes_read);
+//                     if(c=='\n'){
+//                         bytes_read=read(new_fd,&c,1);
+//                         //check for s
+//                         if(bytes_read==1){
+//                             if(c=='s')
+//                                 count++;
+//                         }
+//                     }
+//                 }
+//
+//                 //move cursor at the beggining of file
+//                 lseek(new_fd,0,SEEK_SET);
+//                 break;
+//
+//             }
+//
+//     close(new_fd);
+//     return count;
+//
+// }
+
 char * genRandStr(const int len) {
     static const char alpha[] = "abcdefghijklmnopqrstuvwxyz";
     char * str = new char[len+1];

@@ -12,6 +12,14 @@ PayloadEntry::PayloadEntry(QueryID id,unsigned int words,MatchType type,unsigned
     this->active=active;
 }
 
+PayloadEntry::PayloadEntry(){
+    this->id=-1;
+    this->words_in_query=0;
+    this->type=MT_EXACT_MATCH;
+    this->dist=0;
+    this->active=NULL;
+}
+
 PayloadEntry::PayloadEntry(PayloadEntry & pE) {
     this->id=pE.id;
     this->words_in_query=pE.words_in_query;
@@ -19,6 +27,15 @@ PayloadEntry::PayloadEntry(PayloadEntry & pE) {
     this->dist=pE.dist;
     this->active=pE.active;
 }
+
+void PayloadEntry::setPayloadEntry(QueryID id,unsigned int words,MatchType type,unsigned int dist,bool *active){
+    this->id=id;
+    this->words_in_query=words;
+    this->type=type;
+    this->dist=dist;
+    this->active=active;
+}
+
 
 PayloadEntry::~PayloadEntry() {}
 

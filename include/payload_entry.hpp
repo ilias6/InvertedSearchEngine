@@ -14,9 +14,11 @@ class PayloadEntry {
 	unsigned int dist;
     bool * active;//points to bool of original query
     public:
-        PayloadEntry(QueryID,unsigned int,MatchType,unsigned int,bool *);
-        PayloadEntry(PayloadEntry &);
-        ~PayloadEntry();
+    PayloadEntry(QueryID,unsigned int,MatchType,unsigned int,bool *);
+    PayloadEntry(PayloadEntry &);
+    PayloadEntry();
+    ~PayloadEntry();
+    void setPayloadEntry(QueryID,unsigned int,MatchType,unsigned int,bool *);
 	QueryID getId();
 	MatchType getType();
 	unsigned int getDist();

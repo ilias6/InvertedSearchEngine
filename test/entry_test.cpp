@@ -7,17 +7,18 @@ using namespace std;
 class EntryTest: public ::testing::Test {
     protected:
         Entry * e;
-    int size;
-        int * payload;
+        int size;
+        PayloadEntry * payload;
         virtual void SetUp() {
             Word w("abcd");
-            e = new Entry(w, 0);
+            PayloadEntry p(0,0,MT_EXACT_MATCH,2,NULL);
+            e = new Entry(w, p);
             ASSERT_TRUE(1 == e->getPayload().getLen());
-            ASSERT_TRUE(0 == e->getPayload().getItem(0));
+            ASSERT_TRUE(p == e->getPayload().getItem(0));
             size=1000;
-            payload = new int[size];
+            payload = new PayloadEntry[size];
             for (int i = 0; i < size; ++i) {
-                payload[i] = i+10;
+                payload[i].setPayloadEntry(i+10,0,MT_EXACT_MATCH,2,NULL);
                 e->addToPayload(payload[i]);
             }
         }
@@ -29,20 +30,23 @@ class EntryTest: public ::testing::Test {
 };
 
 TEST_F(EntryTest,addToPayload){
-    Entry e("test",0);
+    PayloadEntry p0(0,0,MT_EXACT_MATCH,2,NULL);
+    Entry e("test",p0);
     ListErrorCode val;
-    val=e.addToPayload(1);
+    PayloadEntry p1(1,0,MT_EXACT_MATCH,2,NULL);
+    val=e.addToPayload(p1);
     ASSERT_TRUE(L_SUCCESS==val);
     // if addToPayload adds to list
     //then list is checked!!
-    List<int> & lst=e.getPayload();
-    int n=1;
-    ASSERT_TRUE(lst.exists(n));
-    e.addToPayload(2);
-    n=2;
-    ASSERT_TRUE(lst.exists(n));
+    List<PayloadEntry> & lst=e.getPayload();
+    ASSERT_TRUE(lst.exists(p1));
+    PayloadEntry p2(2,0,MT_EXACT_MATCH,2,NULL);
+    e.addToPayload(p2);
+    ASSERT_TRUE(lst.exists(p2));
+
     int not_exists=999;
-    ASSERT_FALSE(lst.exists(not_exists));
+    PayloadEntry p_not_exists(not_exists,0,MT_EXACT_MATCH,2,NULL);
+    ASSERT_FALSE(lst.exists(p_not_exists));
     for(int i=0;i<size;i++){
         val=e.addToPayload(payload[i]);
         ASSERT_TRUE(L_SUCCESS==val);
@@ -54,7 +58,7 @@ TEST_F(EntryTest,removeFromPayload){
     // if removeFromPayload removes from list
     //then list is checked!!
     ListErrorCode val;
-    List<int> & lst=e->getPayload();
+    List<PayloadEntry> & lst=e->getPayload();
     for(int i=0;i<size;i++){
         val=e->removeFromPayload(payload[i]);
         ASSERT_TRUE(L_SUCCESS==val);
@@ -62,7 +66,8 @@ TEST_F(EntryTest,removeFromPayload){
         ASSERT_TRUE(L_NOT_EXISTS==val);
         ASSERT_FALSE(lst.exists(payload[i]));
     }
-    val=e->removeFromPayload(0);
+    PayloadEntry p0(0,0,MT_EXACT_MATCH,2,NULL);
+    val=e->removeFromPayload(p0);
     ASSERT_TRUE(L_SUCCESS==val);
     val=e->removeFromPayload(payload[0]);
     ASSERT_TRUE(L_EMPTY==val);
@@ -70,7 +75,8 @@ TEST_F(EntryTest,removeFromPayload){
 
 TEST_F(EntryTest,EntryCharPtrConstructor){
     //if word is constructed from char * then word is checked
-    Entry entry("test",0);
+    PayloadEntry p0(0,0,MT_EXACT_MATCH,2,NULL);
+    Entry entry("test",p0);
     Word & w1=entry.getWord();
     Word w2("test");
     ASSERT_TRUE(w1.exactMatch(w2));
@@ -78,22 +84,26 @@ TEST_F(EntryTest,EntryCharPtrConstructor){
 
 TEST_F(EntryTest,EntryWordConstructor){
 // if word is constructed from other word then word is checked
+PayloadEntry p0(0,0,MT_EXACT_MATCH,2,NULL);
 Word w2("test");
-Entry entry(w2,0);
+Entry entry(w2,p0);
 Word & w1=entry.getWord();
 ASSERT_TRUE(w1.exactMatch(w2));
 }
 
 TEST_F(EntryTest,CopyConstructor){
-    Entry e1("test_entry",999);
-    for(int i=0;i<988;i++)
-        e1.addToPayload(i);
+    PayloadEntry p(999,0,MT_EXACT_MATCH,2,NULL);
+    Entry e1("test_entry",p);
+    for(int i=0;i<988;i++){
+        p.setPayloadEntry(i,0,MT_EXACT_MATCH,2,NULL);
+        e1.addToPayload(p);
+    }
     Entry e2(e1);
     Word &w1=e1.getWord();
     Word &w2=e2.getWord();
     ASSERT_TRUE(w1.exactMatch(w2));
-    List<int> &lst1=e1.getPayload();
-    List<int> &lst2=e2.getPayload();
+    List<PayloadEntry> &lst1=e1.getPayload();
+    List<PayloadEntry> &lst2=e2.getPayload();
     ASSERT_TRUE(lst1.getLen()==lst2.getLen());
     int len=lst1.getLen();
     for(int i=0;i<len;i++)
@@ -102,10 +112,12 @@ TEST_F(EntryTest,CopyConstructor){
 
 TEST_F(EntryTest,EqualOperatorOverload){
     //equal operator just check exactMatch of words
-    Entry e1("test",0);
-    Entry e2("test",1);
+    PayloadEntry p0(0,0,MT_EXACT_MATCH,2,NULL);
+    Entry e1("test",p0);
+    PayloadEntry p1(1,0,MT_EXACT_MATCH,2,NULL);
+    Entry e2("test",p1);
     ASSERT_TRUE(e1==e2);
-    Entry e3("test",0);
-    Entry e4("testtttt",0);
+    Entry e3("test",p0);
+    Entry e4("testtttt",p0);
     ASSERT_FALSE(e3==e4);
 }

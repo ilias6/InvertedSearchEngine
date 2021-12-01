@@ -23,7 +23,7 @@ class Index {
     public:
         MatchType getType();
         // Index(EntryList &, MatchType);
-        Index(MatchType);
+        Index(MatchType,int);
         IndexErrorCode insert(Entry **);//NULL terminated array of Entry **
         List<Entry *> search(Word *, int n = 0);
         ~Index();

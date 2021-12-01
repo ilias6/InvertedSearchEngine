@@ -20,6 +20,7 @@ bool charInWhitespace(char c);
 Vector<char> * countQueries(ifstream &, int *);
 Query ** makeQueries(char **, int);
 void destroyQueries(Query **, int);
+int getNumOfQueriesFromFd();
 /*
 Index * makeIndex(MatchType, EntryList *);
 void multipleSearch(Index *, Word **, int, int threshold=0);

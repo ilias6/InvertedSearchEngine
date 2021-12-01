@@ -21,7 +21,8 @@ class HashTableTest: public ::testing::Test {
             const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
                 "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
             for(int i = 0; i < numOfEntries; i++) {
-                this->entryPtrs[i] = new Entry(strArr[i], i);
+                PayloadEntry p(i,0,MT_EXACT_MATCH,2,NULL);
+                this->entryPtrs[i] = new Entry(strArr[i], p);
                 errorVal = this->hTable->insert(entryPtrs[i]);
                 ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
             }
@@ -87,20 +88,27 @@ TEST_F(HashTableTest, GetEntry) {       Bucket getBucketCopy(Word *);
 
 TEST_F(HashTableTest, updateEntryPayload) {
     for (int i = 0; i < this->numOfEntries; ++i) {
-        HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), i+1);
+        Entry * e;
+        PayloadEntry p(i+1,0,MT_EXACT_MATCH,2,NULL);
+        HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), p,&e);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
         int n1 = 57;
-        errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), n1);
+        p.setPayloadEntry(n1,0,MT_EXACT_MATCH,2,NULL);
+
+        errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), p,&e);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
 
         Entry * ePtrHTable = this->hTable->getEntry(&this->entryPtrs[i]->getWord());
-        List <int> payload2(ePtrHTable->getPayload());
+        List <PayloadEntry> payload2(ePtrHTable->getPayload());
 
-        List <int> payload1;
-        payload1.insert(i);
+        List <PayloadEntry> payload1;
+        p.setPayloadEntry(i,0,MT_EXACT_MATCH,2,NULL);
+        payload1.insert(p);
         int n2 = i+1;
-        payload1.insert(n2);
-        payload1.insert(n1);
+        p.setPayloadEntry(n2,0,MT_EXACT_MATCH,2,NULL);
+        payload1.insert(p);
+        p.setPayloadEntry(n1,0,MT_EXACT_MATCH,2,NULL);
+        payload1.insert(p);
         int len = payload1.getLen();
 
         ASSERT_TRUE(len == payload2.getLen());
@@ -121,7 +129,8 @@ TEST(BucketTest, getEntry) {
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
 
     for (int i = 0; i < 16; ++i) {
-        Entry e(strArr[i], i);
+        PayloadEntry p(i,0,MT_EXACT_MATCH,2,NULL);
+        Entry e(strArr[i], p);
         Entry * ePtrOrigin = NULL;
         entryList.insert(e, &ePtrOrigin);
         HashTableErrorCode errorVal = b.insert(ePtrOrigin);
@@ -148,7 +157,8 @@ TEST(BucketTest, Insert) {
     "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
 
     for (int i = 0; i < 16; ++i) {
-        Entry e(strArr[i], i);
+        PayloadEntry p(i,0,MT_EXACT_MATCH,2,NULL);
+        Entry e(strArr[i], p);
         Entry * ePtrOrigin = NULL;
         entryList.insert(e, &ePtrOrigin);
         HashTableErrorCode errorVal = b.insert(ePtrOrigin);

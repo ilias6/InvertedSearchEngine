@@ -21,14 +21,16 @@ class BKTreeTest: public ::testing::Test {
             {"melt"},{"swall"}};
             BKErrorCode err_val;
             for(int i=0;i<edit_data_size;i++){
-                edit_data[i]=new Data(str_arr[i],0);
+                PayloadEntry p(0,0,MT_EDIT_DIST,2,NULL);
+                edit_data[i]=new Data(str_arr[i],p);
                 err_val=edit_tree->insert(edit_data[i]);
                 ASSERT_TRUE(err_val==BK_SUCCESS);//succesful insert
             }
             const char str1_arr[][4]={{"aaa"},{"aab"},{"abb"},{"aba"},{"baa"},{"bab"},
             {"bba"},{"bbb"},{"aa"},{"e"}};
             for(int i=0;i<hamming_data_size;i++){
-                hamming_data[i]=new Data(str1_arr[i],0);
+                PayloadEntry p(0,0,MT_HAMMING_DIST,2,NULL);
+                hamming_data[i]=new Data(str1_arr[i],p);
                 if(i<8){
                     err_val=hamming_tree->insert(hamming_data[i]);
                     ASSERT_TRUE(err_val==BK_SUCCESS);//succesful insert
@@ -332,8 +334,8 @@ TEST_F(BKTreeTest,SearchTest){
     data_list=new List<Data*>(hamming_tree->search(&hamming_data[0]->getWord(),-1));
     ASSERT_TRUE(0==data_list->getLen());
     delete data_list;
-
-    Data * dd=new Data("ccc",0);
+    PayloadEntry p(0,0,MT_HAMMING_DIST,2,NULL);
+    Data * dd=new Data("ccc",p);
     // now lets search something that doesn't exist
     // -> result must be empty list
     data_list=new List<Data*>(hamming_tree->search(&dd->getWord(),0));

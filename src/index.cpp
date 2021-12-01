@@ -3,16 +3,16 @@
 
 #include "../include/index.hpp"
 #include "../include/core.hpp"
-
+#include "../include/hash_functions.hpp"
 using namespace std;
 
 
-Index::Index(MatchType tp){
+Index::Index(MatchType tp,int h_size){
     this->type=tp;
     if (this->type == MT_EXACT_MATCH) {
         this->numOfTrees=0;
         this->tree=NULL;
-        this->hTable=new HashTable();
+        this->hTable=new HashTable(h_size,djb2);
         return;
     }
     if(this->type==MT_EDIT_DIST){
@@ -27,7 +27,7 @@ Index::Index(MatchType tp){
             tree[i]=new BKTree(&Word::hammingDist);
     }
     // also make hashtable for searching if something exists as is in index
-    this->hTable=new HashTable();
+    this->hTable=new HashTable(h_size,djb2);
     return ;
 }
 

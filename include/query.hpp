@@ -19,7 +19,7 @@ class Query{
         bool active;
         unsigned int matchDist;
    public:
-        Query(int, const char *);
+        // Query(int, const char *);
         Query(QueryID, const char *, MatchType, unsigned int dist = 0);
         Query();
         ~Query();
