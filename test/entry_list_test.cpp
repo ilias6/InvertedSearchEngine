@@ -15,24 +15,21 @@ class EntryListTest: public ::testing::Test {
             numOfQueries=4;
             EntryListErrorCode err_val;
     	    qs = new Query*[numOfQueries];
-            const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"}
-            Matchtype m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
+            const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"};
+            MatchType m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
             unsigned int d[4]={0,1,2,1};
             this->e=new Entry**[numOfQueries];
             for (int i = 0; i < numOfQueries; ++i) {
-        		// char path[64];
         		qs[i] = new Query(i,str[i],m_t[i],d[i]);
         		err_val=eList->insert(*qs[i],&e[i]);
                 ASSERT_TRUE(E_L_SUCCESS==err_val);
             }
-	    }
+	}
 
 
         virtual void TearDown() {
     	    for (int i = 0; i < numOfQueries; ++i){
                 delete qs[i];
-                for(int j=0;e[j]!=NULL;j++)
-                    delete e[i][j];
                 delete[] e[i];
             }
             delete[] e;
@@ -49,6 +46,7 @@ TEST_F(EntryListTest,ConstructorTest){
     ASSERT_TRUE(hashtable.getSize()==10000);
     // check list size equal 0
     ASSERT_TRUE(el.getLen()==0);
+    
     ASSERT_TRUE(el.getItemPtr(0)==NULL);
 
 }
@@ -58,12 +56,12 @@ TEST_F(EntryListTest,ConstructorTest){
 TEST_F(EntryListTest,InsertTest){
     EntryList *el=new EntryList(11);
     EntryListErrorCode err_val;
-    const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"}
-    Matchtype m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
+    const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"};
+    MatchType m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
     unsigned int d[4]={0,1,2,1};
     Entry ***en=new Entry**[numOfQueries];
     for (int i = 0; i < numOfQueries; ++i) {
-        err_val=eList->insert(*qs[i],&en[i]);
+        err_val=el->insert(*qs[i],&en[i]);
         ASSERT_TRUE(E_L_SUCCESS==err_val);
     }
     //ENTRY LIST MUST HAVE SIZE 7
@@ -93,8 +91,6 @@ TEST_F(EntryListTest,InsertTest){
 
     delete el;
     for (int i = 0; i < numOfQueries; ++i){
-        for(int j=0;en[j]!=NULL;j++)
-            delete en[i][j];
         delete[] en[i];
     }
     delete[] en;
@@ -109,7 +105,7 @@ TEST_F(EntryListTest,GetItemPtrTest){
     char test_words[][7]={
         "this","is","first","query","second","third","fourth"
     };
-    for(int i=0;i<13;i++){
+    for(int i=0;i<7;i++){
         Word * w2=new Word(test_words[i]);
         Entry * e=eList->getItemPtr(i);
         ASSERT_TRUE(e->getWord().exactMatch(*w2));

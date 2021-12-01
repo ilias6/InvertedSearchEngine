@@ -9,16 +9,16 @@ using namespace std;
 
 Index::Index(MatchType tp,int h_size){
     this->type=tp;
+    this->hTable=new HashTable(h_size,djb2);
     if (this->type == MT_EXACT_MATCH) {
         this->numOfTrees=0;
         this->tree=NULL;
-        this->hTable=new HashTable(h_size,djb2);
         return;
     }
     if(this->type==MT_EDIT_DIST){
         this->numOfTrees=1;
         this->tree=new BKTree*;
-        this->tree[0]=new  BKTree(&Word::editDist);
+        this->tree[0]=new BKTree(&Word::editDist);
     }else{
         this->numOfTrees=MAX_WORD_LENGTH-MIN_WORD_LENGTH;//one tree for each length (hammingDist)
         tree=new BKTree*[this->numOfTrees];
@@ -27,7 +27,6 @@ Index::Index(MatchType tp,int h_size){
             tree[i]=new BKTree(&Word::hammingDist);
     }
     // also make hashtable for searching if something exists as is in index
-    this->hTable=new HashTable(h_size,djb2);
     return ;
 }
 
@@ -40,10 +39,10 @@ IndexErrorCode Index::insert(Entry ** arr){
         IndexErrorCode i_err;
         HashTableErrorCode h_err;
         if(e==NULL){
-            h_err=hTable->insert(e);
+            h_err=hTable->insert(arr[i]);
             if(h_err==H_T_FAIL)
                 return I_FAIL;
-            i_err=this->insert(e);
+            i_err=this->insert(arr[i]);
             if(i_err==I_FAIL)
                 return I_FAIL;
         }
@@ -70,9 +69,11 @@ IndexErrorCode Index::insert(Entry *e){
 
 
 Index::~Index() {
-    if(this->type==MT_EXACT_MATCH){
-        delete hTable;
-    }else if (this->type==MT_HAMMING_DIST){
+    delete hTable;
+    if (this->type==MT_EXACT_MATCH) {
+	return;
+    }
+    else if (this->type==MT_HAMMING_DIST){
         for(int i=0;i<this->numOfTrees;i++)
             delete tree[i];
         delete[] tree;
