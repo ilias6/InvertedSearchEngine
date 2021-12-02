@@ -12,24 +12,17 @@
 #include "hash_table.hpp"
 
 
-ErrorCode StartQuery(QueryID, const char *, MatchType, unsigned int);
-
 bool isPrime(int);
 int findNextPrime(int);
 bool charInWhitespace(char c);
-//Query ** makeQueries(Vector<char> &, int);
+
 Vector<char> * countQueries(ifstream &, int *);
-Query ** makeQueries(char **, int);
-void destroyQueries(Query **, int);
-int getNumOfQueriesFromFd();
-int scan(int,const char*,Word ***,int *);
+
+
+int getNumOfQueriesFromFd();//haha NO
+int scan(int,const char*,Word ***,int *,int,int);
 Query * biSearchQuery(Vector<Query *> *, QueryID);
-/*
-Index * makeIndex(MatchType, EntryList *);
-void multipleSearch(Index *, Word **, int, int threshold=0);
-void search(Index *, Word *, int threshold=0);
-EntryList * makeEntryList(Query **, int);
-*/
+
 char * genRandStr(const int);
 
 #endif

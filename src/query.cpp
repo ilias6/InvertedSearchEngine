@@ -28,7 +28,7 @@ Query::Query(QueryID id, const char * str, MatchType type, unsigned int dist) {
         exit(-1);
     }
     int len=strlen(buff);
-    int ret=scan(this->wordsInQuery,str+len,&this->words,&this->wordsInQuery);
+    int ret=scan(this->wordsInQuery,str+len,&this->words,&this->wordsInQuery,MAX_WORD_LENGTH,MIN_WORD_LENGTH);
     if(ret==-1){
         cerr<<"Query contains words bigger than "<<MAX_WORD_LENGTH<<endl;
         exit(-1);

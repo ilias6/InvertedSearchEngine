@@ -22,7 +22,7 @@ Document::Document(DocID id, const char * str) {
         exit(-1);
     }
     int len=strlen(buff);
-    int ret=scan(this->wordsInDoc,str+len,&this->words,&this->wordsInDoc);
+    int ret=scan(this->wordsInDoc,str+len,&this->words,&this->wordsInDoc,MAX_WORD_LENGTH,MIN_WORD_LENGTH);
     if(ret==-1){
         cerr<<"Doc contains words bigger than "<<MAX_WORD_LENGTH<<endl;
         exit(-1);
