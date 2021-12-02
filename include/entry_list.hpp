@@ -17,7 +17,7 @@ class EntryList{
         EntryListErrorCode insert(Word *, PayloadEntry &, Entry **);
         EntryListErrorCode remove(Word *, int);
     public:
-        EntryList(int);
+        EntryList(int n = 97);
         ~EntryList();
         EntryListErrorCode insert(Query &, Entry ***);
         EntryListErrorCode remove(Query &);

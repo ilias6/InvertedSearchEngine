@@ -13,8 +13,8 @@ class HashTableTest: public ::testing::Test {
         Entry ** entryPtrs;//data for HashTable insertion
 
         virtual void SetUp() {
-            this->hTable = new HashTable(7, djb2);
-                ASSERT_TRUE(this->hTable->getSize() == 7);
+            this->hTable = new HashTable(1, djb2);
+                ASSERT_TRUE(this->hTable->getSize() == 1);
             this->numOfEntries = 16;
             this->entryPtrs = new Entry*[this->numOfEntries];
             HashTableErrorCode errorVal;
@@ -25,6 +25,10 @@ class HashTableTest: public ::testing::Test {
                 this->entryPtrs[i] = new Entry(strArr[i], p);
                 errorVal = this->hTable->insert(entryPtrs[i]);
                 ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
+		if (i == 2)
+		    ASSERT_TRUE(5 == this->hTable->getSize());//succesful insert
+		if (i == 8)
+		    ASSERT_TRUE(23 == this->hTable->getSize());//succesful insert
             }
         }
 
@@ -55,9 +59,6 @@ TEST_F(HashTableTest, CopyConstructorTest) {
 TEST_F(HashTableTest, InsertTest) {
     for(int i = 0; i < numOfEntries; i++)
         checkInsert(this->hTable, i, entryPtrs, H_T_SUCCESS);
-}
-
-TEST_F(HashTableTest, RehashTest) {
 }
 
 TEST_F(HashTableTest, updateEntryPayload) {

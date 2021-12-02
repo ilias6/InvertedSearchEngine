@@ -8,13 +8,12 @@
 #include "entry.hpp"
 #include "word.hpp"
 #include "query.hpp"
+#include "document.hpp"
 
 #define MAX_DISTANCES MAX_WORD_LENGTH-MIN_WORD_LENGTH
 
 class CoreWrapper {
     private:
-        unsigned int queryCounter;
-        unsigned int Q;
         EntryList * entryList;
 
         //		      Index ***
@@ -26,10 +25,10 @@ class CoreWrapper {
         /* We define Max_possible_distances=Max_word_length - Min_word_length.
            So for i=1,2 we have: Index[i][Max_possible_distances] */
         Index *** indeces;
-        Query ** queries;
-        //Document ** docs;
+        Vector<Query*> * queries;
+        Vector<Document *> * docs;
     public:
-	CoreWrapper(unsigned int);
+	CoreWrapper();
 	~CoreWrapper();
 	IndexErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
 };

@@ -6,6 +6,7 @@
 #include "./query.hpp"
 using namespace std;
 
+
 class PayloadEntry {
     private:
 	QueryID id;

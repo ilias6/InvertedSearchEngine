@@ -161,6 +161,7 @@ void HashTable::rehash() {
 	for (int j = 0; j < bSize; ++j)
 	    this->insert(tmpBucketArr[i].getEntry(j));
     }
+    delete[] tmpBucketArr;
 }
 
 enum HashTableErrorCode HashTable::updateEntryPayload(Word *w, PayloadEntry & pE, Entry ** ePtr){

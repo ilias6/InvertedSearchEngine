@@ -5,7 +5,7 @@ unsigned int Q = 0;
 CoreWrapper * CW = NULL;
 
 ErrorCode InitializeIndex() {
-    CW = new CoreWrapper(Q); 
+    CW = new CoreWrapper(); 
     return EC_SUCCESS;
 }
 ErrorCode DestroyIndex() {
