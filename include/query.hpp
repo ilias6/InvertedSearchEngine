@@ -27,8 +27,8 @@ class Query{
         MatchType getType();
         unsigned int getMatchDist();
         bool getActive();
-        void Activate();
-        void Deactivate();
+        void activate();
+        void deactivate();
         void print();
         bool * getAdressOfActive();
 

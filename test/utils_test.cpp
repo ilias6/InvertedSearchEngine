@@ -26,3 +26,7 @@ TEST(findNextPrimeTest, SameNum) {
     int p = findNextPrime(n);
     ASSERT_TRUE(n == p);
 }
+
+TEST(UtilsScanTest,ScanTest) {
+    ;
+}
