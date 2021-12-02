@@ -79,11 +79,11 @@ bool * Query::getAdressOfActive(){
 }
 
 
-void Query::Activate(){
+void Query::activate(){
     this->active=true;
 }
 
-void Query::Deactivate(){
+void Query::deactivate(){
     this->active=false;
 }
 

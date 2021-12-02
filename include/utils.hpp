@@ -23,6 +23,7 @@ Query ** makeQueries(char **, int);
 void destroyQueries(Query **, int);
 int getNumOfQueriesFromFd();
 int scan(int,const char*,Word ***,int *);
+Query * biSearchQuery(Vector<Query *> *, QueryID);
 /*
 Index * makeIndex(MatchType, EntryList *);
 void multipleSearch(Index *, Word **, int, int threshold=0);

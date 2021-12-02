@@ -22,9 +22,9 @@ TEST_F(QueryTest, ConstructorTestNormal) {
     ASSERT_TRUE(q->getId() == 0);
     ASSERT_TRUE(q->getType() == MT_EXACT_MATCH);
     ASSERT_TRUE(q->getActive());
-    q->Deactivate();
+    q->deactivate();
     ASSERT_FALSE(q->getActive());
-    q->Activate();
+    q->activate();
     ASSERT_TRUE(q->getActive());
     ASSERT_TRUE(q->getMatchDist() == 0);
     const char strArr[][8] = {"a", "word", "is", "here"};

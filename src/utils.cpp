@@ -82,6 +82,27 @@ int scan(int n,const char* str,Word ***w_arr,int * different_words){
         return 0;
 }
 
+Query * biSearchQuery(Vector<Query *> * queries, QueryID id) {
+    int start = 0;
+    int end = queries->getLen();
+    Query * qPtr = NULL;
+    while (start < end) {
+	int middle = (end-start)/2;
+    	QueryID tId = queries->getItem(middle)->getId();
+	if (id < tId) {
+	    end = middle;
+	}
+	else if (id > tId) {
+	    start = middle;
+	}
+	else {
+	    qPtr = queries->getItem(middle);
+	    break;
+	}
+    }
+    return qPtr;
+}
+
 /*
 Vector<char> * countQueries(ifstream & inFile, int * counter) {
     cout << "Counting queries...\n";

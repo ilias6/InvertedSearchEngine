@@ -23,6 +23,12 @@ CoreWrapper::CoreWrapper() {
     this->docs = new Vector<Document *>();
 }
 
+void CoreWrapper::deactivateQuery(QueryID id) {
+    Query * qPtr = biSearchQuery(this->queries, id);
+    if (qPtr != NULL)
+	qPtr->deactivate();
+}
+
 IndexErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType type, unsigned int dist){
     Query * q = new Query(id,str,type,dist);
     this->queries->insert(q);

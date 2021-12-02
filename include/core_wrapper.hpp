@@ -31,6 +31,7 @@ class CoreWrapper {
 	CoreWrapper();
 	~CoreWrapper();
 	IndexErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
+	void deactivateQuery(QueryID);
 };
 
 #endif
