@@ -17,6 +17,10 @@ Document::Document(DocID id, const char * str) {
     char buff[100];
     sscanf(str,"%s",buff);
     this->wordsInDoc=atoi(buff);
+    if(this->wordsInDoc<=0){
+        cerr<<"Document size can't be equal or smaller than zero (DocID "<<this->id<<")"<<endl;
+        exit(-1);
+    }
     int len=strlen(buff);
     int ret=scan(this->wordsInDoc,str+len,&this->words,&this->wordsInDoc);
     if(ret==-1){
