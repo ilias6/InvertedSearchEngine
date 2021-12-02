@@ -57,34 +57,8 @@ TEST_F(HashTableTest, InsertTest) {
         checkInsert(this->hTable, i, entryPtrs, H_T_SUCCESS);
 }
 
-/* Bucket::getEntry needs to be tested only*/
-/*
-
-TEST_F(HashTableTest, GetEntry) {       Bucket getBucketCopy(Word *);
-    const char strArr[][5]={"aaa", "aab", "abb", "aba", "baa", "bab",
-    "bba", "bbb", "aa", "e", "dj", "test", "ing", "my", "clas", "ses"};
-
-    HashTable hTable(7, djb2);
-    List<Entry> entryList;
-    for (int i = 0; i < this->numOfEntries; ++i) {
-        Entry e(strArr[i], i);
-        entryList.insert(e);
-        Entry * ePtrOrigin = &entryList.getItem(i);
-        HashTableErrorCode errorVal = hTable.insert(ePtrOrigin);
-        ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-        Entry * ePtrHTable = hTable.getEntry(&e.getWord());
-        ASSERT_TRUE(ePtrHTable == ePtrOrigin);
-    }
-
-    const char strArr2[][5]={"aaaa", "ab", "bb", "b", "a", "baba",};
-    for (int i = 0; i < 6; ++i) {
-        Entry e(strArr2[i], i);
-        Entry * ePtrHTable = hTable.getEntry(&e.getWord());
-        ASSERT_TRUE(ePtrHTable == NULL);
-    }
+TEST_F(HashTableTest, RehashTest) {
 }
-
-*/
 
 TEST_F(HashTableTest, updateEntryPayload) {
     for (int i = 0; i < this->numOfEntries; ++i) {

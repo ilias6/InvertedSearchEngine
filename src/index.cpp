@@ -39,7 +39,6 @@ IndexErrorCode Index::insert(Entry ** arr){
         IndexErrorCode i_err;
         HashTableErrorCode h_err;
         if(e==NULL){
-	    rehashCheck(hTable, true);
             h_err=hTable->insert(arr[i]);
             if(h_err==H_T_FAIL)
                 return I_FAIL;

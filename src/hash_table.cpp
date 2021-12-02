@@ -140,6 +140,8 @@ enum HashTableErrorCode HashTable::setHashFunc(unsigned long (*h_f)(const char *
 }
 
 enum HashTableErrorCode HashTable::insert(Entry * e){
+    if ((float)this->current_size/this->size >= 1.8)
+	this->rehash();
 
     //insert just inserts entry in hashtable
     unsigned long hash= this->hash_func((e->getWord()).getStr());
@@ -148,20 +150,17 @@ enum HashTableErrorCode HashTable::insert(Entry * e){
     return this->array[bucket_index].insert(e);
 }
 
-void rehashCheck(HashTable * hTable, bool freeMem = true) {
-    if ((float)hTable->current_size/hTable->size < 0.9)
-	return;
+void HashTable::rehash() {
+    int tmpSize = this->size;
+    Bucket * tmpBucketArr = this->array;
 
-    HashTable * newTable = new HashTable(findNextPrime(hTable->size*2),hTable->hash_func);
-    for (int i = 0; i < hTable->size; i++) {
-	Bucket * b = &(hTable->array[i]);		
-	int bSize = b->bucketSize();
+    this->size = findNextPrime(this->size*4);
+    this->array = new Bucket[this->size];
+    for (int i = 0; i < tmpSize; i++) {
+	int bSize = tmpBucketArr[i].bucketSize();
 	for (int j = 0; j < bSize; ++j)
-	    newTable->insert(b->getEntry(j));
+	    this->insert(tmpBucketArr[i].getEntry(j));
     }
-    if (freeMem)
-	delete hTable;
-    hTable = newTable;
 }
 
 enum HashTableErrorCode HashTable::updateEntryPayload(Word *w, PayloadEntry & pE, Entry ** ePtr){

@@ -28,13 +28,13 @@ class HashTable {
 	int current_size;
         Bucket * array;
         unsigned long(*hash_func)(const char *);//pointer to hash function
+	void rehash();
     public:
         HashTable();
         HashTable(HashTable &);
         HashTable(int sz,unsigned long (*h_f)(const char *));
         ~HashTable();
         int getSize(void);
-	friend void rehashCheck(HashTable *, bool);
         enum HashTableErrorCode setSizeAndAlloc(int s);
         enum HashTableErrorCode setHashFunc(unsigned long (*h_f)(const char * ));
         enum HashTableErrorCode updateEntryPayload(Word *, PayloadEntry &, Entry **);

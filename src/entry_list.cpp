@@ -47,7 +47,6 @@ EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE, Entry ** qEntry
 
         if (list.insert(tmp,&e) == L_FAIL)
 	       return E_L_FAIL;
-	rehashCheck(&hashtable, false);
         if (hashtable.insert(e) == H_T_FAIL)
 	       return E_L_FAIL;
 	*qEntryPtr = e;
