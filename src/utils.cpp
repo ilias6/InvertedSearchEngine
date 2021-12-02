@@ -35,6 +35,53 @@ bool charInWhitespace(char c){
     return false;
 }
 
+int scan(int n,const char* str,Word ***w_arr,int * different_words){
+        //returns 0 in case of success
+        //this function reads n strings from str and returns w_arr filled
+        // -2 indicates corruption
+        // -1 indicates word bigger than MAX_WORD_LENGTH
+        // -3 indicates word smaller than MIN_WORD_LENGTH
+        char *buff =new char[2*MAX_WORD_LENGTH];
+        int bytes_read=0;
+        int index=0;
+        *w_arr=new Word *[n];
+        Word **r_arr=*w_arr;
+        HashTable hashtable(findNextPrime(n),djb2);
+        for(int i=0;i<n;i++){
+            if(sscanf(str+bytes_read,"%s",buff)==EOF)
+                return -2;
+            int len=strlen(buff);
+            if(len>MAX_WORD_LENGTH)
+                return -1;
+            else if(len<MIN_WORD_LENGTH)
+                return -3;
+            bytes_read+=len+1;
+            r_arr[index]=new Word(buff);
+            if(hashtable.getEntry(r_arr[index])==NULL){
+                PayloadEntry p(0,0,MT_EXACT_MATCH,0,NULL);
+                Entry * e=new Entry(*r_arr[index],p);
+                hashtable.insert(e);
+                index++;
+           }else{
+               delete r_arr[index];
+           }
+        }
+        delete[] buff;
+        *different_words=index;
+        // resize array to appropriate len
+        //if duplicates exist
+        if(index<n){
+            Word **tmp=*w_arr;
+            *w_arr=new Word*[*different_words];
+            for(int i=0;i<*different_words;i++){
+                *(*w_arr+i)=tmp[i];
+            }
+            delete[] tmp;
+        }
+        hashtable.deleteData();
+        return 0;
+}
+
 /*
 Vector<char> * countQueries(ifstream & inFile, int * counter) {
     cout << "Counting queries...\n";

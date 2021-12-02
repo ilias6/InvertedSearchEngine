@@ -15,7 +15,7 @@ class EntryListTest: public ::testing::Test {
             numOfQueries=4;
             EntryListErrorCode err_val;
     	    qs = new Query*[numOfQueries];
-            const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"};
+            const char * str[]={"4 this is first query","4 this is second query","4 this is third query","4 this is fourth query"};
             MatchType m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
             unsigned int d[4]={0,1,2,1};
             this->e=new Entry**[numOfQueries];
@@ -46,12 +46,11 @@ TEST_F(EntryListTest,ConstructorTest){
     ASSERT_TRUE(hashtable.getSize()==10000);
     // check list size equal 0
     ASSERT_TRUE(el.getLen()==0);
-    
+
     ASSERT_TRUE(el.getItemPtr(0)==NULL);
 
 }
 
-// NEEEEEEEEEEEEEEEEEED TOOOOOOOO BE CHEEEEEECKED
 
 TEST_F(EntryListTest,InsertTest){
     EntryList *el=new EntryList(11);
