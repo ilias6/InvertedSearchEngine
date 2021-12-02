@@ -3,6 +3,7 @@
 #include "list.hpp"
 #include "word.hpp"
 #include "entry.hpp"
+#include "hash_functions.hpp"
 
 enum HashTableErrorCode{H_T_SUCCESS, H_T_FAIL};
 class Bucket{

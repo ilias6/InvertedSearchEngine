@@ -9,6 +9,7 @@
 #include "query.hpp"
 #include "vector.hpp"
 #include <fstream>
+#include "hash_table.hpp"
 
 
 ErrorCode StartQuery(QueryID, const char *, MatchType, unsigned int);
@@ -21,6 +22,7 @@ Vector<char> * countQueries(ifstream &, int *);
 Query ** makeQueries(char **, int);
 void destroyQueries(Query **, int);
 int getNumOfQueriesFromFd();
+int scan(int,const char*,Word ***,int *);
 /*
 Index * makeIndex(MatchType, EntryList *);
 void multipleSearch(Index *, Word **, int, int threshold=0);

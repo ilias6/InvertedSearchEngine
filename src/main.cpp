@@ -29,13 +29,12 @@ int main(int argc, char * argv[]) {
         cerr<<"Usage: "<<argv[0]<<" [inputPath] "<<endl;
         return -1;
     }
-    
+
     // fscanf(fp,"%[^\n]s",path);
     // printf("%s\n",path);
 
     // Q = 100;
     // InitializeIndex();
-    // StartQuery(0, "", MT_EXACT_MATCH, 0);
     // StartQuery(1, "", MT_HAMMING_DIST, 1);
     // StartQuery(2, "", MT_EDIT_DIST, 1);
     // CW->makeIndeces();
