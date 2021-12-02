@@ -118,14 +118,19 @@ Query * biSearchQuery(Vector<Query *> * queries, QueryID id) {
     int start = 0;
     int end = queries->getLen();
     Query * qPtr = NULL;
-    while (start < end) {
-	int middle = (end-start)/2;
+
+    if (queries->getItem(0)->getId() > id || queries->getItem(end-1)->getId() < id)
+	return qPtr;
+
+    int middle = 0;
+    while (start <= end) {
+	middle = (end-start)/2 + start;
     	QueryID tId = queries->getItem(middle)->getId();
 	if (id < tId) {
-	    end = middle;
+	    end = middle-1;
 	}
 	else if (id > tId) {
-	    start = middle;
+	    start = middle+1;
 	}
 	else {
 	    qPtr = queries->getItem(middle);

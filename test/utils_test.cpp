@@ -27,6 +27,90 @@ TEST(UtilsfindNextPrimeTest, SameNum) {
     ASSERT_TRUE(n == p);
 }
 
+TEST(UtilsBiSearchQuery, FoundSimple) {
+    Vector<Query *> queries;
+    Query ** qs = new Query*[27];
+    for (int i = 0; i < 27; ++i) {
+	qs[i] = new Query(i, "1 word", MT_EXACT_MATCH, 0);
+	queries.insert(qs[i]);
+    }
+
+    Query * qPtr = biSearchQuery(&queries, 5);
+    ASSERT_TRUE(qPtr->getId() == 5);
+    qPtr = biSearchQuery(&queries, 15);
+    ASSERT_TRUE(qPtr->getId() == 15);
+    qPtr = biSearchQuery(&queries, 20);
+    ASSERT_TRUE(qPtr->getId() == 20);
+    qPtr = biSearchQuery(&queries, 16);
+    ASSERT_TRUE(qPtr->getId() == 16);
+    qPtr = biSearchQuery(&queries, 24);
+    ASSERT_TRUE(qPtr->getId() == 24);
+    qPtr = biSearchQuery(&queries, 26);
+    ASSERT_TRUE(qPtr->getId() == 26);
+    qPtr = biSearchQuery(&queries, 0);
+    ASSERT_TRUE(qPtr->getId() == 0);
+
+    for (int i = 0; i < 27; ++i)
+	delete qs[i];
+    delete[] qs;
+}
+
+TEST(UtilsBiSearchQuery, FoundComplex) {
+    Vector<Query *> queries;
+    Query ** qs = new Query*[256];
+    for (int i = 0; i < 256; ++i) {
+	qs[i] = new Query(i*2, "1 word", MT_EXACT_MATCH, 0);
+	queries.insert(qs[i]);
+    }
+    
+    for (int i = 0; i < 128; ++i) {
+	int n = (rand() % 256)*2;
+	Query * qPtr = biSearchQuery(&queries, n);
+	ASSERT_TRUE(qPtr->getId() == n);
+    }
+
+    for (int i = 0; i < 256; ++i)
+	delete qs[i];
+    delete[] qs;
+}
+
+TEST(UtilsBiSearchQuery, NotFoundSimple) {
+    Vector<Query *> queries;
+    Query ** qs = new Query*[27];
+    for (int i = 0; i < 27; ++i) {
+	qs[i] = new Query(i, "1 word", MT_EXACT_MATCH, 0);
+	queries.insert(qs[i]);
+    }
+
+    Query * qPtr = biSearchQuery(&queries, -1);
+    ASSERT_TRUE(qPtr == NULL);
+    qPtr = biSearchQuery(&queries, 28);
+    ASSERT_TRUE(qPtr == NULL);
+
+    for (int i = 0; i < 27; ++i)
+	delete qs[i];
+    delete[] qs;
+}
+
+TEST(UtilsBiSearchQuery, NotFoundComplex) {
+    Vector<Query *> queries;
+    Query ** qs = new Query*[256];
+    for (int i = 0; i < 256; ++i) {
+	qs[i] = new Query(i*2, "1 word", MT_EXACT_MATCH, 0);
+	queries.insert(qs[i]);
+    }
+    
+    for (int i = 0; i < 128; ++i) {
+	int n = (rand() % 256)*2 +1;
+	Query * qPtr = biSearchQuery(&queries, n);
+	ASSERT_TRUE(qPtr == NULL);
+    }
+
+    for (int i = 0; i < 256; ++i)
+	delete qs[i];
+    delete[] qs;
+}
+
 TEST(UtilsScanTest,ScanTest) {
     const char * arr[5]={"10 20 30","prwth deuterh trith tetarth","not not notnot notnot",
 "MORETHANMAXWOR","a"};
