@@ -18,7 +18,7 @@ OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 _TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
-_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp
+_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
@@ -58,7 +58,7 @@ $(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)h
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp
+$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp $(IDIR)queue.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
