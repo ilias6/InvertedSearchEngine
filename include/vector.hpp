@@ -175,18 +175,57 @@ VectorErrorCode Vector<T>::insertSorted(T & item, CmpKey key) {
         this->actual_arr_size=2;
         this->arr=new T[2];
     }
-    if(this->len<this->actual_arr_size){
-        arr[this->len]=item;
-        this->len++;
-        return V_SUCCESS;
+
+    // Double actual arr size
+    if(this->len >= this->actual_arr_size){
+	this->actual_arr_size*=2;
+    	T* tmp=arr;
+    	this->arr=new T[this->actual_arr_size];
+    	memcpy(this->arr,tmp,this->len*sizeof(T));
+    	delete[] tmp;
     }
-    // double actual arr size
-    this->actual_arr_size*=2;
-    T* tmp=arr;
-    this->arr=new T[this->actual_arr_size];
-    memcpy(this->arr,tmp,this->len*sizeof(T));
-    delete[] tmp;
-    this->arr[this->len]=item;
+   
+    if (this->len == 0 || this->arr[this->len-1]->getId() <= key) {
+	this->arr[this->len] = item;
+	this->len++;
+	return V_SUCCESS;
+    }
+
+    // Find the position of the new item
+    // O(logn)
+    int index;
+    int start = 0;
+    int end = this->len-1;
+    int cond = false;
+    while (!cond) {
+	int middle = start + (end - start)/2;
+	int cmpKey = this->arr[middle]->getId();
+	if (start >= end-1 || cmpKey == key) {
+	    index = middle;
+	    cond = true;
+	}
+	else if (cmpKey > key) {
+	    end = middle;
+	}
+	else {
+	    start = middle;
+	}
+
+    }
+    // O(n)
+    /*
+    for (int i = 0; i < this->len; ++i)
+	if (this->arr[i]->getId() >= key) {
+	    index = i;
+	    break;
+	}
+    */
+
+    // Shift elements to make space for the new item
+    for (int i = this->len; i > index; --i)
+	this->arr[i] = this->arr[i-1];
+
+    this->arr[index]=item;
     this->len++;
     return V_SUCCESS;
 }

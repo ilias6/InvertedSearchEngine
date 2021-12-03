@@ -1,4 +1,6 @@
 #include "../include/vector.hpp"
+#include "../include/query.hpp"
+#include "../include/utils.hpp"
 #include "../include/gtest.h"
 #include "../include/hash_functions.hpp"
 #include <stdexcept>
@@ -54,6 +56,24 @@ TEST_F(VectorTest,EmptyTest){
             throw;
         }
     },std::invalid_argument);
+
+}
+
+TEST_F(VectorTest, InsertSortedTest) {
+    Vector<Query *> queries;
+    Query ** qs = new Query*[256];
+    for (int i = 0; i < 256; ++i) {
+	int id = rand() % 100;
+	qs[i] = new Query(id, "1 word", MT_EXACT_MATCH, 0);
+	queries.insertSorted(qs[i], id);
+
+    }
+    for (int i = 0; i < 256-1; ++i)
+	ASSERT_TRUE(queries.getItem(i)->getId() <= queries.getItem(i)->getId());
+
+    for (int i = 0; i < 256; ++i)
+	delete qs[i];
+    delete[] qs;
 
 }
 
