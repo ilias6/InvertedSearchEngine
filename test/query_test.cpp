@@ -9,7 +9,7 @@ class QueryTest: public ::testing::Test {
     protected:
         Query * q;
         virtual void SetUp() {
-            q = new Query(0, "4 a word is here", MT_EXACT_MATCH, 0);
+            q = new Query(0, "a word is here", MT_EXACT_MATCH, 0);
         }
 
         virtual void TearDown() {
@@ -32,5 +32,4 @@ TEST_F(QueryTest, ConstructorTestNormal) {
         Word * w = q->getWord(i);
         ASSERT_TRUE(strcmp(w->getStr(), strArr[i]) == 0);
     }
-
 }

@@ -1,7 +1,6 @@
 #include "../include/core.hpp"
 #include "../include/core_wrapper.hpp"
 
-unsigned int Q = 0;
 CoreWrapper * CW = NULL;
 
 ErrorCode InitializeIndex() {
@@ -15,6 +14,11 @@ ErrorCode DestroyIndex() {
 
 ErrorCode StartQuery (QueryID query_id, const char * query_str, MatchType match_type, unsigned int match_dist) {
     CW->addQuery(query_id, query_str, match_type, match_dist);
+    return EC_SUCCESS;
+}
+
+ErrorCode EndQuery (QueryID query_id) {
+    CW->deactivateQuery(query_id);
     return EC_SUCCESS;
 }
 

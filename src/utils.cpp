@@ -35,6 +35,15 @@ bool charInWhitespace(char c){
     return false;
 }
 
+int countSpaces(const char * str) {
+    int len = strlen(str);
+    int counter = 0;
+    for (int i = 0; i < len; ++i)
+	if (str[i] == ' ')
+	    counter++;
+    return counter;
+}
+
 int scan(int n,const char* str,Word ***w_arr,int * different_words,int max_word_length,int min_word_length){
         //returns 0 in case of success
         //this function reads n strings from str and returns w_arr filled

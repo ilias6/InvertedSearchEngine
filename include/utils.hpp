@@ -15,14 +15,10 @@
 bool isPrime(int);
 int findNextPrime(int);
 bool charInWhitespace(char c);
-
-Vector<char> * countQueries(ifstream &, int *);
-
-
+int countSpaces(const char *);
 int getNumOfQueriesFromFd();//haha NO
 int scan(int,const char*,Word ***,int *,int,int);
 Query * biSearchQuery(Vector<Query *> *, QueryID);
-
 char * genRandStr(const int);
 
 #endif

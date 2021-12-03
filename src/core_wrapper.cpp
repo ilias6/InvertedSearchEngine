@@ -32,11 +32,13 @@ void CoreWrapper::deactivateQuery(QueryID id) {
 IndexErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType type, unsigned int dist){
     Query * q = new Query(id,str,type,dist);
     this->queries->insertSorted(q, q->getId());
-
     // insert to entry list
     Entry ** e_arr=NULL;
     EntryListErrorCode list_error_code;
     list_error_code=entryList->insert(*q, &e_arr);
+    for (int i = 0; e_arr[i] != NULL ; ++i)
+	cout << *e_arr[i] << endl;
+    cout << "END\n";
     if(list_error_code==E_L_FAIL)
         return I_FAIL;
     IndexErrorCode error_code;
@@ -68,10 +70,8 @@ CoreWrapper::~CoreWrapper() {
     delete this->indeces[0];
 
     for(int i=1;i<3;i++) {
-	for(int i=0;i<MAX_DISTANCES;i++){
-	    delete this->indeces[1][i];
-	    delete this->indeces[2][i];
-	}
+	for(int j=0;j<MAX_DISTANCES;j++)
+	    delete this->indeces[i][j];
         delete[] this->indeces[i];
     }
   
