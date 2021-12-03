@@ -11,7 +11,7 @@
 #include "document.hpp"
 
 #define MAX_DISTANCES MAX_WORD_LENGTH-MIN_WORD_LENGTH
-
+enum CoreWrapperErrorCode {C_W_SUCCESS,C_W_FAIL};
 class CoreWrapper {
     private:
         EntryList * entryList;
@@ -30,8 +30,8 @@ class CoreWrapper {
     public:
 	CoreWrapper();
 	~CoreWrapper();
-	IndexErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
-	void deactivateQuery(QueryID);
+	CoreWrapperErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
+	CoreWrapperErrorCode deactivateQuery(QueryID);
 };
 
 #endif

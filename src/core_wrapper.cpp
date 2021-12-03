@@ -2,8 +2,10 @@
 #include <iostream>
 #include "../include/core_wrapper.hpp"
 #include "../include/utils.hpp"
+#include "../include/result.hpp"
 
-#define APPROXIMATE_Q_NUM 1000 
+#define APPROXIMATE_Q_NUM 1000
+
 
 CoreWrapper::CoreWrapper() {
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
@@ -23,21 +25,24 @@ CoreWrapper::CoreWrapper() {
     this->docs = new Vector<Document *>();
 }
 
-void CoreWrapper::deactivateQuery(QueryID id) {
+CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
     Query * qPtr = biSearchQuery(this->queries, id);
-    if (qPtr != NULL)
-	qPtr->deactivate();
+    if (qPtr != NULL){
+        qPtr->deactivate();
+        return C_W_SUCCESS;
+    }
+    return C_W_FAIL;
 }
 
-IndexErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType type, unsigned int dist){
+CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType type, unsigned int dist){
     Query * q = new Query(id,str,type,dist);
     this->queries->insertSorted(q, q->getId());
     // insert to entry list
     Entry ** e_arr=NULL;
     EntryListErrorCode list_error_code;
     list_error_code=entryList->insert(*q, &e_arr);
-    if(list_error_code==E_L_FAIL)
-        return I_FAIL;
+    if(list_error_code!=E_L_SUCCESS)
+        return C_W_FAIL;
     IndexErrorCode error_code;
     switch(type){
         case MT_EXACT_MATCH:
@@ -52,8 +57,9 @@ IndexErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType typ
     }
     // delete entry arr
     delete[] e_arr;
-    
-    return error_code;
+    if(error_code!=I_SUCCESS)
+        return C_W_FAIL;
+    return C_W_SUCCESS;
 }
 
 
@@ -72,6 +78,6 @@ CoreWrapper::~CoreWrapper() {
 	    delete this->indeces[i][j];
         delete[] this->indeces[i];
     }
-  
+
     delete[] this->indeces;
 }

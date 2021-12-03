@@ -123,6 +123,7 @@ int scan(int n,const char* str,Word ***w_arr,int * different_words,int max_word_
         return 0;
 }
 
+// returns query pointer
 Query * biSearchQuery(Vector<Query *> * queries, QueryID id) {
     int start = 0;
     int end = queries->getLen();
@@ -147,6 +148,34 @@ Query * biSearchQuery(Vector<Query *> * queries, QueryID id) {
 	}
     }
     return qPtr;
+}
+// returns index else -1 if not found
+int biSearchQueryIndex(Vector<Query *> * queries, QueryID id) {
+    int start = 0;
+    int indx=-1;
+    int end = queries->getLen();
+    Query * qPtr = NULL;
+
+    if (queries->getItem(0)->getId() > id || queries->getItem(end-1)->getId() < id)
+	return indx;
+
+    int middle = 0;
+    while (start <= end) {
+	middle = (end-start)/2 + start;
+    	QueryID tId = queries->getItem(middle)->getId();
+	if (id < tId) {
+	    end = middle-1;
+	}
+	else if (id > tId) {
+	    start = middle+1;
+	}
+	else {
+	    // qPtr = queries->getItem(middle);
+        indx=middle;
+	    break;
+	}
+    }
+    return indx;
 }
 
 char * genRandStr(const int len) {
