@@ -12,13 +12,13 @@ BDIR	= ./bin/
 TDIR	= ./test/
 
 
-_OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o payload_entry.o document.o
+_OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o payload_entry.o document.o result.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
-_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o
+_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o result_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
-_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp
+_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp result.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
@@ -36,7 +36,7 @@ $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 	$(++) -c -o $@ $< $(TESTFLAGS)
 
 
-$(ODIR)document.o: $(SDIR)document.cpp $(IDIR)document.hpp $(IDIR)core.hpp $(IDIR)word.hpp $(IDIR)hash_functions.hpp $(IDIR)hash_table.hpp 
+$(ODIR)document.o: $(SDIR)document.cpp $(IDIR)document.hpp $(IDIR)core.hpp $(IDIR)word.hpp $(IDIR)hash_functions.hpp $(IDIR)hash_table.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)payload_entry.o: $(SDIR)payload_entry.cpp $(IDIR)payload_entry.hpp $(IDIR)core.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
@@ -65,6 +65,8 @@ $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 $(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 
+$(ODIR)result.o: $(SDIR)result.cpp $(IDIR)result.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)document.hpp $(IDIR)utils.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
 directories:
 	mkdir -p build; mkdir -p bin
 

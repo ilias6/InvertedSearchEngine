@@ -1,5 +1,7 @@
 #include <iostream>
 #include "../include/result.hpp"
+#include "../include/utils.hpp"
+
 using namespace std;
 
 
@@ -13,7 +15,7 @@ Result::Result(DocID id,Vector<Query *> & cur_queries):queries(cur_queries){
 }
 
 Result::~Result(){
-    delete[] this->counters
+    delete[] this->counters;
 }
 
 
@@ -21,7 +23,7 @@ ResultErrorCode Result::increaseCounter(QueryID query_id){
     int query_index;
     query_index=biSearchQueryIndex(&this->queries,query_id);
     if(query_index==-1)//query with this id not found
-        R_FAIL
+        return R_FAIL;
     this->counters[query_index]++;
     return R_SUCCESS;
 }
@@ -55,10 +57,10 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
     return R_SUCCESS;
 }
 
-Result::print(){
+void Result::print(){
     cout<<"------------DOC: "<<this->docId<<"-------------"<<endl;
     int vec_len=this->queries.getLen();
     for(int i=0;i<vec_len;i++)
-        cout<<"QueryID "<<queries.getItem()->getId()<<": "<<counters[i]<<" matches"<<endl;
+        cout<<"QueryID "<<queries.getItem(i)->getId()<<": "<<counters[i]<<" matches"<<endl;
 
 }
