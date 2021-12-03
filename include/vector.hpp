@@ -9,6 +9,8 @@ enum VectorErrorCode { V_SUCCESS, V_FAIL, V_EMPTY, V_NOT_EXISTS};
 
 using namespace std;
 
+typedef int CmpKey;
+
 template <typename T>
 class Vector {
     private:
@@ -25,6 +27,7 @@ class Vector {
         int getLen() const;
         VectorErrorCode copyVector(Vector &);
         VectorErrorCode insert(T&);
+        VectorErrorCode insertSorted(T&, CmpKey key);
         // VectorErrorCode append(Vector<T> *);
         bool exists(T&) const;
         VectorErrorCode remove(T&);
@@ -146,6 +149,28 @@ T Vector<T>::getItemCopy(int index) {
 
 template <typename T>
 VectorErrorCode Vector<T>::insert(T & item) {
+    if(this->len==0){
+        this->actual_arr_size=2;
+        this->arr=new T[2];
+    }
+    if(this->len<this->actual_arr_size){
+        arr[this->len]=item;
+        this->len++;
+        return V_SUCCESS;
+    }
+    // double actual arr size
+    this->actual_arr_size*=2;
+    T* tmp=arr;
+    this->arr=new T[this->actual_arr_size];
+    memcpy(this->arr,tmp,this->len*sizeof(T));
+    delete[] tmp;
+    this->arr[this->len]=item;
+    this->len++;
+    return V_SUCCESS;
+}
+
+template <typename T>
+VectorErrorCode Vector<T>::insertSorted(T & item, CmpKey key) {
     if(this->len==0){
         this->actual_arr_size=2;
         this->arr=new T[2];

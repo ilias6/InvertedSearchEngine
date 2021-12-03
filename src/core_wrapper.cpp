@@ -31,7 +31,7 @@ void CoreWrapper::deactivateQuery(QueryID id) {
 
 IndexErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType type, unsigned int dist){
     Query * q = new Query(id,str,type,dist);
-    this->queries->insert(q);
+    this->queries->insertSorted(q, q->getId());
 
     // insert to entry list
     Entry ** e_arr=NULL;
