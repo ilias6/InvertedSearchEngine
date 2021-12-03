@@ -53,8 +53,7 @@ EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE, Entry ** qEntry
     }
     // else update payload
     *qEntryPtr = e;
-    Entry * ska;
-    hashtable.updateEntryPayload(w, pE, &ska);
+    hashtable.updateEntryPayload(w, pE);
     return E_L_SUCCESS;
 }
 EntryListErrorCode EntryList::remove(Word *,int){

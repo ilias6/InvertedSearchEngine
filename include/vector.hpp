@@ -22,6 +22,7 @@ class Vector {
         Vector(int);
         Vector(const Vector &);
         ~Vector();
+	VectorErrorCode destroyData();
         int getActualMemoryLen() const;
         void print() const;
         int getLen() const;
@@ -83,6 +84,15 @@ Vector<T>::~Vector() {
         delete[] arr;
     len=0;
     actual_arr_size=0;
+}
+
+template <typename T>
+VectorErrorCode Vector<T>::destroyData() {
+    for (int i = 0; i < this->len; ++i) {
+	delete this->arr[i];
+	this->arr[i] = NULL;
+    }
+    return V_SUCCESS;
 }
 
 template <typename T>

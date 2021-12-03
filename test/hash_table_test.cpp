@@ -65,12 +65,12 @@ TEST_F(HashTableTest, updateEntryPayload) {
     for (int i = 0; i < this->numOfEntries; ++i) {
         Entry * e;
         PayloadEntry p(i+1,0,MT_EXACT_MATCH,2,NULL);
-        HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), p,&e);
+        HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), p);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
         int n1 = 57;
         p.setPayloadEntry(n1,0,MT_EXACT_MATCH,2,NULL);
 
-        errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), p,&e);
+        errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), p);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
 
         Entry * ePtrHTable = this->hTable->getEntry(&this->entryPtrs[i]->getWord());

@@ -14,15 +14,12 @@ using namespace std;
 Document::Document(DocID id, const char * str) {
     this->id = id;
     this->wordsInDoc;
-    char buff[100];
-    sscanf(str,"%s",buff);
-    this->wordsInDoc=atoi(buff);
+    this->wordsInDoc = countSpaces(str)+1;
     if(this->wordsInDoc<=0){
         cerr<<"Document size can't be equal or smaller than zero (DocID "<<this->id<<")"<<endl;
         exit(-1);
     }
-    int len=strlen(buff);
-    int ret=scan(this->wordsInDoc,str+len,&this->words,&this->wordsInDoc,MAX_WORD_LENGTH,MIN_WORD_LENGTH);
+    int ret=scan(this->wordsInDoc,str,&this->words,&this->wordsInDoc,MAX_WORD_LENGTH,MIN_WORD_LENGTH);
     if(ret==-1){
         cerr<<"Doc contains words bigger than "<<MAX_WORD_LENGTH<<endl;
         exit(-1);

@@ -164,7 +164,7 @@ void HashTable::rehash() {
     delete[] tmpBucketArr;
 }
 
-enum HashTableErrorCode HashTable::updateEntryPayload(Word *w, PayloadEntry & pE, Entry ** ePtr){
+enum HashTableErrorCode HashTable::updateEntryPayload(Word *w, PayloadEntry & pE){
     unsigned long hash= this->hash_func(w->getStr());
     int bucket_index=hash%this->size;
     Entry *to_be_updated=this->array[bucket_index].getEntry(w);
@@ -172,7 +172,6 @@ enum HashTableErrorCode HashTable::updateEntryPayload(Word *w, PayloadEntry & pE
         return H_T_FAIL;
 
     to_be_updated->addToPayload(pE);
-    *ePtr = to_be_updated;
     return H_T_SUCCESS;
 }
 

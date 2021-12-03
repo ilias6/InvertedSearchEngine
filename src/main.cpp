@@ -53,6 +53,7 @@ void TestSigmod(const char* test_file_str)
 		if(EOF==fscanf(test_file, "%c %u ", &ch, &id))
 			break;
 
+
 		if(ch=='s') {
 			int match_type;
 			int match_dist;
@@ -88,6 +89,45 @@ void TestSigmod(const char* test_file_str)
 				printf("The call to EndQuery() returned unknown error code.\n");
 				fflush(NULL);
 				return;
+			}
+		}
+		else if(ch=='m') {
+			if(EOF==fscanf(test_file, "%*u %[^\n\r] ", temp)) {
+				printf("Corrupted Test File.\n");
+				fflush(NULL);
+				return;
+			}
+
+			ErrorCode err=MatchDocument(id, temp);
+
+			if(err==EC_FAIL) {
+				printf("The call to MatchDocument() returned EC_FAIL.\n");
+				fflush(NULL);
+				return;
+			}
+			else if(err!=EC_SUCCESS) {
+				printf("The call to MatchDocument() returned unknown error code.\n");
+				fflush(NULL);
+				return;
+			}
+		}
+		else if(ch=='r') {
+			unsigned int num_res=0;
+			if(EOF==fscanf(test_file, "%u ", &num_res)) {
+				printf("Corrupted Test File.\n");
+				fflush(NULL);
+				return;
+			}
+			
+			unsigned int qid;
+			
+			for(i=0;i<(int)num_res;i++) {
+				if(EOF==fscanf(test_file, "%u ", &qid)) {
+					printf("Corrupted Test File.\n");
+					fflush(NULL);
+					return;
+				}
+				
 			}
 		}
 		else {

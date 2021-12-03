@@ -24,8 +24,8 @@ class DocumentTest: public ::testing::Test {
 TEST_F(DocumentTest,ConstructorTest){
     this->size=3;//3 docs
     this->doc_arr=new Document*[this->size];
-    const char * arr[]={"9 6243 http dbpedia resource list people from minnesota http",
-    "2 ok ok","10 a b c a b c a b c cc"};
+    const char * arr[]={"6243 http dbpedia resource list people from minnesota http",
+    "ok ok","a b c a b c a b c cc"};
     for(int i=0;i<this->size;i++){
         this->doc_arr[i]=new Document(i,arr[i]);
         ASSERT_TRUE(i==this->doc_arr[i]->getId());
