@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <cstring>
 #include <iostream>
-
+#include "vector.hpp"
 using namespace std;
 
 enum  QueueErrorCode{Q_SUCCESS, Q_FAIL, Q_EMPTY, Q_NOT_EXISTS};
@@ -18,7 +18,8 @@ class Queue {
         Queue(const Queue &);
         ~Queue();
         QueueErrorCode push(T&);
-	T & pop() const;
+        QueueErrorCode destroyData();
+        T & pop() const;
 	Vector<T> & getVector() {
 	    return this->vector;
 	}
@@ -34,13 +35,27 @@ Queue<T>::Queue(const Queue & q):vector(q.getVector()) {}
 template <typename T>
 Queue<T>::~Queue() {}
 
-QueueErrorCode Queue::push(T & item) {
-    if (V_SUCCESS != this->vector.insert(T))
+template <typename T>
+QueueErrorCode Queue<T>::push(T & item) {
+    if (V_SUCCESS != this->vector.insert(item))
 	return Q_FAIL;
     return Q_SUCCESS;
 }
 
-T & Queue::pop() {
-    return this->vector.getItem(0);
+template <typename T>
+T & Queue<T>::pop()const {
+    try{
+        return this->vector.getItem(0);
+    }catch(invalid_argument& ia){
+        throw invalid_argument("Index out of range");
+    }
+}
+
+template <typename T>
+QueueErrorCode Queue<T>::destroyData(){
+    VectorErrorCode err=vector.destroyData();
+    if(err!=V_SUCCESS)
+        return Q_FAIL;
+    return Q_SUCCESS;
 }
 #endif

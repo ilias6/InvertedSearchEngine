@@ -22,7 +22,8 @@ CoreWrapper::CoreWrapper() {
     }
 
     this->queries = new Vector<Query *>();
-    this->docs = new Vector<Document *>();
+    this->docs = new Queue<Document *>();
+    this->results = new Queue<Result *>();
 }
 
 CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
@@ -62,6 +63,91 @@ CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchTy
     return C_W_SUCCESS;
 }
 
+CoreWrapperErrorCode CoreWrapper::addDocument(DocID doc_id,const char * str){
+    //master thread construct doc and add to pool
+    Document * doc=new Document(doc_id,str);
+    //push doc to queue (pool) and check if successfull
+    if(this->docs->push(doc)!=Q_SUCCESS){
+        delete doc;
+        return C_W_FAIL;
+    }
+    return C_W_SUCCESS;
+}
+
+Document * CoreWrapper::pullDocument(){
+    try{
+        return this->docs->pop();
+    }catch(invalid_argument& ia){
+        return NULL;
+    }
+}
+
+Result * CoreWrapper::matchDocument(Document * doc){
+    int words_in_doc=doc->getWordsInDoc();
+    Result * res=new Result(doc->getId(),*this->queries);
+    for(int i=0;i<words_in_doc;i++){
+        Word *w=doc->getWord(i);
+        this->searchWordInIndeces(w,res);
+    }
+    return res;
+}
+
+void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
+    //first search exact match and increase counters for exact match in res
+    List<Entry *> entry_res=indeces[0][0]->search(w);
+    increaseCounter(entry_res,res,MT_EXACT_MATCH);
+
+    // for edit dist
+    for(int j=0;j<MAX_DISTANCES;j++){
+        List<Entry *> e_res=indeces[1][j]->search(w);
+        increaseCounter(entry_res,res,MT_EDIT_DIST,j);
+    }
+
+    // for hamming dist
+    for(int j=0;j<MAX_DISTANCES;j++){
+        List<Entry *> e_res=indeces[2][j]->search(w);
+        increaseCounter(entry_res,res,MT_HAMMING_DIST,j);
+    }
+}
+
+void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType mt,unsigned int dist){
+    int len=e_list.getLen();
+    for(int i=0;i<len;i++){
+        Entry * e=e_list.getItem(i);
+        List<PayloadEntry> &p_list=e->getPayload();
+        int plen=p_list.getLen();
+        for(int j=0;j<plen;j++){
+            PayloadEntry &pE=p_list.getItem(j);
+            bool active=pE.getActive();
+            if(active){
+                QueryID id=pE.getId();
+                MatchType tp=pE.getType();
+                unsigned int d=pE.getDist();
+                if(mt==tp && d==dist)
+                    res->increaseCounter(id);
+            }
+        }
+    }
+}
+
+
+CoreWrapperErrorCode CoreWrapper::addResult(Result * res){
+    //all threads push results to queue (pool)
+    // SEMAPHORES TO BE IMPLMENTED
+    if(this->results->push(res)!=Q_SUCCESS){
+        delete res;
+        return C_W_FAIL;
+    }
+    return C_W_SUCCESS;
+
+}
+Result * CoreWrapper::pullResult(){
+    try{
+        return this->results->pop();
+    }catch(invalid_argument& ia){
+        return NULL;
+    }
+}
 
 CoreWrapper::~CoreWrapper() {
     delete this->entryList;
@@ -69,6 +155,8 @@ CoreWrapper::~CoreWrapper() {
     delete this->queries;
     this->docs->destroyData();
     delete this->docs;
+    this->results->destroyData();
+    delete this->results;
 
     delete this->indeces[0][0];
     delete this->indeces[0];
