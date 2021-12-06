@@ -98,7 +98,7 @@ void TestSigmod(const char* test_file_str)
 				return;
 			}
 
-			ErrorCode err=MatchDocument(id, temp);
+			//ErrorCode err=MatchDocument(id, temp);
 
 			if(err==EC_FAIL) {
 				printf("The call to MatchDocument() returned EC_FAIL.\n");

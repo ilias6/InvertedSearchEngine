@@ -158,7 +158,7 @@ void TestSigmod(const char* test_file_str)
 
 				cur_results_ret[doc_id-first_result]=true;
 				if(num_res && query_ids) 
-					free(query_ids);
+					delete[] query_ids;
 			}
 
 			for(i=0;i<num_cur_results;i++) {

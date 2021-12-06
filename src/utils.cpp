@@ -29,6 +29,13 @@ int findNextPrime(int n) {
 
 }
 
+bool satisfy(bool * arr, int size) {
+	for (int i = 0; i < size; ++i)
+		if (!arr[i])
+			return false;
+	return true;
+}
+
 bool charInWhitespace(char c){
     if(c=='\n'||c=='\t'||c==' '||c=='\f'||c=='\r')
         return true;
@@ -62,7 +69,7 @@ int scan(int n,const char* str,Word ***w_arr,int * different_words,int max_word_
             if(bytes_read<str_len){
                 sscanf(str+bytes_read,"%s",buff);
 
-                // cout<<buff<<endl;
+                //cout<<buff<<endl;
                 int len=strlen(buff);
                 if(len>max_word_length){
                     for(int j=0;j<index;j++)
@@ -88,6 +95,7 @@ int scan(int n,const char* str,Word ***w_arr,int * different_words,int max_word_
                 }
                 bytes_read+=len+1;
                 r_arr[index]=new Word(buff);
+
                 if(hashtable.getEntry(r_arr[index])==NULL){
                     PayloadEntry p(0,0,MT_EXACT_MATCH,0,NULL);
                     Entry * e=new Entry(*r_arr[index],p);

@@ -21,6 +21,7 @@ EntryListErrorCode EntryList::insert(Query &q, Entry *** qEntryPtrs){
     for(int i=0;i<len;i++)
         if (this->insert(q.getWord(i), pE, (*qEntryPtrs)+i) == E_L_FAIL)
 	       return E_L_FAIL;
+
     return E_L_SUCCESS;
 }
 

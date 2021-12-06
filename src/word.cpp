@@ -96,6 +96,22 @@ int Word::hammingDist(Word &w) {
     return counter;
 }
 
+//int Word::hammingDist(Word &w) {
+//
+//	int na = this->len;
+//	int nb = w.len;
+//	int j, oo=0x7FFFFFFF;
+//	char * a = this->str;
+//	char * b = w.str;
+//	if(na!=nb) return oo;
+//	
+//	int num_mismatches=0;
+//	for(j=0;j<na;j++) if(a[j]!=b[j]) num_mismatches++;
+//	
+//	return num_mismatches;
+//}
+
+
 int Word::editDist(Word &w) {
     int l1 = this->len;
     int l2 = w.len;

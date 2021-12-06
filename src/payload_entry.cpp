@@ -60,7 +60,7 @@ bool PayloadEntry::getActive(){
 }
 
 ostream & operator<<(ostream & os, const PayloadEntry & pE) {
-    cout << "QueryID: " << pE.id << " MatchType: " << pE.type << " Dist: " << pE.type <<" Active: "<<*pE.active << endl;
+    cout << "QueryID: " << pE.id << " MatchType: " << pE.type << " Dist: " << pE.dist <<" Active: "<<*pE.active << endl;
     return os;
 }
 

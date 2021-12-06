@@ -9,11 +9,13 @@ class Result{
         DocID docId;
         Vector<Query *> queries;//
         int * counters;//               1-1 match
+	bool ** wordFlags;
     public:
         Result(DocID,Vector<Query *> &);
         ~Result();
-        ResultErrorCode increaseCounter(QueryID);
+        ResultErrorCode increaseCounter(QueryID, Word * w);
         ResultErrorCode fetch(DocID *,unsigned int *,QueryID **);
+	DocID getId();
         void print();
 };
 

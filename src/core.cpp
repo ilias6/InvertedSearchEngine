@@ -54,7 +54,6 @@ ErrorCode MatchDocument(DocID doc_id, const char * doc_str) {
 ErrorCode GetNextAvailRes(DocID * p_doc_id, unsigned int * p_num_res, QueryID ** p_query_ids) {
     // master thread collect results
     Result * res=CW->pullResult();
-
     if(res==NULL){
         cerr<<"PULLED NULL RESULT!"<<endl;
         return EC_FAIL;
@@ -64,6 +63,6 @@ ErrorCode GetNextAvailRes(DocID * p_doc_id, unsigned int * p_num_res, QueryID **
         cerr<<"RESULT FETCH FAILED!"<<endl;
         return EC_FAIL;
     }
-    delete res;
+    //delete res;
     return EC_SUCCESS;
 }

@@ -17,8 +17,8 @@ CoreWrapper::CoreWrapper() {
         this->indeces[i] = new Index*[MAX_DISTANCES+1];
     this->indeces[0][0]=new Index(MT_EXACT_MATCH,findNextPrime(APPROXIMATE_Q_NUM/2));
     for(int i=0;i<MAX_DISTANCES;i++){
-        this->indeces[1][i]=new Index(MT_EDIT_DIST,findNextPrime(APPROXIMATE_Q_NUM/64));
-        this->indeces[2][i]=new Index(MT_HAMMING_DIST,findNextPrime(APPROXIMATE_Q_NUM/64));
+        this->indeces[1][i]=new Index(MT_HAMMING_DIST,findNextPrime(APPROXIMATE_Q_NUM/64));
+        this->indeces[2][i]=new Index(MT_EDIT_DIST,findNextPrime(APPROXIMATE_Q_NUM/64));
     }
 
     this->queries = new Vector<Query *>();
@@ -42,6 +42,9 @@ CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchTy
     Entry ** e_arr=NULL;
     EntryListErrorCode list_error_code;
     list_error_code=entryList->insert(*q, &e_arr);
+
+    //cout << "-------------------------\n";
+    //entryList->print();
     if(list_error_code!=E_L_SUCCESS)
         return C_W_FAIL;
     IndexErrorCode error_code;
@@ -49,10 +52,10 @@ CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchTy
         case MT_EXACT_MATCH:
             error_code=indeces[0][0]->insert(e_arr);
             break;
-        case MT_EDIT_DIST:
+        case MT_HAMMING_DIST:
             error_code=indeces[1][dist]->insert(e_arr);
             break;
-        case MT_HAMMING_DIST:
+        case MT_EDIT_DIST:
             error_code=indeces[2][dist]->insert(e_arr);
             break;
     }
@@ -76,7 +79,8 @@ CoreWrapperErrorCode CoreWrapper::addDocument(DocID doc_id,const char * str){
 
 Document * CoreWrapper::pullDocument(){
     try{
-        return this->docs->pop();
+	Document * d = this->docs->pop();
+        return d;
     }catch(invalid_argument& ia){
         return NULL;
     }
@@ -99,14 +103,15 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
 
     // for edit dist
     for(int j=0;j<MAX_DISTANCES;j++){
-        List<Entry *> e_res=indeces[1][j]->search(w);
-        increaseCounter(entry_res,res,MT_EDIT_DIST,j);
+        List<Entry *> e_res=indeces[2][j]->search(w, j);
+        increaseCounter(e_res,res,MT_EDIT_DIST,j);
     }
 
     // for hamming dist
-    for(int j=0;j<MAX_DISTANCES;j++){
-        List<Entry *> e_res=indeces[2][j]->search(w);
-        increaseCounter(entry_res,res,MT_HAMMING_DIST,j);
+    int len=w->getLen();
+    for(int j=0;j<=len;j++){
+        List<Entry *> e_res=indeces[1][j]->search(w, j);
+        increaseCounter(e_res,res,MT_HAMMING_DIST,j);
     }
 }
 
@@ -123,8 +128,9 @@ void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType m
                 QueryID id=pE.getId();
                 MatchType tp=pE.getType();
                 unsigned int d=pE.getDist();
-                if(mt==tp && d==dist)
-                    res->increaseCounter(id);
+                if(mt==tp && d==dist) {
+                    res->increaseCounter(id, &e->getWord());
+		}
             }
         }
     }
@@ -143,7 +149,10 @@ CoreWrapperErrorCode CoreWrapper::addResult(Result * res){
 }
 Result * CoreWrapper::pullResult(){
     try{
-        return this->results->pop();
+	
+	int vasf = this->results->getVector().getLen();
+	Result * res = this->results->pop();
+        return res;
     }catch(invalid_argument& ia){
         return NULL;
     }
@@ -155,7 +164,7 @@ CoreWrapper::~CoreWrapper() {
     delete this->queries;
     this->docs->destroyData();
     delete this->docs;
-    this->results->destroyData();
+    //this->results->destroyData();
     delete this->results;
 
     delete this->indeces[0][0];

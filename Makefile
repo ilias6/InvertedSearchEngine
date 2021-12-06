@@ -15,10 +15,10 @@ TDIR	= ./test/
 _OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o payload_entry.o document.o result.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
-_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o result_test.o
+_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o result_test.o queue_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
-_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp result.hpp
+_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp result.hpp queue.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
@@ -29,7 +29,7 @@ all_tests:$(BDIR)tests
 $(BDIR)tests: $(TESTOBJ) $(OBJ)
 	$(++) -Wall -o $@ $^ $(TESTFLAGS) $(TESTLIBS)
 
-$(BDIR)out: $(OBJ) $(ODIR)main.o
+$(BDIR)out: $(OBJ) $(ODIR)main2.o
 	$(++) -Wall -o $@ $^ $(CFLAGS)
 
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
@@ -52,7 +52,7 @@ $(ODIR)hash_table.o: $(SDIR)hash_table.cpp $(IDIR)hash_table.hpp $(IDIR)entry.hp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)index.o: $(SDIR)index.cpp $(IDIR)index.hpp $(IDIR)core.hpp $(IDIR)word.hpp $(IDIR)entry_list.hpp $(IDIR)hash_table.hpp $(IDIR)entry.hpp $(IDIR)BK_tree.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)main.o: $(SDIR)main.cpp $(DEPS)
+$(ODIR)main2.o: $(SDIR)main2.cpp $(DEPS)
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)vector.hpp $(IDIR)core.hpp
 	$(++) -c -o $@ $< $(CFLAGS)

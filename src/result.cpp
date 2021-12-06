@@ -12,19 +12,37 @@ Result::Result(DocID id,Vector<Query *> & cur_queries):queries(cur_queries){
     this->counters=new int[len];
     for(int i=0;i<len;i++)
         counters[i]=0;
+    this->wordFlags=new bool*[len];
+    for(int i=0;i<len;i++) { 
+	int queryLen = cur_queries.getItem(i)->getWordsInQuery();
+        wordFlags[i]=new bool[queryLen];
+	for (int j = 0; j < queryLen; ++j)
+	    wordFlags[i][j] = false;
+    }
 }
 
 Result::~Result(){
     delete[] this->counters;
 }
 
+DocID Result::getId(){
+	return this->docId;
+}
 
-ResultErrorCode Result::increaseCounter(QueryID query_id){
+ResultErrorCode Result::increaseCounter(QueryID query_id, Word * w){
     int query_index;
     query_index=biSearchQueryIndex(&this->queries,query_id);
     if(query_index==-1)//query with this id not found
         return R_FAIL;
-    this->counters[query_index]++;
+    Query * query = this->queries.getItem(query_index);
+    int qLen = query->getWordsInQuery();
+    int wordIndex = -1;
+    for (int i = 0; i < qLen; ++i)
+	if (query->getWord(i)->exactMatch(*w)) {
+	    wordIndex = i;
+	    break;
+	}
+    wordFlags[query_index][wordIndex] = true;
     return R_SUCCESS;
 }
 
@@ -35,14 +53,14 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
     *q_id=new QueryID[vec_len];
     for(int i=0;i<vec_len;i++){
         Query *q=queries.getItem(i);
-        if(counters[i]>=q->getWordsInQuery())
+	if (satisfy(this->wordFlags[i], q->getWordsInQuery()))
             (*q_id)[size++]=q->getId();;
     }
     if(size==0){
-        delete[] *q_id;
+        //delete[] *q_id;
         *size_ptr=0;
         *q_id=NULL;
-        return R_EMPTY;
+        return R_SUCCESS;
 
     }
     *size_ptr=size;

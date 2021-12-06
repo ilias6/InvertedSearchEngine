@@ -19,7 +19,7 @@ class Queue {
         ~Queue();
         QueueErrorCode push(T&);
         QueueErrorCode destroyData();
-        T & pop() const;
+        T pop();
 	Vector<T> & getVector() {
 	    return this->vector;
 	}
@@ -43,11 +43,13 @@ QueueErrorCode Queue<T>::push(T & item) {
 }
 
 template <typename T>
-T & Queue<T>::pop()const {
+T Queue<T>::pop(){
     try{
-        return this->vector.getItem(0);
+	T item = vector.getItem(0);
+	vector.removeHead();
+        return item;
     }catch(invalid_argument& ia){
-        throw invalid_argument("Index out of range");
+	    throw invalid_argument("Index out of range");
     }
 }
 

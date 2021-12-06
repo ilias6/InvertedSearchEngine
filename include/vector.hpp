@@ -32,6 +32,7 @@ class Vector {
         // VectorErrorCode append(Vector<T> *);
         bool exists(T&) const;
         VectorErrorCode remove(T&);
+        VectorErrorCode removeHead();
         T & getItem(int) const;
         T getItemCopy(int);
 
@@ -237,6 +238,16 @@ VectorErrorCode Vector<T>::insertSorted(T & item, CmpKey key) {
 
     this->arr[index]=item;
     this->len++;
+    return V_SUCCESS;
+}
+
+template <typename T>
+VectorErrorCode Vector<T>::removeHead() { 
+    if(this->len==0)
+        return V_EMPTY;
+    for (int i = 1; i < this->len; ++i)
+	arr[i-1] = arr[i];	
+    this->len--;
     return V_SUCCESS;
 }
 
