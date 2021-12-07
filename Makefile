@@ -18,7 +18,7 @@ OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 _TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o result_test.o queue_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
-_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.hpp query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp result.hpp queue.hpp
+_DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.h query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp result.hpp queue.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 
@@ -29,16 +29,16 @@ all_tests:$(BDIR)tests
 $(BDIR)tests: $(TESTOBJ) $(OBJ)
 	$(++) -Wall -o $@ $^ $(TESTFLAGS) $(TESTLIBS)
 
-$(BDIR)out: $(OBJ) $(ODIR)main2.o
+$(BDIR)out: $(OBJ) $(ODIR)test.o
 	$(++) -Wall -o $@ $^ $(CFLAGS)
 
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 	$(++) -c -o $@ $< $(TESTFLAGS)
 
 
-$(ODIR)document.o: $(SDIR)document.cpp $(IDIR)document.hpp $(IDIR)core.hpp $(IDIR)word.hpp $(IDIR)hash_functions.hpp $(IDIR)hash_table.hpp
+$(ODIR)document.o: $(SDIR)document.cpp $(IDIR)document.hpp $(IDIR)core.h $(IDIR)word.hpp $(IDIR)hash_functions.hpp $(IDIR)hash_table.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)payload_entry.o: $(SDIR)payload_entry.cpp $(IDIR)payload_entry.hpp $(IDIR)core.hpp
+$(ODIR)payload_entry.o: $(SDIR)payload_entry.cpp $(IDIR)payload_entry.hpp $(IDIR)core.h
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)BK_tree.o: $(SDIR)BK_tree.cpp $(IDIR)BK_tree.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
@@ -50,19 +50,19 @@ $(ODIR)hash_functions.o: $(SDIR)hash_functions.cpp $(IDIR)hash_functions.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)hash_table.o: $(SDIR)hash_table.cpp $(IDIR)hash_table.hpp $(IDIR)entry.hpp $(IDIR)word.hpp $(IDIR)list.hpp $(IDIR)hash_functions.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)index.o: $(SDIR)index.cpp $(IDIR)index.hpp $(IDIR)core.hpp $(IDIR)word.hpp $(IDIR)entry_list.hpp $(IDIR)hash_table.hpp $(IDIR)entry.hpp $(IDIR)BK_tree.hpp
+$(ODIR)index.o: $(SDIR)index.cpp $(IDIR)index.hpp $(IDIR)core.h $(IDIR)word.hpp $(IDIR)entry_list.hpp $(IDIR)hash_table.hpp $(IDIR)entry.hpp $(IDIR)BK_tree.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)main2.o: $(SDIR)main2.cpp $(DEPS)
+$(ODIR)test.o: $(SDIR)test.cpp $(DEPS)
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)vector.hpp $(IDIR)core.hpp
+$(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)vector.hpp $(IDIR)core.h
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp
+$(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp $(IDIR)queue.hpp
+$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp $(IDIR)queue.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.hpp
+$(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.h
 	$(++) -c -o $@ $< $(CFLAGS)
 
 $(ODIR)result.o: $(SDIR)result.cpp $(IDIR)result.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)document.hpp $(IDIR)utils.hpp

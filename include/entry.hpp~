@@ -18,7 +18,9 @@ class Entry {
         ListErrorCode addToPayload(PayloadEntry &);
         ListErrorCode removeFromPayload(PayloadEntry &);
         Word &getWord();
+        int &getIdx();
         Entry(const char *, PayloadEntry &);
+        Entry(Word * &, int);
         Entry(Word &, PayloadEntry &);
         Entry(Entry &);
         ~Entry();

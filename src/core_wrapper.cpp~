@@ -144,10 +144,8 @@ void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType m
     int len=e_list.getLen();
     for(int i=0;i<len;i++){
         Entry * e=e_list.getItem(i);
-		/*
 		if (e == this->exactEntries->getEntry(&e->getWord()))
 			continue;
-			*/
         List<PayloadEntry> &p_list=e->getPayload();
         int plen=p_list.getLen();
         for(int j=0;j<plen;j++){

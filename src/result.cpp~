@@ -44,7 +44,6 @@ DocID Result::getId(){
 	return this->docId;
 }
 
-// For the hash table implementation but probably it does not worth
 int Result::getIdx(int hashIdx, Word * w) {
 	Entry * ePtr = this->wordIndices[hashIdx]->getEntry(w);	
 	if (ePtr == NULL) {

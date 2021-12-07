@@ -35,7 +35,7 @@ class List {
         List();
         List(const List &);
         ~List();
-		ListErrorCode destroyData();
+		ListErrorCode List<T>::destroyData();
         void print() const;
         void printAddr() const;
         int getLen() const;

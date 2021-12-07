@@ -31,7 +31,7 @@ class CoreWrapper {
         Vector<Query*> * queries;
         Queue<Document *> * docs;
         Queue<Result *> * results;
-		//HashTable * exactEntries;
+		HashTable * exactEntries;
 
 
         void increaseCounter(List<Entry *>&,Result *,MatchType,unsigned int dist=0);

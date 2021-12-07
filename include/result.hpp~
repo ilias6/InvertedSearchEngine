@@ -12,7 +12,7 @@ class Result{
 		Vector<Query *> queries;//
 		bool ** wordFlags;
 		HashTable ** wordIndices;
-		int getIdx(int, Word *);
+		int getIdx(int);
 	public:
 		Result(DocID,Vector<Query *> &);
 		~Result();

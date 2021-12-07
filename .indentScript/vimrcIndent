@@ -1,0 +1,5 @@
+gg=G
+:set tabstop=4
+:set expandtab
+:retab
+:wq

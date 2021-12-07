@@ -16,6 +16,13 @@ PayloadEntry::PayloadEntry(int id){
     this->id=id;
 }
 
+void PayloadEntry::setPayloadEntry(QueryID id,unsigned int words,MatchType type,unsigned int dist,bool *active){
+    this->id=id;
+    this->words_in_query=words;
+    this->type=type;
+    this->dist=dist;
+    this->active=active;
+}
 PayloadEntry::PayloadEntry(){
     this->id=-1;
     this->words_in_query=0;
