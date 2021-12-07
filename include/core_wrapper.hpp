@@ -19,9 +19,9 @@ class CoreWrapper {
     private:
         EntryList * entryList;
 
-        //		      Index ***
-        //    	     	  	|
-        //       	Index * [3] (MatchType)
+        //            Index ***
+        //                  |
+        //          Index * [3] (MatchType)
 
         /* Index[0] has size=1 and is an exact match index --> a hash table */
         /* For the other two index pointers: */
@@ -31,17 +31,17 @@ class CoreWrapper {
         Vector<Query*> * queries;
         Queue<Document *> * docs;
         Queue<Result *> * results;
-		//HashTable * exactEntries;
+        //HashTable * exactEntries;
 
 
         void increaseCounter(List<Entry *>&,Result *,MatchType,unsigned int dist=0);
         void increaseCounter(List<Entry *>&,Result *);
         void searchWordInIndeces(Word *,Result *);
     public:
-	CoreWrapper();
-	~CoreWrapper();
-	CoreWrapperErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
-	CoreWrapperErrorCode deactivateQuery(QueryID);
+    CoreWrapper();
+    ~CoreWrapper();
+    CoreWrapperErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
+    CoreWrapperErrorCode deactivateQuery(QueryID);
     CoreWrapperErrorCode addDocument(DocID,const char *);
     Document *pullDocument();
     Result * matchDocument(Document *);

@@ -35,7 +35,7 @@ class List {
         List();
         List(const List &);
         ~List();
-		ListErrorCode destroyData();
+        ListErrorCode destroyData();
         void print() const;
         void printAddr() const;
         int getLen() const;
@@ -64,7 +64,7 @@ List<T>::List(const List & lst) {
 
     if (lst.head == NULL) {
         this->head = NULL;
-            this->tail = NULL;
+        this->tail = NULL;
         return;
     }
 
@@ -145,9 +145,9 @@ List<T>::~List() {
 
 template <typename T>
 ListErrorCode List<T>::destroyData() {
-	for (int i = 0; i < this->len; ++i)
-		delete this->getItem(i);
-	return L_SUCCESS;
+    for (int i = 0; i < this->len; ++i)
+        delete this->getItem(i);
+    return L_SUCCESS;
 }
 
 template <typename T>
@@ -176,7 +176,7 @@ int List<T>::getLen() const {
 template <typename T>
 T & List<T>::getItem(int index) const {
     if (index >= this->len || index < 0)
-           throw invalid_argument("Index out of range");
+        throw invalid_argument("Index out of range");
 
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)
@@ -202,7 +202,7 @@ T * List<T>::getItemPtr(int index) const {
 template <typename T>
 T List<T>::getItemCopy(int index) {
     if (index >= this->len || index < 0)
-           throw invalid_argument("Index out of range");
+        throw invalid_argument("Index out of range");
 
     ListNode<T> * lst = this->head;
     for (int i = 0; i < index; ++i)
@@ -218,17 +218,17 @@ ListErrorCode List<T>::append(List<T> * lst) {
     int len = lst->getLen();
     for (int i = 0; i < len; ++i) {
         T & item = lst->getItem(i);
-            if (this->insert(item) == L_FAIL)
-                return L_FAIL;
+        if (this->insert(item) == L_FAIL)
+            return L_FAIL;
     }
     return L_SUCCESS;
     /*
-    if (lst.head == NULL)
-        return;
+       if (lst.head == NULL)
+       return;
 
-    this->tail->setNext(lst.head);
-    this->tail = lst.tail;
-    */
+       this->tail->setNext(lst.head);
+       this->tail = lst.tail;
+       */
 }
 
 template <typename T>
@@ -309,7 +309,7 @@ ListErrorCode List<T>::removeIdx(int idx) {
 
     ListNode<T> * n1 = this->head;
     ListNode<T> * n2 = this->head->getNext();
-	int counter = 1;
+    int counter = 1;
     while (n2 != NULL) {
         if (idx == counter) {
             n1->setNext(n2->getNext());
@@ -319,7 +319,7 @@ ListErrorCode List<T>::removeIdx(int idx) {
             this->len--;
             return L_SUCCESS;
         }
-		counter++;
+        counter++;
         n1 = n2;
         n2 = n2->getNext();
     }

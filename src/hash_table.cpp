@@ -141,7 +141,7 @@ enum HashTableErrorCode HashTable::setHashFunc(unsigned long (*h_f)(const char *
 
 enum HashTableErrorCode HashTable::insert(Entry * e){
     if ((float)this->current_size/this->size >= 1.8)
-	this->rehash();
+        this->rehash();
 
     //insert just inserts entry in hashtable
     unsigned long hash= this->hash_func((e->getWord()).getStr());
@@ -157,9 +157,9 @@ void HashTable::rehash() {
     this->size = findNextPrime(this->size*4);
     this->array = new Bucket[this->size];
     for (int i = 0; i < tmpSize; i++) {
-	int bSize = tmpBucketArr[i].bucketSize();
-	for (int j = 0; j < bSize; ++j)
-	    this->insert(tmpBucketArr[i].getEntry(j));
+        int bSize = tmpBucketArr[i].bucketSize();
+        for (int j = 0; j < bSize; ++j)
+            this->insert(tmpBucketArr[i].getEntry(j));
     }
     delete[] tmpBucketArr;
 }

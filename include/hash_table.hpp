@@ -26,10 +26,10 @@ class Bucket{
 class HashTable {
     private:
         int size;
-	int current_size;
+        int current_size;
         Bucket * array;
         unsigned long(*hash_func)(const char *);//pointer to hash function
-	void rehash();
+        void rehash();
     public:
         HashTable();
         HashTable(HashTable &);

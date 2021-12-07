@@ -9,19 +9,19 @@ using namespace std;
 // and may be used as doc id
 Entry::Entry(const char * w, PayloadEntry & pEntry):
     word(w), payload() {
-    this->addToPayload(pEntry);
-}
+        this->addToPayload(pEntry);
+    }
 
 Entry::Entry(Entry & e):
     word(e.getWord()), payload(e.payload) {}
 
 
-Entry::~Entry() {}
+    Entry::~Entry() {}
 
-Entry::Entry(Word & w, PayloadEntry & pEntry):
-	word(w), payload() {
-    this->addToPayload(pEntry);
-}
+    Entry::Entry(Word & w, PayloadEntry & pEntry):
+        word(w), payload() {
+            this->addToPayload(pEntry);
+        }
 
 Word &Entry::getWord() {
     return this->word;
@@ -41,7 +41,7 @@ ListErrorCode Entry::removeFromPayload(PayloadEntry & pEntry) {
 //equal operator just check exactMatch of words
 bool Entry::operator==(Entry & e) {
     if (this->word.exactMatch(e.getWord()))
-           return true;
+        return true;
     return false;
 }
 

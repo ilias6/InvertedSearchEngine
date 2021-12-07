@@ -71,7 +71,7 @@ IndexErrorCode Index::insert(Entry *e){
 Index::~Index() {
     delete hTable;
     if (this->type==MT_EXACT_MATCH) {
-	return;
+        return;
     }
     else if (this->type==MT_HAMMING_DIST){
         for(int i=0;i<this->numOfTrees;i++)
@@ -93,10 +93,10 @@ List<Entry *> Index::search(Word * w, int n) {
         return results;
 
     if (this->type == MT_EXACT_MATCH) {
-               Entry * ePtr = this->hTable->getEntry(w);
-               if (ePtr != NULL)
-                  results.insert(ePtr);
-               return results;
+        Entry * ePtr = this->hTable->getEntry(w);
+        if (ePtr != NULL)
+            results.insert(ePtr);
+        return results;
     }
 
     if(this->type == MT_EDIT_DIST) {

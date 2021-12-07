@@ -16,7 +16,7 @@ class Query{
         MatchType type;
         bool active;
         unsigned int matchDist;
-   public:
+    public:
         // Query(int, const char *);
         Query(QueryID, const char *, MatchType, unsigned int dist = 0);
         Query();

@@ -23,7 +23,7 @@ CoreWrapper::CoreWrapper() {
 
     this->queries = new Vector<Query *>();
     this->docs = new Queue<Document *>();
-    this->results = new Queue<Result *>();	
+    this->results = new Queue<Result *>();  
 }
 
 CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
@@ -79,7 +79,7 @@ CoreWrapperErrorCode CoreWrapper::addDocument(DocID doc_id,const char * str){
 
 Document * CoreWrapper::pullDocument(){
     try{
-		Document * d = this->docs->pop();
+        Document * d = this->docs->pop();
         return d;
     }catch(invalid_argument& ia){
         return NULL;
@@ -101,12 +101,12 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
     List<Entry *> entry_res=indeces[0][0]->search(w);
     increaseCounter(entry_res,res, MT_EXACT_MATCH);
 
-	/*
-	int exactEntriesLen = entry_res.getLen();
-	this->exactEntries = new HashTable(findNextPrime(exactEntriesLen), djb2);
-	for (int i = 0; i < exactEntriesLen; ++i)
-		this->exactEntries->insert(entry_res.getItem(i));
-	*/
+    /*
+       int exactEntriesLen = entry_res.getLen();
+       this->exactEntries = new HashTable(findNextPrime(exactEntriesLen), djb2);
+       for (int i = 0; i < exactEntriesLen; ++i)
+       this->exactEntries->insert(entry_res.getItem(i));
+       */
     // for edit dist
     int len=w->getLen();
     for(int j=0;j<MAX_DISTANCES;j++){
@@ -120,7 +120,7 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
         increaseCounter(e_res,res,MT_HAMMING_DIST,j);
     }
 
-	//delete this->exactEntries;
+    //delete this->exactEntries;
 }
 
 void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res){
@@ -144,10 +144,10 @@ void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType m
     int len=e_list.getLen();
     for(int i=0;i<len;i++){
         Entry * e=e_list.getItem(i);
-		/*
-		if (e == this->exactEntries->getEntry(&e->getWord()))
-			continue;
-			*/
+        /*
+           if (e == this->exactEntries->getEntry(&e->getWord()))
+           continue;
+           */
         List<PayloadEntry> &p_list=e->getPayload();
         int plen=p_list.getLen();
         for(int j=0;j<plen;j++){
@@ -159,7 +159,7 @@ void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType m
                 unsigned int d=pE.getDist();
                 if(mt==tp && d==dist) {
                     res->increaseCounter(id, &e->getWord());
-		}
+                }
             }
         }
     }
@@ -177,11 +177,11 @@ CoreWrapperErrorCode CoreWrapper::addResult(Result * res){
 
 }
 Result * CoreWrapper::pullResult(){
-    try{	
-		Result * res = this->results->pop();
+    try{    
+        Result * res = this->results->pop();
         return res;
     }
-	catch(invalid_argument& ia){
+    catch(invalid_argument& ia){
         return NULL;
     }
 }
@@ -199,8 +199,8 @@ CoreWrapper::~CoreWrapper() {
     delete this->indeces[0];
 
     for(int i=1;i<3;i++) {
-	for(int j=0;j<MAX_DISTANCES;j++)
-	    delete this->indeces[i][j];
+        for(int j=0;j<MAX_DISTANCES;j++)
+            delete this->indeces[i][j];
         delete[] this->indeces[i];
     }
 

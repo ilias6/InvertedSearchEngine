@@ -40,7 +40,7 @@ Query::Query(QueryID id, const char * str, MatchType type, unsigned int dist) {
 
 Query::~Query(){
     for(int i=0;i<wordsInQuery;i++)
-	   delete this->words[i];
+        delete this->words[i];
     delete[] this->words;
 }
 
@@ -54,7 +54,7 @@ int Query::getWordsInQuery(){
 
 Word * Query::getWord(int indx){
     if(indx<this->wordsInQuery){
-	return words[indx];
+        return words[indx];
     }
     return NULL;
 }
@@ -91,7 +91,7 @@ void Query::print(){
     cout<<"Match distance: "<<this->matchDist<<endl;
     cout<<"WordsInQuery: "<<wordsInQuery<<endl;
     for(int i=0;i<wordsInQuery;i++)
-	cout<<"\t"<<*words[i]<<" "<<words[i]->getLen()<<endl;
+        cout<<"\t"<<*words[i]<<" "<<words[i]->getLen()<<endl;
 
     return ;
 }

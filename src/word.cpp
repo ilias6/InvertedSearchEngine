@@ -43,7 +43,7 @@ Word::~Word() {
 
 void Word::set(const char * s) {
     if (this->str != NULL)
-           delete[] this->str;
+        delete[] this->str;
 
     if (s != NULL && strlen(s) != 0) {
         this->len = strlen(s);
@@ -52,8 +52,8 @@ void Word::set(const char * s) {
         this->str[this->len] = '\0';
     }
     else {
-       this->len = 0;
-       this->str = NULL;
+        this->len = 0;
+        this->str = NULL;
     }
 }
 
@@ -98,17 +98,17 @@ int Word::hammingDist(Word &w) {
 
 //int Word::hammingDist(Word &w) {
 //
-//	int na = this->len;
-//	int nb = w.len;
-//	int j, oo=0x7FFFFFFF;
-//	char * a = this->str;
-//	char * b = w.str;
-//	if(na!=nb) return oo;
-//	
-//	int num_mismatches=0;
-//	for(j=0;j<na;j++) if(a[j]!=b[j]) num_mismatches++;
-//	
-//	return num_mismatches;
+//  int na = this->len;
+//  int nb = w.len;
+//  int j, oo=0x7FFFFFFF;
+//  char * a = this->str;
+//  char * b = w.str;
+//  if(na!=nb) return oo;
+//  
+//  int num_mismatches=0;
+//  for(j=0;j<na;j++) if(a[j]!=b[j]) num_mismatches++;
+//  
+//  return num_mismatches;
 //}
 
 

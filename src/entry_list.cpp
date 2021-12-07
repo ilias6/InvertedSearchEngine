@@ -20,7 +20,7 @@ EntryListErrorCode EntryList::insert(Query &q, Entry *** qEntryPtrs){
     (*qEntryPtrs)[len] = NULL;
     for(int i=0;i<len;i++)
         if (this->insert(q.getWord(i), pE, (*qEntryPtrs)+i) == E_L_FAIL)
-	       return E_L_FAIL;
+            return E_L_FAIL;
 
     return E_L_SUCCESS;
 }
@@ -43,13 +43,13 @@ EntryListErrorCode EntryList::insert(Word *w, PayloadEntry & pE, Entry ** qEntry
     e=hashtable.getEntry(w);
     //if word does not exist
     if(e==NULL){
-       // add it to list and then to hashtable
+        // add it to list and then to hashtable
         Entry tmp(*w,pE);
         if (list.insert(tmp,&e) == L_FAIL)
-	       return E_L_FAIL;
+            return E_L_FAIL;
         if (hashtable.insert(e) == H_T_FAIL)
-	       return E_L_FAIL;
-	*qEntryPtr = e;
+            return E_L_FAIL;
+        *qEntryPtr = e;
         return E_L_SUCCESS;
     }
     // else update payload
