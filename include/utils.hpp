@@ -5,7 +5,7 @@
 #include "word.hpp"
 #include "entry.hpp"
 #include "entry_list.hpp"
-#include "core.hpp"
+#include "core.h"
 #include "query.hpp"
 #include "vector.hpp"
 #include <fstream>

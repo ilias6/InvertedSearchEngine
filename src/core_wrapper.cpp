@@ -6,7 +6,6 @@
 
 #define APPROXIMATE_Q_NUM 10000
 
-
 CoreWrapper::CoreWrapper() {
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -23,7 +22,8 @@ CoreWrapper::CoreWrapper() {
 
     this->queries = new Vector<Query *>();
     this->docs = new Queue<Document *>();
-    this->results = new Queue<Result *>();  
+    this->results = new Queue<Result *>();
+    this->exactEntries=NULL;
 }
 
 CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
@@ -177,7 +177,7 @@ CoreWrapperErrorCode CoreWrapper::addResult(Result * res){
 
 }
 Result * CoreWrapper::pullResult(){
-    try{    
+    try{
         Result * res = this->results->pop();
         return res;
     }

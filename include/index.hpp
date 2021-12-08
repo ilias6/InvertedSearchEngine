@@ -5,7 +5,7 @@
 #include "entry.hpp"
 #include "hash_table.hpp"
 #include "entry_list.hpp"
-#include "core.hpp"
+#include "core.h"
 #include "word.hpp"
 
 using namespace std;

@@ -62,7 +62,7 @@ $(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)entry_lis
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.h
+$(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.h $(IDIR)core_wrapper.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 
 $(ODIR)result.o: $(SDIR)result.cpp $(IDIR)result.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)document.hpp $(IDIR)utils.hpp
