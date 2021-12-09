@@ -14,7 +14,7 @@ class Entry {
         List<PayloadEntry> payload[3][4];
 		int idx;
     public:
-        List<PayloadEntry> & getPayload(MatchType, unsigned int dist=0);
+        List<PayloadEntry> & getPayload(MatchType, int dist=0);
         ListErrorCode addToPayload(PayloadEntry &, MatchType, unsigned int);
         ListErrorCode removeFromPayload(PayloadEntry &);
         Word &getWord();

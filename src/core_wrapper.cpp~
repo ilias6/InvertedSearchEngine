@@ -122,7 +122,7 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
 
     //delete this->exactEntries;
 }
-/*
+
 void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res){
     int len=e_list.getLen();
     for(int i=0;i<len;i++){
@@ -139,7 +139,6 @@ void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res){
         }
     }
 }
-*/
 
 void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType mt,unsigned int dist){
     int len=e_list.getLen();
