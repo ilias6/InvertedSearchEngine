@@ -7,11 +7,14 @@
 #include "./list.hpp"
 using namespace std;
 
+#define MATCH_TYPES_NUM 3
+#define MAX_DISTANCE 3
+
 class Entry {
     private:
         Word word;
 		Word * wPtr;
-        List<PayloadEntry> payload[3][4];
+        List<PayloadEntry> payload[MATCH_TYPES_NUM+1][MAX_DISTANCE];
 		int idx;
     public:
         List<PayloadEntry> & getPayload(MatchType, unsigned int dist=0);

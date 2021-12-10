@@ -6,8 +6,6 @@
 
 using namespace std;
 
-#define MATCH_TYPES_NUM 3
-#define MAX_DISTANCE 3
 
 //val is query id
 // and may be used as doc id
@@ -64,7 +62,7 @@ bool Entry::operator==(Entry & e) {
 */
 
 ostream & operator<<(ostream & os, const Entry & e) {
-    os << e.word;
+    /*os << e.word;
     os << " exists in [";
     int l = e.payload.getLen();
     if (l > 0)
@@ -72,5 +70,6 @@ ostream & operator<<(ostream & os, const Entry & e) {
     for (int i = 1; i < l; i++)
         os << ", " << e.payload.getItem(i);
     os << "]";
+    */
     return os;
 }

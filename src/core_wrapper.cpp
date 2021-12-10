@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../include/core_wrapper.hpp"
 #include "../include/utils.hpp"
+#include "../include/entry.hpp"
 #include "../include/result.hpp"
 
 #define APPROXIMATE_Q_NUM 10000
@@ -13,9 +14,9 @@ CoreWrapper::CoreWrapper() {
     this->indeces[0] = new Index*;
 
     for(int i=1;i<3;i++)
-        this->indeces[i] = new Index*[MAX_DISTANCES+1];
+        this->indeces[i] = new Index*[MAX_DISTANCE+1];
     this->indeces[0][0]=new Index(MT_EXACT_MATCH,findNextPrime(APPROXIMATE_Q_NUM/2));
-    for(int i=0;i<MAX_DISTANCES;i++){
+    for(int i=0;i<MAX_DISTANCE+1;i++){
         this->indeces[1][i]=new Index(MT_HAMMING_DIST,findNextPrime(APPROXIMATE_Q_NUM/64));
         this->indeces[2][i]=new Index(MT_EDIT_DIST,findNextPrime(APPROXIMATE_Q_NUM/64));
     }
@@ -109,13 +110,13 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
        */
     // for edit dist
     int len=w->getLen();
-    for(int j=0;j<MAX_DISTANCES;j++){
+    for(int j=0;j<= MAX_DISTANCE;j++){
         List<Entry *> e_res=indeces[2][j]->search(w, j);
         increaseCounter(e_res,res,MT_EDIT_DIST,j);
     }
 
     // for hamming dist
-    for(int j=0;j<=len;j++){
+    for(int j=0;j<=MAX_DISTANCE;j++){
         List<Entry *> e_res=indeces[1][j]->search(w, j);
         increaseCounter(e_res,res,MT_HAMMING_DIST,j);
     }
@@ -196,7 +197,7 @@ CoreWrapper::~CoreWrapper() {
     delete this->indeces[0];
 
     for(int i=1;i<3;i++) {
-        for(int j=0;j<MAX_DISTANCES;j++)
+        for(int j=0;j<MAX_DISTANCE;j++)
             delete this->indeces[i][j];
         delete[] this->indeces[i];
     }

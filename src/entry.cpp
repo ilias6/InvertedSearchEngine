@@ -6,8 +6,6 @@
 
 using namespace std;
 
-#define MATCH_TYPES_NUM 3
-#define MAX_DISTANCE 3
 
 //val is query id
 // and may be used as doc id
@@ -55,13 +53,15 @@ ListErrorCode Entry::addToPayload(PayloadEntry & pEntry, MatchType mt, unsigned 
 ListErrorCode Entry::removeFromPayload(PayloadEntry & pEntry) {
     return this->payload.remove(pEntry);
 }
+
+*/
+
 //equal operator just check exactMatch of words
 bool Entry::operator==(Entry & e) {
     if (this->word.exactMatch(e.getWord()))
         return true;
     return false;
 }
-*/
 
 ostream & operator<<(ostream & os, const Entry & e) {
     /*os << e.word;
