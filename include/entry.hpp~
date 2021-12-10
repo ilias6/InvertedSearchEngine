@@ -6,7 +6,6 @@
 #include "./payload_entry.hpp"
 #include "./list.hpp"
 using namespace std;
-#define MAX_DISTANCE 3
 
 class Entry {
     private:

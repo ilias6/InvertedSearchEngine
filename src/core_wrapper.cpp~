@@ -108,17 +108,17 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
        this->exactEntries->insert(entry_res.getItem(i));
        */
     // for edit dist
-    int range = MAX_DISTANCE;
-    for(int j=0;j<=range;j++){
+    int len=w->getLen();
+    for(int j=0;j<=3;j++){
         List<Entry *> e_res=indeces[2][j]->search(w, j);
         increaseCounter(e_res,res,MT_EDIT_DIST,j);
     }
 
-    int len=w->getLen();
     // for hamming dist
+    int range = MAX_DISTANCE;
     if (len < 3)
         range = len;
-    for(int j=0;j<=range;j++){
+    for(int j=0;j<=3;j++){
         List<Entry *> e_res=indeces[1][j]->search(w, j);
         increaseCounter(e_res,res,MT_HAMMING_DIST,j);
     }
