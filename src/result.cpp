@@ -45,6 +45,7 @@ DocID Result::getId(){
 }
 
 // For the hash table implementation but probably it does not worth
+/*
 int Result::getIdx(int hashIdx, Word * w) {
     Entry * ePtr = this->wordIndices[hashIdx]->getEntry(w); 
     if (ePtr == NULL) {
@@ -53,6 +54,7 @@ int Result::getIdx(int hashIdx, Word * w) {
     }
     return ePtr->getPayload().getItem(0).getId();
 }
+*/
 
 ResultErrorCode Result::increaseCounter(QueryID query_id, Word * w){
     int query_index;

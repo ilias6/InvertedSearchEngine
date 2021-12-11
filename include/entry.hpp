@@ -8,19 +8,22 @@
 using namespace std;
 #define MAX_DISTANCE 3
 
+#define MATCH_TYPES_NUM 3
+#define MAX_DISTANCE 3
+
 class Entry {
     private:
         Word word;
 		Word * wPtr;
-        List<PayloadEntry> payload;
+        List<PayloadEntry> payload[MATCH_TYPES_NUM+1][MAX_DISTANCE];
 		int idx;
     public:
-        List<PayloadEntry> & getPayload();
-        ListErrorCode addToPayload(PayloadEntry &);
+        List<PayloadEntry> & getPayload(MatchType, unsigned int dist=0);
+        ListErrorCode addToPayload(PayloadEntry &, MatchType, unsigned int);
         ListErrorCode removeFromPayload(PayloadEntry &);
         Word &getWord();
-        Entry(const char *, PayloadEntry &);
-        Entry(Word &, PayloadEntry &);
+        Entry(const char *, PayloadEntry &, MatchType, unsigned int);
+        Entry(Word &, PayloadEntry &, MatchType, unsigned int);
         Entry(Entry &);
         ~Entry();
         friend ostream & operator<<(ostream &, const Entry &);

@@ -97,8 +97,8 @@ int scan(int n,const char* str,Word ***w_arr,int * different_words,int max_word_
             r_arr[index]=new Word(buff);
 
             if(hashtable.getEntry(r_arr[index])==NULL){
-                PayloadEntry p(0,0,MT_EXACT_MATCH,0,NULL);
-                Entry * e=new Entry(*r_arr[index],p);
+                PayloadEntry p(0,NULL);
+                Entry * e=new Entry(*r_arr[index],p, MT_EXACT_MATCH,0);
                 hashtable.insert(e);
                 index++;
             }else{

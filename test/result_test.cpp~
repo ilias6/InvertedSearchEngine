@@ -34,7 +34,6 @@ TEST_F(ResultTest, fetchTest){
     DocID result_id;
     unsigned int size;
     QueryID * q_res_arr;
-
     ASSERT_TRUE(this->res->fetch(&result_id,&size,&q_res_arr)==R_EMPTY);
     ASSERT_TRUE(q_res_arr==NULL);
     ASSERT_TRUE(size==0);

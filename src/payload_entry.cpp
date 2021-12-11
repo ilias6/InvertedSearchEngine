@@ -4,11 +4,8 @@
 
 using namespace std;
 
-PayloadEntry::PayloadEntry(QueryID id,unsigned int words,MatchType type,unsigned int dist,bool *active){
+PayloadEntry::PayloadEntry(QueryID id,bool *active){
     this->id=id;
-    this->words_in_query=words;
-    this->type=type;
-    this->dist=dist;
     this->active=active;
 }
 
@@ -18,45 +15,24 @@ PayloadEntry::PayloadEntry(int id){
 
 PayloadEntry::PayloadEntry(){
     this->id=-1;
-    this->words_in_query=0;
-    this->type=MT_EXACT_MATCH;
-    this->dist=0;
     this->active=NULL;
 }
 
 PayloadEntry::PayloadEntry(PayloadEntry & pE) {
     this->id=pE.id;
-    this->words_in_query=pE.words_in_query;
-    this->type=pE.type;
-    this->dist=pE.dist;
     this->active=pE.active;
 }
 
-void PayloadEntry::setPayloadEntry(QueryID id,unsigned int words,MatchType type,unsigned int dist,bool *active){
+void PayloadEntry::setPayloadEntry(QueryID id,bool *active){
     this->id=id;
-    this->words_in_query=words;
-    this->type=type;
-    this->dist=dist;
     this->active=active;
 }
 
 
 PayloadEntry::~PayloadEntry() {}
 
-unsigned int PayloadEntry::getWordsInQuery(){
-    return this->words_in_query;
-}
-
 QueryID PayloadEntry::getId() {
     return this->id;
-}
-
-MatchType PayloadEntry::getType() {
-    return this->type;
-}
-
-unsigned int PayloadEntry::getDist() {
-    return this->dist;
 }
 
 bool PayloadEntry::getActive(){
@@ -64,7 +40,7 @@ bool PayloadEntry::getActive(){
 }
 
 ostream & operator<<(ostream & os, const PayloadEntry & pE) {
-    cout << "QueryID: " << pE.id << " MatchType: " << pE.type << " Dist: " << pE.dist <<" Active: "<<*pE.active << endl;
+    cout << "QueryID: " << pE.id <<" Active: "<<*pE.active << endl;
     return os;
 }
 

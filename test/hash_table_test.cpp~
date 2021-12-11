@@ -74,7 +74,7 @@ TEST_F(HashTableTest, updateEntryPayload) {
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update
 
         Entry * ePtrHTable = this->hTable->getEntry(&this->entryPtrs[i]->getWord());
-        List <PayloadEntry> payload2(ePtrHTable->getPayload(MT_EXACT_MATCH, 0));
+        List <PayloadEntry> payload2(ePtrHTable->getPayload(MT_EXACT_MATCH, MT_EXACT_MATCH, 00));
 
         List <PayloadEntry> payload1;
         p.setPayloadEntry(i,NULL);

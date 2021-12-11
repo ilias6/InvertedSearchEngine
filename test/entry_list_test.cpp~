@@ -99,6 +99,14 @@ TEST_F(EntryListTest,InsertTest){
     // check if word is "this"
     ASSERT_TRUE(e->getWord().exactMatch(*w2));
 
+    // check if Payload contains 0,1,2,3 ids
+    List<PayloadEntry> list=e->getPayload();
+    ASSERT_TRUE(4==list.getLen());
+    for(int i=0;i<4;i++){
+        PayloadEntry p(i,0,m_t[i],d[i],NULL);
+        ASSERT_TRUE(list.exists(p));
+    }
+
     delete w2;
     char test_words[][7]={"this","is","first","query","second","third","fourth"};
     for(int i=0;i<7;i++){
