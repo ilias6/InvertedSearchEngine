@@ -110,13 +110,16 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
        */
     // for edit dist
     int len=w->getLen();
-    for(int j=0;j<= MAX_DISTANCE;j++){
+    int range = MAX_DISTANCE;
+    for(int j=0;j<= range;j++){
         List<Entry *> e_res=indeces[2][j]->search(w, j);
         increaseCounter(e_res,res,MT_EDIT_DIST,j);
     }
+    if (len < MAX_DISTANCE)
+        range = len;
 
     // for hamming dist
-    for(int j=0;j<=MAX_DISTANCE;j++){
+    for(int j=0;j<=range;j++){
         List<Entry *> e_res=indeces[1][j]->search(w, j);
         increaseCounter(e_res,res,MT_HAMMING_DIST,j);
     }
