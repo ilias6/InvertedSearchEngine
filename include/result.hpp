@@ -5,7 +5,7 @@
 #include "document.hpp"
 #include "hash_table.hpp"
 
-enum ResultErrorCode {R_SUCCESS,R_EMPTY,R_FAIL};
+enum ResultErrorCode {R_SUCCESS,R_FAIL};
 class Result{
     private:
         DocID docId;
