@@ -200,7 +200,7 @@ CoreWrapper::~CoreWrapper() {
     delete this->indeces[0];
 
     for(int i=1;i<3;i++) {
-        for(int j=0;j<MAX_DISTANCE;j++)
+        for(int j=0;j<=MAX_DISTANCE;j++)
             delete this->indeces[i][j];
         delete[] this->indeces[i];
     }

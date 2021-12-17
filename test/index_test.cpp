@@ -26,18 +26,18 @@ class IndexTest: public ::testing::Test {
 };
 
 TEST_F(IndexTest, SimpleIndexTest) {
-	Entry ** entryPtrs = new Entry*[6];		
+	Entry ** entryPtrs = new Entry*[6];
 	PayloadEntry pL(0, NULL);
 	for (int i = 0; i < 5; ++i) {
-		char * str = genRandStr(16); 
+		char * str = genRandStr(16);
 		entryPtrs[i] = new Entry(str, pL, MT_EXACT_MATCH, 0);
 		delete[] str;
 	}
 	entryPtrs[5] = NULL;
 
 	this->editIndex->insert(entryPtrs);
-	
-	IndexErrorCode err;
+
+	// IndexErrorCode err;
 	for (int i = 0; i < 5; ++i) {
 		List<Entry *> res = this->editIndex->search(&entryPtrs[i]->getWord(), 0);
 		ASSERT_TRUE(res.getLen() == 1);
@@ -59,7 +59,7 @@ TEST_F(IndexTest, SimpleIndexTest) {
 		delete entryPtrs[i];
 	}
 	delete[] entryPtrs;
-		
+
 }
 
 TEST_F(IndexTest, EmptyIndexTest) {

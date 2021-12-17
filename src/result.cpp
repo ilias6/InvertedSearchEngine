@@ -15,7 +15,7 @@ Result::Result(DocID id,Vector<Query *> & cur_queries):queries(cur_queries){
 
     this->wordFlags=new bool*[len];
 
-    for(int i=0;i<len;i++) { 
+    for(int i=0;i<len;i++) {
         //this->wordIndices[i] = new HashTable(MAX_QUERY_WORDS, djb2);
         Query * q = cur_queries.getItem(i);
         int queryLen = q->getWordsInQuery();
@@ -47,7 +47,7 @@ DocID Result::getId(){
 // For the hash table implementation but probably it does not worth
 /*
 int Result::getIdx(int hashIdx, Word * w) {
-    Entry * ePtr = this->wordIndices[hashIdx]->getEntry(w); 
+    Entry * ePtr = this->wordIndices[hashIdx]->getEntry(w);
     if (ePtr == NULL) {
         cerr << "Result: hash table correpted!\n";
         exit(1);
@@ -86,7 +86,7 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
             (*q_id)[size++]=q->getId();;
     }
     if(size==0){
-        //delete[] *q_id;
+        free(*q_id);
         *size_ptr=0;
         *q_id=NULL;
         return R_SUCCESS;
@@ -106,6 +106,4 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
 
 void Result::print(){
     cout<<"------------DOC: "<<this->docId<<"-------------"<<endl;
-    int vec_len=this->queries.getLen();
-
 }

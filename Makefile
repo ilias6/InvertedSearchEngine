@@ -1,5 +1,5 @@
 ++     	= g++
-CFLAGS 	= -g
+CFLAGS 	= -g -pg
 LIBS	= -lm
 TESTFLAGS= -pthread
 TESTLIBS= -L ./lib/libgtest_main.a ./lib/libgtest.a
@@ -15,7 +15,7 @@ TDIR	= ./test/
 _OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o payload_entry.o document.o result.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
-_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o result_test.o queue_test.o
+_TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o result_test.o queue_test.o core_wrapper_test.o
 TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 
 _DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.h query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp result.hpp queue.hpp
@@ -33,7 +33,7 @@ $(BDIR)out: $(OBJ) $(ODIR)test.o
 	$(++) -Wall -o $@ $^ $(CFLAGS)
 
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
-	$(++) -c -o $@ $< $(TESTFLAGS)
+	$(++) -c -o $@ $< $(TESTFLAGS) -Wall
 
 
 $(ODIR)document.o: $(SDIR)document.cpp $(IDIR)document.hpp $(IDIR)core.h $(IDIR)word.hpp $(IDIR)hash_functions.hpp $(IDIR)hash_table.hpp

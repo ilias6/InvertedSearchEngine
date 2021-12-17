@@ -25,10 +25,12 @@ class HashTableTest: public ::testing::Test {
                 this->entryPtrs[i] = new Entry(strArr[i], p, MT_EXACT_MATCH, 0);
                 errorVal = this->hTable->insert(entryPtrs[i]);
                 ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful insert
-		if (i == 2)
-		    ASSERT_TRUE(5 == this->hTable->getSize());//succesful insert
-		if (i == 8)
-		    ASSERT_TRUE(23 == this->hTable->getSize());//succesful insert
+                if(i == 2){
+                    ASSERT_TRUE(5 == this->hTable->getSize());//succesful insert
+                }
+                if(i == 8){
+		            ASSERT_TRUE(23 == this->hTable->getSize());//succesful insert
+                }
             }
         }
 
@@ -63,7 +65,7 @@ TEST_F(HashTableTest, InsertTest) {
 
 TEST_F(HashTableTest, updateEntryPayload) {
     for (int i = 0; i < this->numOfEntries; ++i) {
-        Entry * e;
+        // Entry * e;
         PayloadEntry p(i+1,NULL);
         HashTableErrorCode errorVal = this->hTable->updateEntryPayload(&entryPtrs[i]->getWord(), p,MT_EXACT_MATCH, 0);
         ASSERT_TRUE(errorVal == H_T_SUCCESS);//succesful update

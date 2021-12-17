@@ -16,11 +16,11 @@ class Entry {
         Word word;
 		Word * wPtr;
         List<PayloadEntry> payload[MATCH_TYPES_NUM+1][MAX_DISTANCE];
-		int idx;
+		// int idx;
     public:
         List<PayloadEntry> & getPayload(MatchType, unsigned int dist=0);
         ListErrorCode addToPayload(PayloadEntry &, MatchType, unsigned int);
-        ListErrorCode removeFromPayload(PayloadEntry &);
+        // ListErrorCode removeFromPayload(PayloadEntry &);
         Word &getWord();
         Entry(const char *, PayloadEntry &, MatchType, unsigned int);
         Entry(Word &, PayloadEntry &, MatchType, unsigned int);

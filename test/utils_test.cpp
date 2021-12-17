@@ -62,9 +62,9 @@ TEST(UtilsBiSearchQuery, FoundComplex) {
 	qs[i] = new Query(i*2, "1 word", MT_EXACT_MATCH, 0);
 	queries.insert(qs[i]);
     }
-    
+
     for (int i = 0; i < 128; ++i) {
-	int n = (rand() % 256)*2;
+	unsigned int n = (rand() % 256)*2;
 	Query * qPtr = biSearchQuery(&queries, n);
 	ASSERT_TRUE(qPtr->getId() == n);
     }
@@ -99,7 +99,7 @@ TEST(UtilsBiSearchQuery, NotFoundComplex) {
 	qs[i] = new Query(i*2, "1 word", MT_EXACT_MATCH, 0);
 	queries.insert(qs[i]);
     }
-    
+
     for (int i = 0; i < 128; ++i) {
 	int n = (rand() % 256)*2 +1;
 	Query * qPtr = biSearchQuery(&queries, n);

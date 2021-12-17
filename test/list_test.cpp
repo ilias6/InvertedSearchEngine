@@ -135,7 +135,7 @@ TEST_F(ListTest,RemoveTest){
     for(int i=0;i<1000;i++)
         stressed_list.insert(i);
     srand(time(NULL));
-    int rand_indx;
+    // int rand_indx;
     int sz=1000;
     // remove from start
     for(int i=0;i<300;i++){

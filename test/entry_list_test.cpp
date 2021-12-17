@@ -55,9 +55,9 @@ TEST_F(EntryListTest,ConstructorTest){
 TEST_F(EntryListTest,InsertTest){
     EntryList *el=new EntryList(11);
     EntryListErrorCode err_val;
-    const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"};
-    MatchType m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
-    unsigned int d[4]={0,1,2,1};
+    // const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"};
+    // MatchType m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
+    // unsigned int d[4]={0,1,2,1};
     Entry ***en=new Entry**[numOfQueries];
     for (int i = 0; i < numOfQueries; ++i) {
         err_val=el->insert(*qs[i],&en[i]);

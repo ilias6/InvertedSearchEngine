@@ -28,7 +28,7 @@ TEST_F(DocumentTest,ConstructorTest){
     "ok ok","a b c a b c a b c cc"};
     for(int i=0;i<this->size;i++){
         this->doc_arr[i]=new Document(i,arr[i]);
-        ASSERT_TRUE(i==this->doc_arr[i]->getId());
+        ASSERT_TRUE((DocID)i==this->doc_arr[i]->getId());
     }
     ASSERT_TRUE(8==this->doc_arr[0]->getWordsInDoc());
     ASSERT_TRUE(1==this->doc_arr[1]->getWordsInDoc());

@@ -119,7 +119,7 @@ int Vector<T>::getActualMemoryLen() const {
 
 template <typename T>
 T & Vector<T>::getItem(int index) const {
-    if (index >= this->len || index < 0)
+    if (index >= (int)this->len || index < 0)
         throw invalid_argument("Index out of range");
     return arr[index];
 }
@@ -171,7 +171,7 @@ VectorErrorCode Vector<T>::insertSorted(T & item, CmpKey key) {
         delete[] tmp;
     }
 
-    if (this->len == 0 || this->arr[this->len-1]->getId() <= key) {
+    if (this->len == 0 || (int)this->arr[this->len-1]->getId() <= key) {
         this->arr[this->len] = item;
         this->len++;
         return V_SUCCESS;
@@ -217,11 +217,11 @@ VectorErrorCode Vector<T>::insertSorted(T & item, CmpKey key) {
 }
 
 template <typename T>
-VectorErrorCode Vector<T>::removeHead() { 
+VectorErrorCode Vector<T>::removeHead() {
     if(this->len==0)
         return V_EMPTY;
     for (int i = 1; i < this->len; ++i)
-        arr[i-1] = arr[i];  
+        arr[i-1] = arr[i];
     this->len--;
     return V_SUCCESS;
 }
