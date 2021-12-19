@@ -1,4 +1,3 @@
-# FAKE COMMIT
 # **Inverted Search Engine** *(SIGMOD 2013)*
 ### **sdi1700072** & **sdi1700055**
 
@@ -15,18 +14,21 @@ As you can see above the project has the following directories:
 ## Structure of the project (class diagram)
 
 ### Our basic classes:
-Word | ListNode\<T\> | List\<T\> | Vector\<T\>
-| :---: | :---: | :---: | :---:
-char\* string | T data | ListNode\<T\>\* head | T[Actual Size]
-int length | ListNode\<T\>* next | ListNode\<T\>\* tail | int length
-_  | _ | int length | int actual_size |
+Word | ListNode\<T\> | List\<T\> | Vector\<T\> | Queue\<T\> 
+| :---: | :---: | :---: | :---: | :---: 
+char\* string | T data | ListNode\<T\>\* head | T[Actual Size] | List\<T\> lst
+int length | ListNode\<T\>* next | ListNode\<T\>\* tail | int length | _
+_  | _ | int length | int actual_size | _ 
 
 ### And the composite ones:
-Entry | Bucket | HashTable | Query | BKNode | BKTree | EntryList | Index
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
-Word w | List\<Entry\*\> | Bucket\* array | Word\*\* | Entry\* e | metric | List\<Entry\> list | MatchType
-List\<int\> payload | _ | int size | int id | int distance (from parent) | BKNode\* root | HashTable t | BKTree\*\* trees (multiple trees for manhattan distance)
-_ | _ | hash function | int numOfWords | Vector\<BKTreeNode\*\> children | int size | _ | HashTable \*
+Entry | Bucket | HashTable | Query | BKNode | BKTree | EntryList | Index | PayloadEntry | Result | CoreWrapper |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
+Word word | Vector\<Entry\*\> list| Bucket\* array | Word\*\* | Entry\* e | metric | List\<Entry\> list | MatchType type | QueryID id | DocID id | EntryList \* entryList
+List\<PayloadEntry\> payload\[MAX_TYPES_NUM\]\[MAX_DISTANCE\] | _ | int size (bucket num) | QueryID id | int distance (from parent) | BKNode\* root | HashTable hashtable | BKTree\*\* trees (multiple trees for manhattan distance) | bool \* active (points to addr of Querry::active) | Vector<Query *> queries | Index \*\*\* indeces 
+_ | _ | int current_size (num of Entries in all buckets) | int wordsInQuery | _ | Vector\<BKNode\*\> children | int size | _ | HashTable \* hTable | bool\*\* wordFlags | Vector\<Query \*\> \*queries |
+_ | _ | hash function | MatchType type | _ | _ | _ | int numOfTrees (1 if MT_EDIT_DIST) | _ | _ | Queue<Document \*> \* docs 
+_ | _ | _ | bool active | _ | _ | _ | _ | _ | _ | Queue<Result \*> \* results |
+_ | _ | _ | unsigned int matchDist | _ | _ | _ | _ | _ | _ | _ |
 
 ### *A few words about our basic classes*
 1. **Word**    
