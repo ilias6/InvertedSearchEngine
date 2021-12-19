@@ -33,8 +33,3 @@ TEST_F(QueryTest, ConstructorTestNormal) {
         ASSERT_TRUE(strcmp(w->getStr(), strArr[i]) == 0);
     }
 }
-
-
-TEST_F(QueryTest, deleteDataTestNormal) {
-;
-}
