@@ -9,7 +9,7 @@ class QueryTest: public ::testing::Test {
     protected:
         Query * q;
         virtual void SetUp() {
-            q = new Query(0, "a word is here", MT_EXACT_MATCH, 0);
+            q = new Query(0, "aaaaa word isis here", MT_EXACT_MATCH, 0);
         }
 
         virtual void TearDown() {
@@ -27,14 +27,9 @@ TEST_F(QueryTest, ConstructorTestNormal) {
     q->activate();
     ASSERT_TRUE(q->getActive());
     ASSERT_TRUE(q->getMatchDist() == 0);
-    const char strArr[][8] = {"a", "word", "is", "here"};
+    const char strArr[][8] = {"aaaaa", "word", "isis", "here"};
     for (int i = 0; i < 4; ++i) {
         Word * w = q->getWord(i);
         ASSERT_TRUE(strcmp(w->getStr(), strArr[i]) == 0);
     }
-}
-
-
-TEST_F(QueryTest, deleteDataTestNormal) {
-;
 }

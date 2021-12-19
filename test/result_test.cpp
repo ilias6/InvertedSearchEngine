@@ -15,7 +15,7 @@ class ResultTest: public ::testing::Test {
             this->size=4;
             d_id=999;
             this->queries=new Vector<Query *>;
-            const char *str_arr[4]={"this is the first query","this is the t second","this is the third query","fourth and final query"};
+            const char *str_arr[4]={"this isis thee first query","this isis thee tttt second","this isis thee third query","fourth andd final query"};
             for(int i=0;i<this->size;i++){
                 Query * t=new Query(i,str_arr[i],MT_EXACT_MATCH,0);
                 queries->insertSorted(t,t->getId());
@@ -39,7 +39,7 @@ TEST_F(ResultTest, increaseCounterAndFetchTest){
     ASSERT_TRUE(q_res_arr==NULL);
     ASSERT_TRUE(size==0);
     ASSERT_TRUE(result_id==this->d_id);
-    const char *str_arr[4][10]={{"this","is","the","first","query"},{"this","is","the","t","second"},{"this","is","the","third","query"},{"fourth","and","final","query"}};
+    const char *str_arr[4][10]={{"this","isis","thee","first","query"},{"this","isis","thee","tttt","second"},{"this","isis","thee","third","query"},{"fourth","andd","final","query"}};
     Word *w=new Word("not-set");
     for(int i=0;i<4;i++)
         for(int j=0;j<4;j++){

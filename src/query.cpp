@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include "../include/query.hpp"
-#include "../include/core.hpp"
+#include "../include/core.h"
 #include "../include/hash_table.hpp"
 #include "../include/hash_functions.hpp"
 #include <fstream>
@@ -16,7 +16,6 @@ Query::Query(QueryID id, const char * str, MatchType type, unsigned int dist) {
     this->type = type;
     this->active = true;
     this->matchDist = dist;
-    this->wordsInQuery;
     this->wordsInQuery=countSpaces(str) +1;
     if(this->wordsInQuery>MAX_QUERY_WORDS){
         cerr<<"Query contains more words than "<<MAX_QUERY_WORDS<<endl;

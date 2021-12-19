@@ -25,7 +25,7 @@ TEST_F(DocumentTest,ConstructorTest){
     this->size=3;//3 docs
     this->doc_arr=new Document*[this->size];
     const char * arr[]={"6243 http dbpedia resource list people from minnesota http",
-    "ok ok","a b c a b c a b c cc"};
+    "okok okok","aaaa bbbb cccc aaaa bbbb cccc aaaa bbbb cccc ccccc"};
     for(int i=0;i<this->size;i++){
         this->doc_arr[i]=new Document(i,arr[i]);
         ASSERT_TRUE((DocID)i==this->doc_arr[i]->getId());
@@ -42,17 +42,17 @@ TEST_F(DocumentTest,ConstructorTest){
     w2->set("minnesota");
     ASSERT_TRUE(w2->exactMatch(*(this->doc_arr[0]->getWord(7))));
 
-    w2->set("ok");
+    w2->set("okok");
     ASSERT_TRUE(w2->exactMatch(*(this->doc_arr[1]->getWord(0))));
     ASSERT_TRUE(this->doc_arr[1]->getWord(1)==NULL);
     ASSERT_TRUE(this->doc_arr[1]->getWord(2)==NULL);
-    w2->set("a");
+    w2->set("aaaa");
     ASSERT_TRUE(w2->exactMatch(*(this->doc_arr[2]->getWord(0))));
-    w2->set("b");
+    w2->set("bbbb");
     ASSERT_TRUE(w2->exactMatch(*(this->doc_arr[2]->getWord(1))));
-    w2->set("c");
+    w2->set("cccc");
     ASSERT_TRUE(w2->exactMatch(*(this->doc_arr[2]->getWord(2))));
-    w2->set("cc");
+    w2->set("ccccc");
     ASSERT_TRUE(w2->exactMatch(*(this->doc_arr[2]->getWord(3))));
 
 

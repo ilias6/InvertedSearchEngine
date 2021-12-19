@@ -1,10 +1,8 @@
-#include "../include/core.hpp"
+#include "../include/core.h"
 #include "../include/core_wrapper.hpp"
 #include "../include/result.hpp"
 
-
 CoreWrapper * CW = NULL;
-
 
 ErrorCode InitializeIndex() {
     CW = new CoreWrapper();
@@ -18,8 +16,8 @@ ErrorCode DestroyIndex() {
 ErrorCode StartQuery (QueryID query_id, const char * query_str, MatchType match_type, unsigned int match_dist) {
     CoreWrapperErrorCode c_err;
     c_err=CW->addQuery(query_id, query_str, match_type, match_dist);
-    // if(c_err==C_W_FAIL)
-    //     return EC_FAIL;
+    if(c_err==C_W_FAIL)
+        return EC_FAIL;
     return EC_SUCCESS;
 }
 

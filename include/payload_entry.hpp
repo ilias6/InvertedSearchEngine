@@ -2,7 +2,7 @@
 #define __PAYLOAD_ENTRY_HPP__
 
 #include <iostream>
-#include "./core.hpp"
+#include "./core.h"
 #include "./query.hpp"
 using namespace std;
 

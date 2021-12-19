@@ -2,8 +2,6 @@
 #include <iostream>
 #include "../include/core_wrapper.hpp"
 #include "../include/utils.hpp"
-#include "../include/entry.hpp"
-#include "../include/result.hpp"
 
 #define APPROXIMATE_Q_NUM 10000
 
@@ -24,7 +22,7 @@ CoreWrapper::CoreWrapper() {
     this->queries = new Vector<Query *>();
     this->docs = new Queue<Document *>();
     this->results = new Queue<Result *>();
-    this->exactEntries=NULL;
+    //this->exactEntries=NULL;
 }
 
 CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {

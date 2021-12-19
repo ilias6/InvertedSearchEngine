@@ -4,7 +4,7 @@
 
 #include "../include/word.hpp"
 #include "../include/vector.hpp"
-#include "../include/core.hpp"
+#include "../include/core.h"
 
 class Query{
     private:

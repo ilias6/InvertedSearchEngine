@@ -15,7 +15,7 @@ class EntryListTest: public ::testing::Test {
             numOfQueries=4;
             EntryListErrorCode err_val;
     	    qs = new Query*[numOfQueries];
-            const char * str[]={"this is first query","this is second query","this is third query","this is fourth query"};
+            const char * str[]={"this isis first query","this isis second query","this isis third query","this isis fourth query"};
             MatchType m_t[4]={MT_EXACT_MATCH,MT_EDIT_DIST,MT_HAMMING_DIST,MT_EDIT_DIST};
             unsigned int d[4]={0,1,2,1};
             this->e=new Entry**[numOfQueries];
@@ -63,28 +63,28 @@ TEST_F(EntryListTest,InsertTest){
         err_val=el->insert(*qs[i],&en[i]);
 	if (i == 0) {
 	    ASSERT_TRUE(strcmp(en[0][0]->getWord().getStr(), "this") == 0);
-	    ASSERT_TRUE(strcmp(en[0][1]->getWord().getStr(), "is") == 0);
+	    ASSERT_TRUE(strcmp(en[0][1]->getWord().getStr(), "isis") == 0);
 	    ASSERT_TRUE(strcmp(en[0][2]->getWord().getStr(), "first") == 0);
 	    ASSERT_TRUE(strcmp(en[0][3]->getWord().getStr(), "query") == 0);
 	    ASSERT_TRUE(en[0][4] == NULL);
 	}
 	if (i == 1) {
 	    ASSERT_TRUE(strcmp(en[1][0]->getWord().getStr(), "this") == 0);
-	    ASSERT_TRUE(strcmp(en[1][1]->getWord().getStr(), "is") == 0);
+	    ASSERT_TRUE(strcmp(en[1][1]->getWord().getStr(), "isis") == 0);
 	    ASSERT_TRUE(strcmp(en[1][2]->getWord().getStr(), "second") == 0);
 	    ASSERT_TRUE(strcmp(en[1][3]->getWord().getStr(), "query") == 0);
 	    ASSERT_TRUE(en[1][4] == NULL);
 	}
 	if (i == 2) {
 	    ASSERT_TRUE(strcmp(en[2][0]->getWord().getStr(), "this") == 0);
-	    ASSERT_TRUE(strcmp(en[2][1]->getWord().getStr(), "is") == 0);
+	    ASSERT_TRUE(strcmp(en[2][1]->getWord().getStr(), "isis") == 0);
 	    ASSERT_TRUE(strcmp(en[2][2]->getWord().getStr(), "third") == 0);
 	    ASSERT_TRUE(strcmp(en[2][3]->getWord().getStr(), "query") == 0);
 	    ASSERT_TRUE(en[2][4] == NULL);
 	}
 	if (i == 3) {
 	    ASSERT_TRUE(strcmp(en[3][0]->getWord().getStr(), "this") == 0);
-	    ASSERT_TRUE(strcmp(en[3][1]->getWord().getStr(), "is") == 0);
+	    ASSERT_TRUE(strcmp(en[3][1]->getWord().getStr(), "isis") == 0);
 	    ASSERT_TRUE(strcmp(en[3][2]->getWord().getStr(), "fourth") == 0);
 	    ASSERT_TRUE(strcmp(en[3][3]->getWord().getStr(), "query") == 0);
 	    ASSERT_TRUE(en[3][4] == NULL);
@@ -100,7 +100,7 @@ TEST_F(EntryListTest,InsertTest){
     ASSERT_TRUE(e->getWord().exactMatch(*w2));
 
     delete w2;
-    char test_words[][7]={"this","is","first","query","second","third","fourth"};
+    char test_words[][7]={"this","isis","first","query","second","third","fourth"};
     for(int i=0;i<7;i++){
         Word * w2=new Word(test_words[i]);
         Entry * e=eList->getItemPtr(i);
@@ -122,7 +122,7 @@ TEST_F(EntryListTest,InsertTest){
 
 TEST_F(EntryListTest,GetItemPtrTest){
     char test_words[][7]={
-        "this","is","first","query","second","third","fourth"
+        "this","isis","first","query","second","third","fourth"
     };
     for(int i=0;i<7;i++){
         Word * w2=new Word(test_words[i]);

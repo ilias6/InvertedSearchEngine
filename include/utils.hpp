@@ -1,14 +1,10 @@
 #ifndef __UTILS_HPP__
 #define __UTILS_HPP__
 
-#include "index.hpp"
-#include "word.hpp"
-#include "entry.hpp"
-#include "entry_list.hpp"
-#include "core.h"
+#include <fstream>
+
 #include "query.hpp"
 #include "vector.hpp"
-#include <fstream>
 #include "hash_table.hpp"
 
 

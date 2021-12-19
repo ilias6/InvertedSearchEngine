@@ -2,9 +2,9 @@
 #include <ctime>
 #include <cstdlib>
 #include <fstream>
-#include "../include/utils.hpp"
-#include "../include/entry_list.hpp"
 #include <sys/time.h>
+
+#include "../include/utils.hpp"
 
 using namespace std;
 
@@ -162,7 +162,6 @@ int biSearchQueryIndex(Vector<Query *> * queries, QueryID id) {
     int start = 0;
     int indx=-1;
     int end = queries->getLen();
-    Query * qPtr = NULL;
 
     if (queries->getItem(0)->getId() > id || queries->getItem(end-1)->getId() < id)
         return indx;

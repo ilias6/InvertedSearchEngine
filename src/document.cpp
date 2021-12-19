@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include "../include/document.hpp"
-#include "../include/core.hpp"
+#include "../include/core.h"
 #include "../include/hash_table.hpp"
 #include "../include/hash_functions.hpp"
 #include <fstream>
@@ -13,14 +13,12 @@ using namespace std;
 
 Document::Document(DocID id, const char * str) {
     this->id = id;
-    this->wordsInDoc;
     this->wordsInDoc = countSpaces(str)+1;
     if(this->wordsInDoc<=0){
         cerr<<"Document size can't be equal or smaller than zero (DocID "<<this->id<<")"<<endl;
         exit(-1);
     }
     int ret=scan(this->wordsInDoc,str,&this->words,&this->wordsInDoc,MAX_WORD_LENGTH,MIN_WORD_LENGTH);
-    //for (int i = 0; i < this->wordsInDoc; ++i)
     if(ret==-1){
         cerr<<"Doc contains words bigger than "<<MAX_WORD_LENGTH<<endl;
         exit(-1);

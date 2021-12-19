@@ -2,7 +2,7 @@
 #define __DOCUMENT_HPP__
 
 #include "../include/word.hpp"
-#include "../include/core.hpp"
+#include "../include/core.h"
 #define MAX_DOC_WORDS ((MAX_DOC_LENGTH+1)/MIN_WORD_LENGTH)
 class Document {
     private:

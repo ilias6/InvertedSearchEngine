@@ -9,9 +9,8 @@ enum ResultErrorCode {R_SUCCESS,R_FAIL};
 class Result{
     private:
         DocID docId;
-        Vector<Query *> queries;//
+        Vector<Query *> queries;
         bool ** wordFlags;
-        HashTable ** wordIndices;
     public:
         Result(DocID,Vector<Query *> &);
         ~Result();

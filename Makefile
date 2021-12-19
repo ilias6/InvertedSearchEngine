@@ -1,5 +1,5 @@
 ++     	= g++
-CFLAGS 	= -g -pg
+CFLAGS 	= -g -Wall #-pg
 LIBS	= -lm
 TESTFLAGS= -pthread
 TESTLIBS= -L ./lib/libgtest_main.a ./lib/libgtest.a
@@ -21,9 +21,9 @@ TESTOBJ	= $(patsubst %, $(ODIR)%, $(_TESTOBJ))
 _DEPS	= list.hpp entry.hpp word.hpp hash_functions.hpp hash_table.hpp document.hpp core.h query.hpp BK_tree.hpp index.hpp utils.hpp entry_list.hpp vector.hpp payload_entry.hpp queue.hpp result.hpp queue.hpp
 DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
-
 all:directories program all_tests
 program: $(BDIR)out
+CFLAGS 	= -g -Wall
 all_tests:$(BDIR)tests
 
 $(BDIR)tests: $(TESTOBJ) $(OBJ)
@@ -56,19 +56,21 @@ $(ODIR)test.o: $(SDIR)test.cpp $(DEPS)
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)hash_functions.hpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)vector.hpp $(IDIR)core.h
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp
+$(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)entry_list.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp $(IDIR)queue.hpp
+$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp $(IDIR)queue.hpp $(IDIR)result.hpp $(IDIR)document.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.h $(IDIR)core_wrapper.hpp
+$(ODIR)core.o: $(SDIR)core.cpp $(IDIR)core.h $(IDIR)core_wrapper.hpp $(IDIR)result.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-
 $(ODIR)result.o: $(SDIR)result.cpp $(IDIR)result.hpp $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)document.hpp $(IDIR)utils.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
+
+
+
 directories:
-	mkdir -p build; mkdir -p bin
+	mkdir -p build; mkdir -p bin; mkdir -p prof;
 
 unit-test: directories
 	make all_tests; ./bin/tests

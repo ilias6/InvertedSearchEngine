@@ -31,7 +31,7 @@ TEST(UtilsBiSearchQuery, FoundSimple) {
     Vector<Query *> queries;
     Query ** qs = new Query*[27];
     for (int i = 0; i < 27; ++i) {
-	qs[i] = new Query(i, "1 word", MT_EXACT_MATCH, 0);
+	qs[i] = new Query(i, "1111 word", MT_EXACT_MATCH, 0);
 	queries.insert(qs[i]);
     }
 
@@ -59,7 +59,7 @@ TEST(UtilsBiSearchQuery, FoundComplex) {
     Vector<Query *> queries;
     Query ** qs = new Query*[256];
     for (int i = 0; i < 256; ++i) {
-	qs[i] = new Query(i*2, "1 word", MT_EXACT_MATCH, 0);
+	qs[i] = new Query(i*2, "1111 word", MT_EXACT_MATCH, 0);
 	queries.insert(qs[i]);
     }
 
@@ -78,7 +78,7 @@ TEST(UtilsBiSearchQuery, NotFoundSimple) {
     Vector<Query *> queries;
     Query ** qs = new Query*[27];
     for (int i = 0; i < 27; ++i) {
-	qs[i] = new Query(i, "1 word", MT_EXACT_MATCH, 0);
+	qs[i] = new Query(i, "1111 word", MT_EXACT_MATCH, 0);
 	queries.insert(qs[i]);
     }
 
@@ -96,7 +96,7 @@ TEST(UtilsBiSearchQuery, NotFoundComplex) {
     Vector<Query *> queries;
     Query ** qs = new Query*[256];
     for (int i = 0; i < 256; ++i) {
-	qs[i] = new Query(i*2, "1 word", MT_EXACT_MATCH, 0);
+	qs[i] = new Query(i*2, "1111 word", MT_EXACT_MATCH, 0);
 	queries.insert(qs[i]);
     }
 

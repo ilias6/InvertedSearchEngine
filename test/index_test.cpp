@@ -1,6 +1,6 @@
 #include "../include/gtest.h"
 #include "../include/index.hpp"
-#include "../include/core.hpp"
+#include "../include/core.h"
 #include "../include/utils.hpp"
 #include <stdexcept>
 #include <iostream>

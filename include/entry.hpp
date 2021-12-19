@@ -14,9 +14,7 @@ using namespace std;
 class Entry {
     private:
         Word word;
-		Word * wPtr;
-        List<PayloadEntry> payload[MATCH_TYPES_NUM+1][MAX_DISTANCE];
-		// int idx;
+        List<PayloadEntry> payload[MATCH_TYPES_NUM][MAX_DISTANCE+1];
     public:
         List<PayloadEntry> & getPayload(MatchType, unsigned int dist=0);
         ListErrorCode addToPayload(PayloadEntry &, MatchType, unsigned int);

@@ -1,7 +1,9 @@
 input/queries/
 build/
 bin/
+prof/
 src/*~
 include/*~
+*~
 sigmod2013contest-1.1
 *.out

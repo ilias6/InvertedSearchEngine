@@ -2,7 +2,7 @@
 #include <cstdlib>
 
 #include "../include/index.hpp"
-#include "../include/core.hpp"
+#include "../include/core.h"
 #include "../include/hash_functions.hpp"
 using namespace std;
 

@@ -64,7 +64,7 @@ TEST_F(VectorTest, InsertSortedTest) {
     Query ** qs = new Query*[256];
     for (int i = 0; i < 256; ++i) {
 	int id = rand() % 1000;
-	qs[i] = new Query(id, "1 word", MT_EXACT_MATCH, 0);
+	qs[i] = new Query(id, "1111 word", MT_EXACT_MATCH, 0);
 	queries.insertSorted(qs[i], id);
 
     }
