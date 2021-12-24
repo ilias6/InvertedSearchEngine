@@ -5,7 +5,6 @@
 using namespace std;
 
 
-
 Result::Result(DocID id,Vector<Query *> & cur_queries):queries(cur_queries){
     this->docId=id;
 
