@@ -1,4 +1,4 @@
-#include <stdlib>
+#include <cstdlib>
 
 enum JobErrorCode{J_SUCCESS, J_FAIL};
 enum JobId{Search, ExactSearch, EditSearch, HammingSearch};

@@ -1,5 +1,5 @@
 ++     	= g++
-CFLAGS 	= -g -Wall #-pg
+CFLAGS 	= -g -Wall -pthread #-pg
 LIBS	= -lm
 TESTFLAGS= -pthread
 TESTLIBS= -L ./lib/libgtest_main.a ./lib/libgtest.a
@@ -12,7 +12,7 @@ BDIR	= ./bin/
 TDIR	= ./test/
 
 
-_OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o payload_entry.o document.o result.o
+_OBJ 	= entry.o word.o hash_table.o hash_functions.o query.o BK_tree.o index.o utils.o entry_list.o core_wrapper.o core.o payload_entry.o document.o result.o scheduler.o job.o
 OBJ	= $(patsubst %, $(ODIR)%, $(_OBJ))
 
 _TESTOBJ= word_test.o test_main.o list_test.o bk_tree_test.o hash_table_test.o vector_test.o entry_test.o index_test.o entry_list_test.o query_test.o utils_test.o document_test.o result_test.o queue_test.o core_wrapper_test.o
@@ -23,7 +23,7 @@ DEPS	= $(patsubst %,	$(IDIR)%, $(_DEPS))
 
 all:directories program all_tests
 program: $(BDIR)out
-CFLAGS 	= -g -Wall
+
 all_tests:$(BDIR)tests
 
 $(BDIR)tests: $(TESTOBJ) $(OBJ)
@@ -35,7 +35,10 @@ $(BDIR)out: $(OBJ) $(ODIR)test.o
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 	$(++) -c -o $@ $< $(TESTFLAGS) -Wall
 
-
+$(ODIR)scheduler.o: $(SDIR)scheduler.cpp $(IDIR)scheduler.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
+$(ODIR)job.o: $(SDIR)job.cpp $(IDIR)job.hpp
+	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)document.o: $(SDIR)document.cpp $(IDIR)document.hpp $(IDIR)core.h $(IDIR)word.hpp $(IDIR)hash_functions.hpp $(IDIR)hash_table.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)payload_entry.o: $(SDIR)payload_entry.cpp $(IDIR)payload_entry.hpp $(IDIR)core.h
