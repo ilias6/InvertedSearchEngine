@@ -45,7 +45,7 @@ ErrorCode MatchDocument(DocID doc_id, const char * doc_str) {
             cerr<<"Failed adding result to result_pool ! [DocID "<<doc_to_be_matched->getId()<<"] "<<endl;
             exit(1);
         }
-        delete doc_to_be_matched;
+        // delete doc_to_be_matched;
     }
     return EC_SUCCESS;
 }

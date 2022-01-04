@@ -3,10 +3,12 @@
 #include "../include/core_wrapper.hpp"
 #include "../include/utils.hpp"
 
+#include <unistd.h>
+
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(10);
+    this->scheduler = new Scheduler(2);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -88,6 +90,9 @@ Document * CoreWrapper::pullDocument(){
 }
 
 Result * CoreWrapper::matchDocument(Document * doc){
+    Job *j=new Job(SEARCH,new SearchArgs(doc));
+
+this->scheduler->addJob(j);
     int words_in_doc=doc->getWordsInDoc();
     Result * res=new Result(doc->getId(),*this->queries);
     for(int i=0;i<words_in_doc;i++){
@@ -95,6 +100,7 @@ Result * CoreWrapper::matchDocument(Document * doc){
         this->searchWordInIndeces(w,res);
     }
     return res;
+
 }
 
 void CoreWrapper::searchWordInIndeces(Word *w,Result *res){

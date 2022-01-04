@@ -1,5 +1,5 @@
 #ifndef __JOB_HPP__
-#define __JOBR_HPP__
+#define __JOB_HPP__
 
 #include <cstdlib>
 #include "document.hpp"
@@ -14,32 +14,34 @@ class SearchArgs {
         SearchArgs(Document *);
         ~SearchArgs();
         Document * getDocument();
+        void print();
 };
 
 class Job {
     private:
-        JobId id;    
+        JobId id;
         SearchArgs * searchArgs;
     public:
         Job(JobId, SearchArgs *);
+        void print();
         ~Job();
 };
 
 
 // class SearchArgs {
-// 
+//
 // };
-// 
+//
 // class SearchArgs {
-// 
+//
 // };
-// 
+//
 // class SearchArgs {
-// 
+//
 // };
-// 
+//
 // class SearchArgs {
-// 
+//
 // };
 
 #endif
