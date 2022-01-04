@@ -5,39 +5,52 @@
 #include "document.hpp"
 
 enum JobErrorCode{J_SUCCESS, J_FAIL};
-enum JobId{SEARCH, EXACTSEARCH, EDITSEARCH, HAMMINGSEARCH};
-
-class SearchArgs {
-    private:
-        Document * doc;
+enum JobId{SEARCH,INSERT,DEACTIVATE,EXACTSEARCH, EDITSEARCH, HAMMINGSEARCH};
+enum Status{PENDING,IN_PROGRESS,DONE};
+class Args {
     public:
-        SearchArgs(Document *);
-        ~SearchArgs();
+        Args();
+        ~Args();
         Document * getDocument();
         void print();
+        QueryID getQueryId();
+
 };
 
 class Job {
     private:
+        enum Status status;
         JobId id;
-        SearchArgs * searchArgs;
+        Args * args;
     public:
-        Job(JobId, SearchArgs *);
+        Job(JobId, Args *);
+        void setStatus(enum Status);
         JobId getId();
-        SearchArgs * getSearchArgs();
+        Args * getArgs();
         void print();
         ~Job();
 };
 
 
-// class SearchArgs {
-//
-// };
-//
-// class SearchArgs {
-//
-// };
-//
+class SearchArgs:public Args {
+    private:
+        Document * doc;
+    public:
+        SearchArgs(Document *);
+        ~SearchArgs();
+        virtual Document * getDocument();
+        virtual void print();
+};
+
+class DeactivateArgs:public Args {
+    private:
+        QueryID id;
+    public:
+        DeactivateArgs();
+        ~DeactivateArgs();
+        virtual QueryID getQueryId();
+};
+
 // class SearchArgs {
 //
 // };

@@ -4,14 +4,24 @@
 
 
 using namespace std;
-Job::Job(JobId id, SearchArgs * searchArgs) {
+Job::Job(JobId id, Args * a) {
+    this->status=PENDING;
     this->id = id;
-    this->searchArgs = searchArgs;
+    args=a;
 }
 
+void Job::setStatus(enum Status s){
+    this->status=s;
+}
+void Args::print(){}
+Args::Args(){}
+Args::~Args(){}
+Document * Args::getDocument(){return NULL;}
+QueryID Args::getQueryId(){return -1;}
+
+
 Job::~Job() {
-    if (this->id == SEARCH)
-        delete this->searchArgs;
+    delete this->args;
 }
 
 
@@ -20,7 +30,7 @@ void Job::print(){
     switch(id){
         case SEARCH:
             cout<<"SEARCH "<<endl;
-            searchArgs->print();
+            args->print();
             break;
         case EXACTSEARCH:
             cout<<"EXACTSEARCH "<<endl;
@@ -38,14 +48,14 @@ void Job::print(){
 }
 
 JobId Job::getId() {
-    return this->Id;
+    return this->id;
 }
 
-SearchArgs * Job::getSearchArgs() {
-    return this->searchArgs;
+Args * Job::getArgs() {
+    return this->args;
 }
 
-SearchArgs::SearchArgs(Document * doc) {
+SearchArgs::SearchArgs(Document * doc){
     this->doc = doc;
 }
 
@@ -56,6 +66,7 @@ Document * SearchArgs::getDocument() {
 }
 
 void SearchArgs::print(){
+    cout<<"\t----SearchArgs-----\n";
     cout<<"\tdoc_id: "<<this->doc->getId()<<endl;
     // this->doc->print();
 }
