@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(2);
+    this->scheduler = new Scheduler(20);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -89,18 +89,22 @@ Document * CoreWrapper::pullDocument(){
     }
 }
 
-Result * CoreWrapper::matchDocument(Document * doc){
-    Job *j=new Job(SEARCH,new SearchArgs(doc));
+CoreWrapperErrorCode CoreWrapper::matchDocument(Document * doc){
+    Args * args = new SearchArgs(doc);
+    Job *j=new Job(SEARCH, args);
 
-this->scheduler->addJob(j);
-    int words_in_doc=doc->getWordsInDoc();
-    Result * res=new Result(doc->getId(),*this->queries);
-    for(int i=0;i<words_in_doc;i++){
-        Word *w=doc->getWord(i);
-        this->searchWordInIndeces(w,res);
-    }
-    return res;
+    if (this->scheduler->addJob(j) != S_SUCCESS)
+        return C_W_FAIL;
+    return C_W_SUCCESS;
 
+
+    // int words_in_doc=doc->getWordsInDoc();
+    // Result * res=new Result(doc->getId(),*this->queries);
+    // for(int i=0;i<words_in_doc;i++){
+        // Word *w=doc->getWord(i);
+        // this->searchWordInIndeces(w,res);
+    // }
+    // return res;
 }
 
 void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
@@ -133,23 +137,23 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
     //delete this->exactEntries;
 }
 /*
-void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res){
-    int len=e_list.getLen();
-    for(int i=0;i<len;i++){
-        Entry * e=e_list.getItem(i);
-        List<PayloadEntry> &p_list=e->getPayload();
-        int plen=p_list.getLen();
-        for(int j=0;j<plen;j++){
-            PayloadEntry &pE=p_list.getItem(j);
-            bool active=pE.getActive();
-            if(active){
-                QueryID id=pE.getId();
-                res->increaseCounter(id, &e->getWord());
-            }
-        }
-    }
-}
-*/
+   void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res){
+   int len=e_list.getLen();
+   for(int i=0;i<len;i++){
+   Entry * e=e_list.getItem(i);
+   List<PayloadEntry> &p_list=e->getPayload();
+   int plen=p_list.getLen();
+   for(int j=0;j<plen;j++){
+   PayloadEntry &pE=p_list.getItem(j);
+   bool active=pE.getActive();
+   if(active){
+   QueryID id=pE.getId();
+   res->increaseCounter(id, &e->getWord());
+   }
+   }
+   }
+   }
+   */
 
 void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType mt,unsigned int dist){
     int len=e_list.getLen();

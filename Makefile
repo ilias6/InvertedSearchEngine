@@ -35,7 +35,7 @@ $(BDIR)out: $(OBJ) $(ODIR)test.o
 $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 	$(++) -c -o $@ $< $(TESTFLAGS) -Wall
 
-$(ODIR)scheduler.o: $(SDIR)scheduler.cpp $(IDIR)scheduler.hpp
+$(ODIR)scheduler.o: $(SDIR)scheduler.cpp $(IDIR)scheduler.hpp $(IDIR)core_wrapper.hpp $(IDIR)core_wrapper.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)job.o: $(SDIR)job.cpp $(IDIR)job.hpp $(IDIR)document.hpp
 	$(++) -c -o $@ $< $(CFLAGS)

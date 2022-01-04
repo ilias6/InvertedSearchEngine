@@ -17,6 +17,22 @@
 enum CoreWrapperErrorCode {C_W_SUCCESS,C_W_FAIL};
 class CoreWrapper {
     private:
+    public:
+        CoreWrapper();
+        ~CoreWrapper();
+        CoreWrapperErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
+        CoreWrapperErrorCode deactivateQuery(QueryID);
+        CoreWrapperErrorCode addDocument(DocID,const char *);
+        Document *pullDocument();
+        CoreWrapperErrorCode matchDocument(Document *);
+        CoreWrapperErrorCode addResult(Result *);
+        Result *pullResult();
+
+
+        void increaseCounter(List<Entry *>&,Result *,MatchType,unsigned int dist=0);
+        void increaseCounter(List<Entry *>&,Result *);
+        void searchWordInIndeces(Word *,Result *);
+
         EntryList * entryList;
 
         //            Index ***
@@ -35,19 +51,6 @@ class CoreWrapper {
 
         Scheduler * scheduler;
 
-        void increaseCounter(List<Entry *>&,Result *,MatchType,unsigned int dist=0);
-        void increaseCounter(List<Entry *>&,Result *);
-        void searchWordInIndeces(Word *,Result *);
-    public:
-        CoreWrapper();
-        ~CoreWrapper();
-        CoreWrapperErrorCode addQuery(QueryID, const char *, MatchType, unsigned int);
-        CoreWrapperErrorCode deactivateQuery(QueryID);
-        CoreWrapperErrorCode addDocument(DocID,const char *);
-        Document *pullDocument();
-        Result * matchDocument(Document *);
-        CoreWrapperErrorCode addResult(Result *);
-        Result *pullResult();
 
 };
 

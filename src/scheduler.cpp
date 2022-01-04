@@ -1,4 +1,6 @@
 #include "../include/scheduler.hpp"
+#include "../include/core_wrapper.hpp"
+#include "../include/document.hpp"
 #include <iostream>
 #include <errno.h>
 #include <cstdlib>
@@ -6,6 +8,7 @@
 
 #include <unistd.h>
 
+extern CoreWrapper * CW;
 
 void * doJobFunction(void *void_argc){
     ArgClass * args = (ArgClass *)void_argc;
@@ -26,26 +29,28 @@ void * doJobFunction(void *void_argc){
         }
         while(sched->thread_jobs[t_indx]==NULL){
             //wait on condition variable if thread has no job
-    pthread_mutex_lock(&sched->stdout_mutex);
-    cout<<"I'm "<<t_id<<" and waiting until i get a job:"<<endl;
-    pthread_mutex_unlock(&sched->stdout_mutex);
-    sleep(2);
+            pthread_mutex_lock(&sched->stdout_mutex);
+            cout<<"I'm "<<t_id<<" and waiting until i get a job:"<<endl;
+            pthread_mutex_unlock(&sched->stdout_mutex);
+            // sleep(2);
 
             pthread_cond_wait(&sched->job_cv[t_indx],&sched->job_mutex[t_indx]);
         }
-        //if there is jobs for thread do stuff
+        //if there are jobs for thread do stuff
         Job * myJob=sched->thread_jobs[t_indx];
-    pthread_mutex_lock(&sched->stdout_mutex);
-    cout<<"I'm "<<t_id<<" and got a job:\n\n";
-    myJob->print();
-    pthread_mutex_unlock(&sched->stdout_mutex);
-    sleep(2);
+        pthread_mutex_lock(&sched->stdout_mutex);
+        cout<<"I'm "<<t_id<<" and got a job:\n\n";
 
-        sched->thread_jobs[t_id]=NULL;
+        if (sched->doJob(myJob) != S_SUCCESS)
+            return new SchedulerErrorCode(S_FAIL);
+
+        pthread_mutex_unlock(&sched->stdout_mutex);
+        sleep(2);
+
+        sched->thread_jobs[t_indx]=NULL;
         /* signal master that i am available
         */
         pthread_cond_signal(&sched->queue_cv);
-
 
         if(pthread_mutex_unlock(&sched->job_mutex[t_indx])){
             cerr<<"ID "<<t_id<<endl;
@@ -57,27 +62,73 @@ void * doJobFunction(void *void_argc){
     return NULL;
 }
 
+SchedulerErrorCode Scheduler::doJob(Job * job){
+    JobId id = job->getId();
+    switch(id){
+        case SEARCH:
+            {
+            Args * searchArgs = job->getArgs();
+            Document * doc = searchArgs->getDocument();
+            cout << doc << endl;
+            int words_in_doc=doc->getWordsInDoc();
+            Result * res=new Result(doc->getId(),*CW->queries);
+            for(int i=0;i<words_in_doc;i++){
+                Word *w=doc->getWord(i);
+                CW->searchWordInIndeces(w,res);
+            }
+            if(pthread_mutex_lock(&this->results_mutex)){
+                perror("results_mutex lock (doJob)");
+                pthread_exit(NULL);
+            }
+            if(CW->addResult(res)==C_W_FAIL){
+                delete res;
+                delete doc;
+                cerr<<"Failed adding result to result_pool ! [DocID "<<doc->getId()<<"] "<<endl;
+                exit(1);
+            }
+            if(pthread_mutex_unlock(&this->results_mutex)){
+                perror("results_mutex unlock (doJob)");
+                pthread_exit(NULL);
+            }
+
+            }
+            break;
+
+        case EXACTSEARCH:
+            break;
+        case EDITSEARCH:
+            break;
+        case HAMMINGSEARCH:
+            break;
+        default:
+            break;
+    }
+}
+
 int Scheduler::assignJob() {
-    for (int i = 0; i < this->numOfThreads-1; ++i) {
-        if (this->thread_jobs[i] == NULL) {
-            if(pthread_mutex_lock(&this->job_mutex[i])){
-                perror("job_mutex lock (assign)");
-                pthread_exit(NULL);
-            }
-    pthread_mutex_lock(&this->stdout_mutex);
+    while (1) {
+        for (int i = 0; i < this->numOfThreads-1; ++i) {
+            if (this->thread_jobs[i] == NULL) {
+                if(pthread_mutex_lock(&this->job_mutex[i])){
+                    perror("job_mutex lock (assign)");
+                    pthread_exit(NULL);
+                }
+                pthread_mutex_lock(&this->stdout_mutex);
 
-    // cout<<i<<" Before pop: "<<this->q.getList().getLen()<<endl;
-            Job * job = this->q.pop();
-    // cout<<i<<"After pop "<<this->q.getList().getLen()<<endl;
-    pthread_mutex_unlock(&this->stdout_mutex);
+                // cout<<i<<" Before pop: "<<this->q.getList().getLen()<<endl;
+                Job * job = this->q.pop();
+                // cout<<i<<" After pop "<<this->q.getList().getLen()<<endl;
+                pthread_mutex_unlock(&this->stdout_mutex);
 
-            this->thread_jobs[i] = job;
-            if(pthread_mutex_unlock(&this->job_mutex[i])){
-                perror("job_mutex unlock (assign)");
-                pthread_exit(NULL);
+                this->thread_jobs[i] = job;
+                if(pthread_mutex_unlock(&this->job_mutex[i])){
+                    perror("job_mutex unlock (assign)");
+                    pthread_exit(NULL);
+                }
+                return i;
             }
-            return i;
         }
+        pthread_cond_wait(&this->queue_cv, &this->queue_mutex);
     }
 
     return -1;
@@ -88,9 +139,9 @@ void * giveJobFunction(void *void_argc){
     ArgClass * args = (ArgClass *)void_argc;
     int t_id=args->getId();
     int t_indx=t_id;//thread 0
-    //t_id is used as index in thread_jobs array
-    //if thread_jobs[i]==NULL
-    //then thread sleeps until a job is assigned to it
+                    //t_id is used as index in thread_jobs array
+                    //if thread_jobs[i]==NULL
+                    //then thread sleeps until a job is assigned to it
     Scheduler * sched = args->getSched();
 
     while(1) {
@@ -100,9 +151,9 @@ void * giveJobFunction(void *void_argc){
         }
 
         while(sched->q.getList().getLen() == 0){
-    pthread_mutex_lock(&sched->stdout_mutex);
-    cout<<"\n\tI'M THREAD 0 AND WAIT TO GET A JOB TO ASSIGN"<<endl;
-    pthread_mutex_unlock(&sched->stdout_mutex);
+            pthread_mutex_lock(&sched->stdout_mutex);
+            cout<<"\n\tI'M THREAD 0 AND WAIT TO GET A JOB TO ASSIGN"<<endl;
+            pthread_mutex_unlock(&sched->stdout_mutex);
 
             pthread_cond_wait(&sched->queue_cv, &sched->queue_mutex);
         }
@@ -112,14 +163,14 @@ void * giveJobFunction(void *void_argc){
                 perror("cond_signal failed (giveJobFunction)");
                 pthread_exit(NULL);
             }
-    pthread_mutex_lock(&sched->stdout_mutex);
-    cout<<"signaled : "<<avail_t_id+1<<" to get job"<<endl;
-    pthread_mutex_unlock(&sched->stdout_mutex);
+            pthread_mutex_lock(&sched->stdout_mutex);
+            cout<<"signaled : "<<avail_t_id+1<<" to get job"<<endl;
+            pthread_mutex_unlock(&sched->stdout_mutex);
 
         }
         else {
-            cout<<"\n\tFUCK noone aavailable [MASTER 0] "<<endl;;
-            sleep(1);
+            cout<<"\n\tFUCK"<<endl;;
+            // sleep(1);
         }
         if(pthread_mutex_unlock(&sched->queue_mutex)) {
             perror("queue_mutex unlock");
@@ -135,6 +186,7 @@ Scheduler::Scheduler(int threads_num){
     this->job_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
     this->stdout_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->queue_mutex=PTHREAD_MUTEX_INITIALIZER;
+    this->results_mutex=PTHREAD_MUTEX_INITIALIZER;
 
     if(this->job_mutex==NULL){
         perror("Malloc job mutex arr failed");
@@ -183,7 +235,7 @@ Scheduler::Scheduler(int threads_num){
     for(int i=0;i<threads_num;i++){
         thread_jobs[i]=NULL;
         int id=i+1;
-    //create i thread
+        //create i thread
         ArgClass * args = new ArgClass(id, this);
         int ret_val=pthread_create(&thread_id[i],NULL,doJobFunction,(void *)args);
         if(ret_val){
@@ -195,7 +247,7 @@ Scheduler::Scheduler(int threads_num){
 
 }
 Scheduler::~Scheduler(){
-;
+    ;
 }
 
 SchedulerErrorCode Scheduler::addJob(Job * j){
@@ -205,10 +257,10 @@ SchedulerErrorCode Scheduler::addJob(Job * j){
     }
     // acquired lock -> time to push job to queue
     // may check error
-// cout<<"ADDED JOB [MAIN_THREAD]"<<endl;
+    // cout<<"ADDED JOB [MAIN_THREAD]"<<endl;
     q.push(j);
     // let master thread [0] know there is job available
-// cout<<"letting master thread [0] know that there is job for assginment"<<endl;
+    // cout<<"letting master thread [0] know that there is job for assginment"<<endl;
     pthread_cond_signal(&this->queue_cv);
 
     if(pthread_mutex_unlock(&this->queue_mutex)){

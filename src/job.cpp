@@ -4,15 +4,6 @@
 
 
 using namespace std;
-Job::Job(JobId id, Args * a) {
-    this->status=PENDING;
-    this->id = id;
-    args=a;
-}
-
-void Job::setStatus(enum Status s){
-    this->status=s;
-}
 void Args::print(){}
 Args::Args(){}
 Args::~Args(){}
@@ -20,10 +11,25 @@ Document * Args::getDocument(){return NULL;}
 QueryID Args::getQueryId(){return -1;}
 
 
-Job::~Job() {
-    delete this->args;
+
+/* Job ---------------------------------------*/
+Job::Job(JobId id, Args * a) {
+    this->status=PENDING;
+    this->id = id;
+    args=a;
 }
 
+Job::~Job() {
+    // delete this->args;
+}
+
+void Job::setStatus(enum Status s){
+    this->status=s;
+}
+
+Status Job::getStatus() {
+    return this->status;
+}
 
 void Job::print(){
     cout<<"\tTASK: ";

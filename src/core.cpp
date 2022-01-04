@@ -38,13 +38,8 @@ ErrorCode MatchDocument(DocID doc_id, const char * doc_str) {
         //threads read from pool and do the search and fill results
         // Document to be searched
         Document * doc_to_be_matched=CW->pullDocument();
-        Result * res=CW->matchDocument(doc_to_be_matched);
-        if(CW->addResult(res)==C_W_FAIL){
-            delete res;
-            delete doc_to_be_matched;
-            cerr<<"Failed adding result to result_pool ! [DocID "<<doc_to_be_matched->getId()<<"] "<<endl;
-            exit(1);
-        }
+        if (CW->matchDocument(doc_to_be_matched) != C_W_SUCCESS)
+            return EC_FAIL;
         // delete doc_to_be_matched;
     }
     return EC_SUCCESS;

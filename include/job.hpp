@@ -7,13 +7,14 @@
 enum JobErrorCode{J_SUCCESS, J_FAIL};
 enum JobId{SEARCH,INSERT,DEACTIVATE,EXACTSEARCH, EDITSEARCH, HAMMINGSEARCH};
 enum Status{PENDING,IN_PROGRESS,DONE};
+
 class Args {
     public:
         Args();
         ~Args();
-        Document * getDocument();
-        void print();
-        QueryID getQueryId();
+        virtual Document * getDocument();
+        virtual void print();
+        virtual QueryID getQueryId();
 
 };
 
@@ -25,6 +26,7 @@ class Job {
     public:
         Job(JobId, Args *);
         void setStatus(enum Status);
+        Status getStatus();
         JobId getId();
         Args * getArgs();
         void print();
@@ -38,8 +40,8 @@ class SearchArgs:public Args {
     public:
         SearchArgs(Document *);
         ~SearchArgs();
-        virtual Document * getDocument();
-        virtual void print();
+        Document * getDocument();
+        void print();
 };
 
 class DeactivateArgs:public Args {
@@ -48,7 +50,7 @@ class DeactivateArgs:public Args {
     public:
         DeactivateArgs();
         ~DeactivateArgs();
-        virtual QueryID getQueryId();
+        QueryID getQueryId();
 };
 
 // class SearchArgs {

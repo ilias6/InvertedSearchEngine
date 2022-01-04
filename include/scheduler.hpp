@@ -21,14 +21,20 @@ class Scheduler {
 
         pthread_mutex_t queue_mutex;
         pthread_cond_t queue_cv;
+        pthread_mutex_t results_mutex;
+
+
+
         // for debugging purposes (stdout)
         pthread_mutex_t stdout_mutex;
+
         int assignJob();
     public:
         Scheduler(int);
         ~Scheduler();
         SchedulerErrorCode addJob(Job *);
         SchedulerErrorCode waitAllTasksFinish();
+        SchedulerErrorCode doJob(Job *);
         friend void * doJobFunction(void *);
         friend void * giveJobFunction(void *);
 
