@@ -37,7 +37,7 @@ $(ODIR)%.o: $(TDIR)%.cpp $(DEPS)
 
 $(ODIR)scheduler.o: $(SDIR)scheduler.cpp $(IDIR)scheduler.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)job.o: $(SDIR)job.cpp $(IDIR)job.hpp
+$(ODIR)job.o: $(SDIR)job.cpp $(IDIR)job.hpp $(IDIR)document.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)document.o: $(SDIR)document.cpp $(IDIR)document.hpp $(IDIR)core.h $(IDIR)word.hpp $(IDIR)hash_functions.hpp $(IDIR)hash_table.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
@@ -61,7 +61,7 @@ $(ODIR)query.o: $(SDIR)query.cpp $(IDIR)query.hpp $(IDIR)hash_table.hpp $(IDIR)h
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)utils.o: $(SDIR)utils.cpp $(IDIR)utils.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
-$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp $(IDIR)queue.hpp $(IDIR)result.hpp $(IDIR)document.hpp
+$(ODIR)core_wrapper.o: $(SDIR)core_wrapper.cpp $(IDIR)utils.hpp $(IDIR)index.hpp $(IDIR)word.hpp $(IDIR)entry.hpp $(IDIR)entry_list.hpp $(IDIR)core.h $(IDIR)query.hpp $(IDIR)vector.hpp $(IDIR)core_wrapper.hpp $(IDIR)queue.hpp $(IDIR)result.hpp $(IDIR)document.hpp $(IDIR)scheduler.hpp
 	$(++) -c -o $@ $< $(CFLAGS)
 $(ODIR)word.o: $(SDIR)word.cpp $(IDIR)word.hpp
 	$(++) -c -o $@ $< $(CFLAGS)

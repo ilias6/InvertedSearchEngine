@@ -2,12 +2,12 @@
 #include <iostream>
 #include "../include/core_wrapper.hpp"
 #include "../include/utils.hpp"
-#include "../include/scheduler.hpp"
 
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    Scheduler s(10);
+    this->scheduler = new Scheduler(10);
+
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
     this->indeces = new Index**[3];
@@ -206,4 +206,5 @@ CoreWrapper::~CoreWrapper() {
     }
 
     delete[] this->indeces;
+    delete this->scheduler;
 }

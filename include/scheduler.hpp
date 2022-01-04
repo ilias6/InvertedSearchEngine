@@ -23,16 +23,26 @@ class Scheduler {
         pthread_cond_t queue_cv;
         // for debugging purposes (stdout)
         pthread_mutex_t stdout_mutex;
-        int assignJob(Job *);
+        int assignJob();
     public:
         Scheduler(int);
         ~Scheduler();
         SchedulerErrorCode addJob(Job *);
         SchedulerErrorCode waitAllTasksFinish();
-        int assignJob();
-        void * doJobFunction(void *);
-        void * giveJobFunction(void *);
+        friend void * doJobFunction(void *);
+        friend void * giveJobFunction(void *);
 
+};
+
+class ArgClass {
+    private:
+        int id;
+        Scheduler * sched;
+    public:
+       ArgClass(int, Scheduler *);
+       ~ArgClass();
+       int getId();
+       Scheduler * getSched();
 };
 
 #endif
