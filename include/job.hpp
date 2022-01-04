@@ -23,6 +23,8 @@ class Job {
         SearchArgs * searchArgs;
     public:
         Job(JobId, SearchArgs *);
+        JobId getId();
+        SearchArgs * getSearchArgs();
         void print();
         ~Job();
 };
