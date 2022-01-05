@@ -50,8 +50,6 @@ class CoreWrapper {
         //HashTable * exactEntries;
 
         Scheduler * scheduler;
-
-
 };
 
 #endif

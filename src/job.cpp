@@ -11,6 +11,24 @@ Document * Args::getDocument(){return NULL;}
 QueryID Args::getQueryId(){return -1;}
 
 
+/* SearchArgs -------------------------------*/
+SearchArgs::SearchArgs(Document * doc){
+    this->doc = doc;
+}
+
+SearchArgs::~SearchArgs() {
+
+}
+
+Document * SearchArgs::getDocument() {
+    return this->doc;
+}
+
+void SearchArgs::print(){
+    cout<<"\t----SearchArgs-----\n";
+    cout<<"\tdoc_id: "<<this->doc->getId()<<endl;
+    // this->doc->print();
+}
 
 /* Job ---------------------------------------*/
 Job::Job(JobId id, Args * a) {
@@ -20,7 +38,7 @@ Job::Job(JobId id, Args * a) {
 }
 
 Job::~Job() {
-    // delete this->args;
+    delete this->args;
 }
 
 void Job::setStatus(enum Status s){
@@ -61,18 +79,3 @@ Args * Job::getArgs() {
     return this->args;
 }
 
-SearchArgs::SearchArgs(Document * doc){
-    this->doc = doc;
-}
-
-SearchArgs::~SearchArgs() {}
-
-Document * SearchArgs::getDocument() {
-    return this->doc;
-}
-
-void SearchArgs::print(){
-    cout<<"\t----SearchArgs-----\n";
-    cout<<"\tdoc_id: "<<this->doc->getId()<<endl;
-    // this->doc->print();
-}

@@ -11,7 +11,7 @@ enum Status{PENDING,IN_PROGRESS,DONE};
 class Args {
     public:
         Args();
-        ~Args();
+        virtual ~Args();
         virtual Document * getDocument();
         virtual void print();
         virtual QueryID getQueryId();
@@ -39,7 +39,7 @@ class SearchArgs:public Args {
         Document * doc;
     public:
         SearchArgs(Document *);
-        ~SearchArgs();
+        virtual ~SearchArgs();
         Document * getDocument();
         void print();
 };

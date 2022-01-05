@@ -11,6 +11,11 @@ enum SchedulerErrorCode{S_SUCCESS, S_FAIL};
 
 class Scheduler {
     private:
+
+        int pending_match_jobs;
+        pthread_mutex_t pending_match_mutex;
+        pthread_cond_t pending_match_cv;
+
         Queue<Job *> q;
         int numOfThreads;
         pthread_t * thread_id;
@@ -26,14 +31,18 @@ class Scheduler {
         pthread_mutex_t results_mutex;
 
 
+        pthread_mutex_t work_condition_mutex;
+        bool work_done;
+
 
         // for debugging purposes (stdout)
-        pthread_mutex_t stdout_mutex;
+        // pthread_mutex_t stdout_mutex;
 
         int assignJob();
     public:
         Scheduler(int);
         ~Scheduler();
+        void waitPendingMatchesFinish();
         SchedulerErrorCode addJob(Job *);
         SchedulerErrorCode waitAllTasksFinish();
         SchedulerErrorCode doJob(Job *);

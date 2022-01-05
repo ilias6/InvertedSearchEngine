@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(20);
+    this->scheduler = new Scheduler(16);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -32,6 +32,7 @@ CoreWrapper::CoreWrapper() {
 CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
     Query * qPtr = biSearchQuery(this->queries, id);
     if (qPtr != NULL){
+        this->scheduler->waitPendingMatchesFinish();
         qPtr->deactivate();
         return C_W_SUCCESS;
     }
@@ -39,6 +40,7 @@ CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
 }
 
 CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType type, unsigned int dist){
+    this->scheduler->waitPendingMatchesFinish();
     Query * q = new Query(id,str,type,dist);
     this->queries->insertSorted(q, q->getId());
     // insert to entry list
@@ -201,6 +203,8 @@ Result * CoreWrapper::pullResult(){
 }
 
 CoreWrapper::~CoreWrapper() {
+
+    this->scheduler->waitPendingMatchesFinish();
     delete this->entryList;
     this->queries->destroyData();
     delete this->queries;

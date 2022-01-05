@@ -10,6 +10,31 @@
 
 extern CoreWrapper * CW;
 
+void Scheduler::waitPendingMatchesFinish(void){
+    pthread_mutex_lock(&this->pending_match_mutex);
+
+    while(pending_match_jobs)
+        pthread_cond_wait(&this->pending_match_cv,&this->pending_match_mutex);
+
+    pthread_mutex_unlock(&this->pending_match_mutex);
+    return ;
+}
+
+bool checkCondition(pthread_mutex_t * mutex, bool * condition) {
+    bool cond = false;
+    if(pthread_mutex_lock(mutex)){
+        perror("mutex lock (checkCondition)");
+        pthread_exit(NULL);
+    }
+    if (*condition)
+        cond = true;
+    if(pthread_mutex_unlock(mutex)){
+        perror("mutex unlock (checkCondition)");
+        pthread_exit(NULL);
+    }
+    return cond;
+}
+
 void * doJobFunction(void *void_argc){
     ArgClass * args = (ArgClass *)void_argc;
     int t_id=args->getId();
@@ -33,18 +58,25 @@ void * doJobFunction(void *void_argc){
             // cout<<"I'm "<<t_id<<" and waiting until i get a job:"<<endl;
             // pthread_mutex_unlock(&sched->stdout_mutex);
             // sleep(2);
+            
 
             pthread_cond_wait(&sched->job_cv[t_indx],&sched->job_mutex[t_indx]);
+            // if all jobs are done
+            if (checkCondition(&sched->work_condition_mutex, &sched->work_done)){
+                delete args;
+                return NULL;
+            }
         }
         //if there are jobs for thread do stuff
         Job * myJob=sched->thread_jobs[t_indx];
         // pthread_mutex_lock(&sched->stdout_mutex);
         // cout<<"I'm "<<t_id<<" and got a job:\n\n";
+        // pthread_mutex_unlock(&sched->stdout_mutex);
 
         if (sched->doJob(myJob) != S_SUCCESS)
             return new SchedulerErrorCode(S_FAIL);
 
-        // pthread_mutex_unlock(&sched->stdout_mutex);
+        delete myJob;
 
         sched->thread_jobs[t_indx]=NULL;
         /* signal master that i am available
@@ -57,8 +89,6 @@ void * doJobFunction(void *void_argc){
             pthread_exit(NULL);
         }
     }
-    delete args;
-    return NULL;
 }
 
 SchedulerErrorCode Scheduler::doJob(Job * job){
@@ -66,29 +96,36 @@ SchedulerErrorCode Scheduler::doJob(Job * job){
     switch(id){
         case SEARCH:
             {
-            Args * searchArgs = job->getArgs();
-            Document * doc = searchArgs->getDocument();
-            int words_in_doc=doc->getWordsInDoc();
-            Result * res=new Result(doc->getId(),*CW->queries);
-            for(int i=0;i<words_in_doc;i++){
-                Word *w=doc->getWord(i);
-                CW->searchWordInIndeces(w,res);
-            }
-            if(pthread_mutex_lock(&this->results_mutex)){
-                perror("results_mutex lock (doJob)");
-                pthread_exit(NULL);
-            }
-            if(CW->addResult(res)==C_W_FAIL){
-                delete res;
-                delete doc;
-                cerr<<"Failed adding result to result_pool ! [DocID "<<doc->getId()<<"] "<<endl;
-                exit(1);
-            }
-            if(pthread_mutex_unlock(&this->results_mutex)){
-                perror("results_mutex unlock (doJob)");
-                pthread_exit(NULL);
-            }
+                Args * searchArgs = job->getArgs();
+                Document * doc = searchArgs->getDocument();
 
+                // cout << "Doc: " << doc->getId() << endl;
+                int words_in_doc=doc->getWordsInDoc();
+                Result * res=new Result(doc->getId(),*CW->queries);
+                for(int i=0;i<words_in_doc;i++){
+                    Word *w=doc->getWord(i);
+                    CW->searchWordInIndeces(w,res);
+                }
+                if(pthread_mutex_lock(&this->results_mutex)){
+                    perror("results_mutex lock (doJob)");
+                    pthread_exit(NULL);
+                }
+                if(CW->addResult(res)==C_W_FAIL){
+                    delete res;
+                    delete doc;
+                    cerr<<"Failed adding result to result_pool ! [DocID "<<doc->getId()<<"] "<<endl;
+                    exit(1);
+                }
+                if(pthread_mutex_unlock(&this->results_mutex)){
+                    perror("results_mutex unlock (doJob)");
+                    pthread_exit(NULL);
+                }
+                // decrease pending_match_jobs
+                pthread_mutex_lock(&this->pending_match_mutex);
+                this->pending_match_jobs--;
+                if(this->pending_match_jobs==0)
+                    pthread_cond_signal(&pending_match_cv);
+                pthread_mutex_unlock(&this->pending_match_mutex);
             }
             break;
 
@@ -101,6 +138,7 @@ SchedulerErrorCode Scheduler::doJob(Job * job){
         default:
             break;
     }
+    return S_SUCCESS;
 }
 
 int Scheduler::assignJob() {
@@ -135,7 +173,7 @@ int Scheduler::assignJob() {
 void * giveJobFunction(void *void_argc){
 
     ArgClass * args = (ArgClass *)void_argc;
-    int t_id=args->getId();
+    // int t_id=args->getId();
     // int t_indx=t_id;//thread 0
                     //t_id is used as index in thread_jobs array
                     //if thread_jobs[i]==NULL
@@ -154,6 +192,10 @@ void * giveJobFunction(void *void_argc){
             // pthread_mutex_unlock(&sched->stdout_mutex);
 
             pthread_cond_wait(&sched->queue_cv, &sched->queue_mutex);
+            if (checkCondition(&sched->work_condition_mutex, &sched->work_done)) {
+                delete args;
+                return NULL;
+            }
         }
         int avail_t_id = sched->assignJob();
         if (avail_t_id != -1) {
@@ -176,16 +218,20 @@ void * giveJobFunction(void *void_argc){
         }
     }
 
-    delete args;
 }
 
 Scheduler::Scheduler(int threads_num){
     //threads_num workers + 1 the master thread
     this->job_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
-    this->stdout_mutex=PTHREAD_MUTEX_INITIALIZER;
+    // this->stdout_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->queue_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->avail_worker_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->results_mutex=PTHREAD_MUTEX_INITIALIZER;
+    this->pending_match_mutex=PTHREAD_MUTEX_INITIALIZER;
+    this->work_condition_mutex=PTHREAD_MUTEX_INITIALIZER;
+
+    this->pending_match_jobs=0;
+    this->work_done = false;
 
     if(this->job_mutex==NULL){
         perror("Malloc job mutex arr failed");
@@ -196,7 +242,12 @@ Scheduler::Scheduler(int threads_num){
         perror("Malloc condition var arr failed");
         exit(1);
     }
-    int ret_v = pthread_cond_init(&this->queue_cv, NULL);
+    int ret_v = pthread_cond_init(&this->pending_match_cv, NULL);
+    if(ret_v){
+        perror("Error initializing pending match job condition variable");
+        exit(1);
+    }
+    ret_v = pthread_cond_init(&this->queue_cv, NULL);
     if(ret_v){
         perror("Error initializing queue condition variable");
         exit(1);
@@ -248,11 +299,63 @@ Scheduler::Scheduler(int threads_num){
         }
     }
 
-
 }
 
 Scheduler::~Scheduler(){
-    ;
+    if(pthread_mutex_lock(&this->work_condition_mutex)){
+        perror("work_condition_mutex lock (~)");
+    }
+    this->work_done = true;
+    if(pthread_mutex_unlock(&this->work_condition_mutex)){
+        perror("work_condition_mutex lock (~)");
+    }
+
+    pthread_cond_signal(&this->queue_cv);
+    if (pthread_join(this->thread_id[0], NULL)) {
+        perror("pthread join error!");
+    }
+
+    if (pthread_mutex_destroy(&this->queue_mutex)) {
+        perror("mutex destroy (~)");
+    }
+    if (pthread_cond_destroy(&this->queue_cv)) {
+        perror("cond destroy (~)");
+    }
+    
+    for (int i = 1; i < this->numOfThreads; ++i) {
+        pthread_cond_signal(&this->job_cv[i-1]);
+        if (pthread_join(this->thread_id[i], NULL)) {
+            perror("pthread join error!");
+        }
+        if (pthread_cond_destroy(&this->job_cv[i-1])) {
+            perror("cond destroy (~)");
+        }
+        if (pthread_mutex_destroy(&this->job_mutex[i-1])) {
+            perror("mutex destroy (~)");
+        }
+    }
+
+    if (pthread_mutex_destroy(&this->avail_worker_mutex)) {
+        perror("mutex destroy (~)");
+    }
+    if (pthread_cond_destroy(&this->avail_worker_cv)) {
+        perror("cond destroy (~)");
+    }
+    if (pthread_mutex_destroy(&this->pending_match_mutex)) {
+        perror("mutex destroy (~)");
+    }
+    if (pthread_cond_destroy(&this->pending_match_cv)) {
+        perror("cond destroy (~)");
+    }
+
+    if (pthread_mutex_destroy(&this->results_mutex)) {
+        perror("mutex destroy (~)");
+    }
+
+    free(thread_jobs);
+    free(job_mutex);
+    free(job_cv);
+    free(thread_id);
 }
 
 SchedulerErrorCode Scheduler::addJob(Job * j){
@@ -263,6 +366,14 @@ SchedulerErrorCode Scheduler::addJob(Job * j){
     // acquired lock -> time to push job to queue
     // may check error
     // cout<<"ADDED JOB [MAIN_THREAD]"<<endl;
+    //if job is of type SEARCH
+    //then increase pending match jobs by 1
+    if(j->getId()==SEARCH){
+        pthread_mutex_lock(&this->pending_match_mutex);
+        this->pending_match_jobs++;
+        pthread_mutex_unlock(&this->pending_match_mutex);
+
+    }
     q.push(j);
     // let master thread [0] know there is job available
     // cout<<"letting master thread [0] know that there is job for assginment"<<endl;
