@@ -1,5 +1,5 @@
 ++     	= g++
-CFLAGS 	= -g -Wall -pthread #-pg
+CFLAGS 	= -g -Wall -lpthread #-pg
 LIBS	= -lm
 TESTFLAGS= -pthread
 TESTLIBS= -L ./lib/libgtest_main.a ./lib/libgtest.a

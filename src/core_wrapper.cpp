@@ -101,8 +101,8 @@ CoreWrapperErrorCode CoreWrapper::matchDocument(Document * doc){
     // int words_in_doc=doc->getWordsInDoc();
     // Result * res=new Result(doc->getId(),*this->queries);
     // for(int i=0;i<words_in_doc;i++){
-        // Word *w=doc->getWord(i);
-        // this->searchWordInIndeces(w,res);
+    // Word *w=doc->getWord(i);
+    // this->searchWordInIndeces(w,res);
     // }
     // return res;
 }
@@ -187,13 +187,16 @@ CoreWrapperErrorCode CoreWrapper::addResult(Result * res){
     return C_W_SUCCESS;
 
 }
+
 Result * CoreWrapper::pullResult(){
-    try{
-        Result * res = this->results->pop();
-        return res;
-    }
-    catch(invalid_argument& ia){
-        return NULL;
+    while (1) {
+        try {
+            Result * res = this->results->pop();
+            return res;
+        }
+        catch(invalid_argument& ia){
+            continue;
+        }
     }
 }
 

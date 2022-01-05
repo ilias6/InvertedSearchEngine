@@ -1,6 +1,7 @@
 #include "../include/core.h"
 #include "../include/core_wrapper.hpp"
 #include "../include/result.hpp"
+#include <unistd.h>
 
 CoreWrapper * CW = NULL;
 

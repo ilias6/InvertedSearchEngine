@@ -21,6 +21,8 @@ class Scheduler {
 
         pthread_mutex_t queue_mutex;
         pthread_cond_t queue_cv;
+        pthread_mutex_t avail_worker_mutex;
+        pthread_cond_t avail_worker_cv;
         pthread_mutex_t results_mutex;
 
 
@@ -37,6 +39,7 @@ class Scheduler {
         SchedulerErrorCode doJob(Job *);
         friend void * doJobFunction(void *);
         friend void * giveJobFunction(void *);
+        friend void * waitForJob(void *);
 
 };
 
