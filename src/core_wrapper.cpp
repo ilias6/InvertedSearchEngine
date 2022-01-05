@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(4);
+    this->scheduler = new Scheduler(200);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -208,7 +208,9 @@ CoreWrapper::~CoreWrapper() {
     delete this->entryList;
     this->queries->destroyData();
     delete this->queries;
+    cout << "Now we destory documents:\n";
     this->docs->destroyData();
+    cout << "We destroyed documents:\n";
     delete this->docs;
     this->results->destroyData();
     delete this->results;

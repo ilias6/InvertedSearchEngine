@@ -56,6 +56,7 @@ T Queue<T>::pop(){
 
 template <typename T>
 QueueErrorCode Queue<T>::destroyData(){
+    cout << "Queue destroy!\n";
     ListErrorCode err=lst.destroyData();
     if(err!=L_SUCCESS)
         return Q_FAIL;
