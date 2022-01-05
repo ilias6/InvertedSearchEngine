@@ -58,11 +58,16 @@ void * doJobFunction(void *void_argc){
             // cout<<"I'm "<<t_id<<" and waiting until i get a job:"<<endl;
             // pthread_mutex_unlock(&sched->stdout_mutex);
             // sleep(2);
-            
+
 
             pthread_cond_wait(&sched->job_cv[t_indx],&sched->job_mutex[t_indx]);
             // if all jobs are done
             if (checkCondition(&sched->work_condition_mutex, &sched->work_done)){
+                if(pthread_mutex_unlock(&sched->job_mutex[t_indx])){
+                    cerr<<"ID "<<t_id<<endl;
+                    perror("job_mutex unlock");
+                    pthread_exit(NULL);
+                }
                 delete args;
                 return NULL;
             }
@@ -73,9 +78,14 @@ void * doJobFunction(void *void_argc){
         // cout<<"I'm "<<t_id<<" and got a job:\n\n";
         // pthread_mutex_unlock(&sched->stdout_mutex);
 
-        if (sched->doJob(myJob) != S_SUCCESS)
+        if (sched->doJob(myJob) != S_SUCCESS){
+            if(pthread_mutex_unlock(&sched->job_mutex[t_indx])){
+                cerr<<"ID "<<t_id<<endl;
+                perror("job_mutex unlock");
+                pthread_exit(NULL);
+            }
             return new SchedulerErrorCode(S_FAIL);
-
+        }
         delete myJob;
 
         sched->thread_jobs[t_indx]=NULL;
@@ -193,6 +203,10 @@ void * giveJobFunction(void *void_argc){
 
             pthread_cond_wait(&sched->queue_cv, &sched->queue_mutex);
             if (checkCondition(&sched->work_condition_mutex, &sched->work_done)) {
+                if(pthread_mutex_unlock(&sched->queue_mutex)) {
+                    perror("queue_mutex unlock");
+                    pthread_exit(NULL);
+                }
                 delete args;
                 return NULL;
             }
@@ -315,40 +329,40 @@ Scheduler::~Scheduler(){
         perror("pthread join error!");
     }
 
-    if (pthread_mutex_destroy(&this->queue_mutex)) {
+    if (pthread_mutex_destroy(&this->queue_mutex)==EBUSY) {
         perror("mutex destroy (~)");
     }
-    if (pthread_cond_destroy(&this->queue_cv)) {
+    if (pthread_cond_destroy(&this->queue_cv)==EBUSY) {
         perror("cond destroy (~)");
     }
-    
+
     for (int i = 1; i < this->numOfThreads; ++i) {
         pthread_cond_signal(&this->job_cv[i-1]);
         if (pthread_join(this->thread_id[i], NULL)) {
             perror("pthread join error!");
         }
-        if (pthread_cond_destroy(&this->job_cv[i-1])) {
+        if (pthread_cond_destroy(&this->job_cv[i-1])==EBUSY) {
             perror("cond destroy (~)");
         }
-        if (pthread_mutex_destroy(&this->job_mutex[i-1])) {
+        if (pthread_mutex_destroy(&this->job_mutex[i-1])==EBUSY) {
             perror("mutex destroy (~)");
         }
     }
 
-    if (pthread_mutex_destroy(&this->avail_worker_mutex)) {
+    if (pthread_mutex_destroy(&this->avail_worker_mutex)==EBUSY) {
         perror("mutex destroy (~)");
     }
-    if (pthread_cond_destroy(&this->avail_worker_cv)) {
+    if (pthread_cond_destroy(&this->avail_worker_cv)==EBUSY) {
         perror("cond destroy (~)");
     }
-    if (pthread_mutex_destroy(&this->pending_match_mutex)) {
+    if (pthread_mutex_destroy(&this->pending_match_mutex)==EBUSY) {
         perror("mutex destroy (~)");
     }
-    if (pthread_cond_destroy(&this->pending_match_cv)) {
+    if (pthread_cond_destroy(&this->pending_match_cv)==EBUSY) {
         perror("cond destroy (~)");
     }
 
-    if (pthread_mutex_destroy(&this->results_mutex)) {
+    if (pthread_mutex_destroy(&this->results_mutex)==EBUSY) {
         perror("mutex destroy (~)");
     }
 
