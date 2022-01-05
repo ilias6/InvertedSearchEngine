@@ -32,6 +32,7 @@ CoreWrapper::CoreWrapper() {
 CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
     Query * qPtr = biSearchQuery(this->queries, id);
     if (qPtr != NULL){
+        this->scheduler->waitPendingMatchesFinish();
         qPtr->deactivate();
         return C_W_SUCCESS;
     }
