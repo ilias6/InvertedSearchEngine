@@ -13,6 +13,7 @@ class Scheduler {
     private:
         Queue<Job *> q;
         int numOfThreads;
+        int max_docs_in_par;
         pthread_t * thread_id;
         Job ** thread_jobs;//thread_jobs[i] for i'th thread (if null thread sleeps)
 
@@ -34,6 +35,16 @@ class Scheduler {
         pthread_mutex_t work_condition_mutex;
         bool work_done;
 
+        pthread_cond_t avail_res_cv;
+
+        int threads_in_search;
+        pthread_mutex_t threads_in_search_mutex;
+        
+        int * searches_in_progress;
+        pthread_cond_t * searches_cv;
+        pthread_mutex_t * searches_mutex;
+        pthread_mutex_t * search_res_mutex;
+
         // for debugging purposes (stdout)
         pthread_mutex_t stdout_mutex;
 
@@ -42,9 +53,12 @@ class Scheduler {
         Scheduler(int);
         ~Scheduler();
         void waitPendingMatchesFinish();
+        void waitForAvailRes();
+        void resMutexUp();
+        void resMutexDown();
         SchedulerErrorCode addJob(Job *);
         SchedulerErrorCode waitAllTasksFinish();
-        SchedulerErrorCode doJob(Job *);
+        SchedulerErrorCode doJob(Job *, int);
         friend void * doJobFunction(void *);
         friend void * giveJobFunction(void *);
         friend void * waitForJob(void *);

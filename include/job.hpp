@@ -3,9 +3,12 @@
 
 #include <cstdlib>
 #include "document.hpp"
+#include "entry.hpp"
+#include "word.hpp"
+#include "result.hpp"
 
 enum JobErrorCode{J_SUCCESS, J_FAIL};
-enum JobId{SEARCH,INSERT,DEACTIVATE,EXACTSEARCH, EDITSEARCH, HAMMINGSEARCH};
+enum JobId{SEARCH,INSERT,DEACTIVATE,SEARCH_METHOD};
 enum Status{PENDING,IN_PROGRESS,DONE};
 
 class Args {
@@ -14,7 +17,11 @@ class Args {
         virtual ~Args();
         virtual Document * getDocument();
         virtual void print();
-        virtual QueryID getQueryId();
+        // virtual QueryID getQueryId();
+        virtual Result * getRes();
+        virtual int getType();
+        virtual int getDist();
+        virtual int getParentIndex();
 
 };
 
@@ -44,6 +51,23 @@ class SearchArgs:public Args {
         void print();
 };
 
+class SearchMethodArgs:public Args {
+    private:
+        Result * res; 
+        Document * doc;
+        int typeIndex;
+        int distIndex;
+        int threadIndex;
+    public: 
+        SearchMethodArgs(Result *, Document *, int, int, int);
+        ~SearchMethodArgs();
+        Result * getRes();
+        Document * getDocument();
+        int getType();
+        int getDist();
+        int getParentIndex();
+};
+
 class DeactivateArgs:public Args {
     private:
         QueryID id;
@@ -53,9 +77,6 @@ class DeactivateArgs:public Args {
         QueryID getQueryId();
 };
 
-// class SearchArgs {
-//
-// };
 //
 // class SearchArgs {
 //

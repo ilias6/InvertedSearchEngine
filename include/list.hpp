@@ -145,7 +145,6 @@ List<T>::~List() {
 
 template <typename T>
 ListErrorCode List<T>::destroyData() {
-    cout << "List destroy!\n";
     for (int i = 0; i < this->len; ++i)
         delete this->getItem(i);
     return L_SUCCESS;

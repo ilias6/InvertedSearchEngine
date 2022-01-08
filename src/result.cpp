@@ -13,14 +13,17 @@ Result::Result(DocID id,Vector<Query *> & cur_queries):queries(cur_queries){
     //this->wordIndices = new HashTable*[len];
 
     this->wordFlags=new bool*[len];
+    this->mutexes=new pthread_mutex_t*[len];
 
     for(int i=0;i<len;i++) {
         //this->wordIndices[i] = new HashTable(MAX_QUERY_WORDS, djb2);
         Query * q = cur_queries.getItem(i);
         int queryLen = q->getWordsInQuery();
         wordFlags[i]=new bool[queryLen];
+        mutexes[i]=new pthread_mutex_t[queryLen];
         for (int j = 0; j < queryLen; ++j) {
             wordFlags[i][j] = false;
+            mutexes[i][j]=PTHREAD_MUTEX_INITIALIZER;
             //PayloadEntry pE(j, 0, MT_EXACT_MATCH, 0, NULL);
             //Entry * ePtr = new Entry(*q->getWord(j), pE);
             //this->wordIndices[i]->insert(ePtr);
@@ -31,11 +34,19 @@ Result::Result(DocID id,Vector<Query *> & cur_queries):queries(cur_queries){
 Result::~Result(){
     int len=this->queries.getLen();
     for (int i = 0; i < len; ++ i) {
+        Query * q = this->queries.getItem(i);
+        int queryLen = q->getWordsInQuery();
+        for (int j = 0; j < queryLen; ++j)
+            if (pthread_mutex_destroy(&this->mutexes[i][j])) {
+                perror("mutex destroy (~)");
+            }
         //this->wordIndices[i]->deleteData();
         //delete this->wordIndices[i];
         delete[] this->wordFlags[i];
+        delete[] this->mutexes[i];
     }
     delete[] this->wordFlags;
+    delete[] this->mutexes;
     //delete[] this->wordIndices;
 }
 
@@ -70,7 +81,13 @@ ResultErrorCode Result::increaseCounter(QueryID query_id, Word * w){
             wordIndex = i;
             break;
         }
+    if (pthread_mutex_lock(&this->mutexes[query_index][wordIndex])) {
+        perror("mutex lock increaseCounter");
+    }
     wordFlags[query_index][wordIndex] = true;
+    if (pthread_mutex_unlock(&this->mutexes[query_index][wordIndex])) {
+        perror("mutex lock increaseCounter");
+    }
     return R_SUCCESS;
 }
 

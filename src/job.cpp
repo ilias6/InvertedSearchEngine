@@ -8,7 +8,10 @@ void Args::print(){}
 Args::Args(){}
 Args::~Args(){}
 Document * Args::getDocument(){return NULL;}
-QueryID Args::getQueryId(){return -1;}
+Result * Args::getRes(){return NULL;}
+int Args::getType(){return -1;}
+int Args::getDist(){return -1;}
+int Args::getParentIndex(){return -1;}
 
 
 /* SearchArgs -------------------------------*/
@@ -28,6 +31,35 @@ void SearchArgs::print(){
     cout<<"\t----SearchArgs-----\n";
     cout<<"\tdoc_id: "<<this->doc->getId()<<endl;
     // this->doc->print();
+}
+/* SearchMethodArgs --------------------------*/
+SearchMethodArgs::SearchMethodArgs(Result * res, Document * doc, int i, int j, int idx) {
+    this->res = res;
+    this->doc = doc;
+    this->typeIndex = i;
+    this->distIndex = j;
+    this->threadIndex = idx;
+}
+SearchMethodArgs::~SearchMethodArgs(){}
+
+Result * SearchMethodArgs::getRes() {
+    return this->res;
+}
+
+Document * SearchMethodArgs::getDocument() {
+    return this->doc;
+}
+
+int SearchMethodArgs::getType() {
+    return this->typeIndex;
+}
+
+int SearchMethodArgs::getDist() {
+    return this->distIndex;
+}
+
+int SearchMethodArgs::getParentIndex() {
+    return this->threadIndex;
 }
 
 /* Job ---------------------------------------*/
@@ -56,14 +88,9 @@ void Job::print(){
             cout<<"SEARCH "<<endl;
             args->print();
             break;
-        case EXACTSEARCH:
-            cout<<"EXACTSEARCH "<<endl;
-            break;
-        case EDITSEARCH:
-            cout<<"EDITSEARCH "<<endl;
-            break;
-        case HAMMINGSEARCH:
-            cout<<"HAMMINGSEARCH "<<endl;
+        case SEARCH_METHOD:
+            cout<<"SEARCH_METHOD "<<endl;
+            args->print();
             break;
         default:
             cout<<" - "<<endl;

@@ -4,12 +4,14 @@
 #include "vector.hpp"
 #include "document.hpp"
 #include "hash_table.hpp"
+#include <pthread.h>
 
 enum ResultErrorCode {R_SUCCESS,R_FAIL};
 class Result{
     private:
         DocID docId;
         Vector<Query *> queries;
+        pthread_mutex_t ** mutexes;
         bool ** wordFlags;
     public:
         Result(DocID,Vector<Query *> &);

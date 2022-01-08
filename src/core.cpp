@@ -33,16 +33,10 @@ ErrorCode EndQuery (QueryID query_id) {
 ErrorCode MatchDocument(DocID doc_id, const char * doc_str) {
 
     //master thread construct doc and add to pool
-    CoreWrapperErrorCode err;
-    err=CW->addDocument(doc_id,doc_str);
-    if(err==C_W_SUCCESS){
-        //threads read from pool and do the search and fill results
-        // Document to be searched
-        Document * doc_to_be_matched=CW->pullDocument();
-        if (CW->matchDocument(doc_to_be_matched) != C_W_SUCCESS)
-            return EC_FAIL;
-        // delete doc_to_be_matched;
-    }
+    Document * doc=new Document(doc_id, doc_str);
+    if (CW->matchDocument(doc) != C_W_SUCCESS)
+        return EC_FAIL;
+    // delete doc_to_be_matched;
     return EC_SUCCESS;
 }
 

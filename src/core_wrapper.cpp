@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(200);
+    this->scheduler = new Scheduler(64);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -71,17 +71,6 @@ CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchTy
     return C_W_SUCCESS;
 }
 
-CoreWrapperErrorCode CoreWrapper::addDocument(DocID doc_id,const char * str){
-    //master thread construct doc and add to pool
-    Document * doc=new Document(doc_id,str);
-    //push doc to queue (pool) and check if successfull
-    if(this->docs->push(doc)!=Q_SUCCESS){
-        delete doc;
-        return C_W_FAIL;
-    }
-    return C_W_SUCCESS;
-}
-
 Document * CoreWrapper::pullDocument(){
     try{
         Document * d = this->docs->pop();
@@ -98,46 +87,87 @@ CoreWrapperErrorCode CoreWrapper::matchDocument(Document * doc){
     if (this->scheduler->addJob(j) != S_SUCCESS)
         return C_W_FAIL;
     return C_W_SUCCESS;
+}
 
+void CoreWrapper::searchWordExact(Document * doc,Result *res,int thread_index){
+    Args * args = new SearchMethodArgs(res, doc, 0, 0, thread_index);
+    Job * job = new Job(SEARCH_METHOD, args);
+    if (this->scheduler->addJob(job) != S_SUCCESS) {
+        cerr << "addJob fail searchWordInIndeces\n";
+        return;
+    }
+}
 
-    // int words_in_doc=doc->getWordsInDoc();
-    // Result * res=new Result(doc->getId(),*this->queries);
-    // for(int i=0;i<words_in_doc;i++){
-    // Word *w=doc->getWord(i);
-    // this->searchWordInIndeces(w,res);
+void CoreWrapper::searchWordEdit(Document * doc,Result *res,int thread_index){
+    // int range = MAX_DISTANCE;
+    // for(int j=0;j<= range;j++){
+        // Args * args = new SearchMethodArgs(res, doc, 2, j, thread_index);
+        // Job * job = new Job(SEARCH_METHOD, args);
+        // if (this->scheduler->addJob(job) != S_SUCCESS) {
+            // cerr << "addJob fail searchWordInIndeces\n";
+            // return;
+        // }
     // }
-    // return res;
+
+    Args * args = new SearchMethodArgs(res, doc, 2, 0, thread_index);
+    Job * job = new Job(SEARCH_METHOD, args);
+    if (this->scheduler->addJob(job) != S_SUCCESS) {
+        cerr << "addJob fail searchWordInIndeces\n";
+        return;
+    }
 }
 
-void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
-    //first search exact match and increase counters for exact match in res
-    List<Entry *> entry_res=indeces[0][0]->search(w);
-    increaseCounter(entry_res,res, MT_EXACT_MATCH);
-
-    /*
-       int exactEntriesLen = entry_res.getLen();
-       this->exactEntries = new HashTable(findNextPrime(exactEntriesLen), djb2);
-       for (int i = 0; i < exactEntriesLen; ++i)
-       this->exactEntries->insert(entry_res.getItem(i));
-       */
-    // for edit dist
+void CoreWrapper::searchWordHamm(Document * doc,Result *res,int thread_index){
     int range = MAX_DISTANCE;
-    for(int j=0;j<= range;j++){
-        List<Entry *> e_res=indeces[2][j]->search(w, j);
-        increaseCounter(e_res,res,MT_EDIT_DIST,j);
-    }
-
-    int len=w->getLen();
-    if (len < 3)
-        range = len;
-    // for hamming dist
     for(int j=0;j<=range;j++){
-        List<Entry *> e_res=indeces[1][j]->search(w, j);
-        increaseCounter(e_res,res,MT_HAMMING_DIST,j);
+        Args * args = new SearchMethodArgs(res, doc, 1, j, thread_index);
+        Job * job=new Job(SEARCH_METHOD, args);
+        if (this->scheduler->addJob(job) != S_SUCCESS) {
+            cerr << "addJob fail searchWordInIndeces\n";
+            return;
+        }
     }
-
-    //delete this->exactEntries;
 }
+
+
+// void CoreWrapper::searchWordInIndeces(Word *w,Result *res,int thread_index){
+    // //first search exact match and increase counters for exact match in res
+    // Args * args1 = new SearchMethodArgs(res, w, 0, 0, thread_index);
+    // Job *j1=new Job(SEARCH_METHOD, args1);
+    // if (this->scheduler->addJob(j1) != S_SUCCESS) {
+        // cerr << "addJob fail searchWordInIndeces\n";
+        // return;
+    // }
+// 
+    // /*
+       // int exactEntriesLen = entry_res.getLen();
+       // this->exactEntries = new HashTable(findNextPrime(exactEntriesLen), djb2);
+       // for (int i = 0; i < exactEntriesLen; ++i)
+       // this->exactEntries->insert(entry_res.getItem(i));
+       // */
+    // // for edit dist
+    // int range = MAX_DISTANCE;
+    // for(int j=0;j<= range;j++){
+        // Args * args2 = new SearchMethodArgs(res, w, 2, j, thread_index);
+        // Job *j2=new Job(SEARCH_METHOD, args2);
+        // if (this->scheduler->addJob(j2) != S_SUCCESS) {
+            // cerr << "addJob fail searchWordInIndeces\n";
+            // return;
+        // }
+    // }
+// 
+    // // for hamming dist
+    // for(int j=0;j<=range;j++){
+        // Args * args2 = new SearchMethodArgs(res, w, 1, j, thread_index);
+        // Job *j2=new Job(SEARCH_METHOD, args2);
+        // if (this->scheduler->addJob(j2) != S_SUCCESS) {
+            // cerr << "addJob fail searchWordInIndeces\n";
+            // return;
+        // }
+    // }
+// 
+    // //delete this->exactEntries;
+// }
 /*
    void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res){
    int len=e_list.getLen();
@@ -157,7 +187,9 @@ void CoreWrapper::searchWordInIndeces(Word *w,Result *res){
    }
    */
 
-void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType mt,unsigned int dist){
+void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType mt,
+                                    unsigned int dist){
+        
     int len=e_list.getLen();
     for(int i=0;i<len;i++){
         Entry * e=e_list.getItem(i);
@@ -191,29 +223,27 @@ CoreWrapperErrorCode CoreWrapper::addResult(Result * res){
 }
 
 Result * CoreWrapper::pullResult(){
-    while (1) {
-        try {
-            Result * res = this->results->pop();
-            return res;
-        }
-        catch(invalid_argument& ia){
-            continue;
-        }
-    }
+    this->scheduler->waitForAvailRes();
+    this->scheduler->resMutexDown();
+    Result * res = this->results->pop();
+    this->scheduler->resMutexUp();
+    return res;
 }
 
 CoreWrapper::~CoreWrapper() {
 
     this->scheduler->waitPendingMatchesFinish();
+    delete this->scheduler;
+
     delete this->entryList;
-    this->queries->destroyData();
-    delete this->queries;
-    cout << "Now we destory documents:\n";
-    this->docs->destroyData();
-    cout << "We destroyed documents:\n";
-    delete this->docs;
     this->results->destroyData();
     delete this->results;
+
+    this->queries->destroyData();
+    delete this->queries;
+
+    // this->docs->destroyData();
+    delete this->docs;
 
     delete this->indeces[0][0];
     delete this->indeces[0];
@@ -225,5 +255,4 @@ CoreWrapper::~CoreWrapper() {
     }
 
     delete[] this->indeces;
-    delete this->scheduler;
 }

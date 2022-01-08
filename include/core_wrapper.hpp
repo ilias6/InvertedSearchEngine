@@ -12,6 +12,7 @@
 #include "result.hpp"
 #include "queue.hpp"
 #include "scheduler.hpp"
+#include <pthread.h>
 
 #define MAX_DISTANCES MAX_WORD_LENGTH-MIN_WORD_LENGTH
 enum CoreWrapperErrorCode {C_W_SUCCESS,C_W_FAIL};
@@ -29,9 +30,13 @@ class CoreWrapper {
         Result *pullResult();
 
 
-        void increaseCounter(List<Entry *>&,Result *,MatchType,unsigned int dist=0);
+        void increaseCounter(List<Entry *>&,Result *,MatchType,unsigned int dist);
         void increaseCounter(List<Entry *>&,Result *);
-        void searchWordInIndeces(Word *,Result *);
+        // void searchWordInIndeces(Word *,Result *, int);
+        void searchWordExact(Document *,Result *, int);
+        void searchWordEdit(Document *,Result *, int);
+        void searchWordHamm(Document *,Result *, int);
+        void searchWordHammAndExact(Document *,Result *, int);
 
         EntryList * entryList;
 
