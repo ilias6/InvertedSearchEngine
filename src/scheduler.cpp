@@ -39,7 +39,7 @@ void Scheduler::waitPendingMatchesFinish(void){
     // all pending matches finished-> do all pending deactivates
     for(int i=0;i<pending_deactivate_counter;i++)
         pending_deactivate_queries->getItem(i)->deactivate();
-    if(pending_deactivate_queries!=NULL){
+    if(pending_deactivate_counter>0){
         delete pending_deactivate_queries;
         pending_deactivate_queries=NULL;
         pending_deactivate_queries=new Vector<Query*>(20);
@@ -54,6 +54,15 @@ void Scheduler::waitForAvailRes(void){
     mutexDown(&this->results_mutex);
     while(!CW->results->getList().getLen())
         pthread_cond_wait(&this->avail_res_cv,&this->results_mutex);
+
+    for(int i=0;i<pending_deactivate_counter;i++)
+        pending_deactivate_queries->getItem(i)->deactivate();
+    if(pending_deactivate_counter>0){
+        delete pending_deactivate_queries;
+        pending_deactivate_queries=NULL;
+        pending_deactivate_queries=new Vector<Query*>(20);
+        this->pending_deactivate_counter=0;
+    }
     mutexUp(&this->results_mutex);
     return ;
 }
@@ -592,10 +601,14 @@ SchedulerErrorCode Scheduler::addJob(Job * j){
         // increase pending deactivaates
         //and add query to be deactivated to Vector
 
-
-        this->pending_deactivate_counter++;
         Query * q=j->getArgs()->getQuery();
+        if(this->pending_match_jobs==0){
+            q->deactivate();
+            return S_SUCCESS;
+        }
+        this->pending_deactivate_counter++;
         pending_deactivate_queries->insert(q);
+        return S_SUCCESS;
     }
 
     // acquired lock -> time to push job to queue
