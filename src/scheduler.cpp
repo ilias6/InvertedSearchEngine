@@ -12,7 +12,7 @@
 extern CoreWrapper * CW;
 
 
-void mutexDown(pthread_mutex_t * mutex, char * message = NULL) {
+inline void mutexDown(pthread_mutex_t * mutex, char * message = NULL) {
     if(pthread_mutex_lock(mutex)) {
         if (message)
             perror(message);
@@ -22,7 +22,7 @@ void mutexDown(pthread_mutex_t * mutex, char * message = NULL) {
     }
 }
 
-void mutexUp(pthread_mutex_t * mutex, char * message = NULL) {
+inline void mutexUp(pthread_mutex_t * mutex, char * message = NULL) {
     if(pthread_mutex_unlock(mutex)) {
         if (message)
             perror(message);
@@ -57,7 +57,7 @@ void Scheduler::resMutexUp(void) {
     mutexUp(&this->results_mutex);
 }
 
-bool checkCondition(pthread_mutex_t * stdout_mutex,pthread_mutex_t * mutex, bool * condition) {
+inline bool checkCondition(pthread_mutex_t * stdout_mutex,pthread_mutex_t * mutex, bool * condition) {
     bool cond = false;
     // pthread_mutex_lock(stdout_mutex);
     // cout<<"check"<<endl;
@@ -92,7 +92,7 @@ void * doJobFunction(void *void_argc){
             // pthread_mutex_unlock(&sched->stdout_mutex);
             // sleep(2);
 
-            if (checkCondition(&sched->stdout_mutex,&sched->work_condition_mutex, &sched->work_done)){ 
+            if (checkCondition(&sched->stdout_mutex,&sched->work_condition_mutex, &sched->work_done)){
 
                 // pthread_mutex_lock(&sched->stdout_mutex);
                 // cout<<"I'm "<<t_id<<" and going to exit 1:"<<endl;
@@ -103,7 +103,7 @@ void * doJobFunction(void *void_argc){
             }
             pthread_cond_wait(&sched->job_cv[t_indx],&sched->job_mutex[t_indx]);
             // if all jobs are done
-            if (checkCondition(&sched->stdout_mutex,&sched->work_condition_mutex, &sched->work_done)){ 
+            if (checkCondition(&sched->stdout_mutex,&sched->work_condition_mutex, &sched->work_done)){
                 // pthread_mutex_lock(&sched->stdout_mutex);
                 // cout<<"I'm "<<t_id<<" and going to exit 2:"<<endl;
                 // pthread_mutex_unlock(&sched->stdout_mutex);
@@ -158,7 +158,7 @@ SchedulerErrorCode Scheduler::doJob(Job * job, int thread_index){
             {
                 Args * searchArgs = job->getArgs();
                 Document * doc = searchArgs->getDocument();
-
+                Vector<Query *> * deactivated_vec=job->getDeactivated();
                 Result * res=new Result(doc->getId(),*CW->queries);
 
                 this->searches_in_progress[thread_index] = 1;
@@ -187,7 +187,7 @@ SchedulerErrorCode Scheduler::doJob(Job * job, int thread_index){
 
 
                 mutexDown(&this->searches_mutex[thread_index]);
-                
+
                 while (this->searches_in_progress[thread_index] > 0)
                     pthread_cond_wait(&this->searches_cv[thread_index], &this->searches_mutex[thread_index]);
 
@@ -195,23 +195,32 @@ SchedulerErrorCode Scheduler::doJob(Job * job, int thread_index){
                 mutexUp(&this->searches_mutex[thread_index]);
 
                 mutexDown(&this->results_mutex);
+
+        // for deactivate: remove queries that shouldn't be in result (deactivated queries)
+                if(deactivated_vec!=NULL){
+                    int vlen=deactivated_vec->getLen();
+                    for(int i=0;i<vlen;i++)
+                        res->resetCounters(deactivated_vec->getItem(i)->getId());
+                }
+
+
                 if(CW->addResult(res)==C_W_FAIL){
                     delete res;
                     delete doc;
                     cerr<<"Failed adding result to result_pool ! [DocID "<<doc->getId()<<"] "<<endl;
                     exit(1);
-                }  
+                }
                 delete doc;
                 if (CW->results->getList().getLen() == 1)
                     pthread_cond_signal(&this->avail_res_cv);
 
                 mutexUp(&this->results_mutex);
                 // decrease pending_match_jobs
-                
+
                 mutexDown(&this->pending_match_mutex);
                 this->pending_match_jobs--;
                 // cout << "Done: " << doc->getId() << endl;
-                   // cout<<"pending"<<this->pending_match_jobs<<endl;   
+                   // cout<<"pending"<<this->pending_match_jobs<<endl;
                 if(this->pending_match_jobs==0){
                     pthread_cond_signal(&this->pending_match_cv);
                 }
@@ -224,8 +233,8 @@ SchedulerErrorCode Scheduler::doJob(Job * job, int thread_index){
             Args * searchMethodArgs = job->getArgs();
             Result * res = searchMethodArgs->getRes();
             Document * doc = searchMethodArgs->getDocument();
-            int type = searchMethodArgs->getType();
-            int dist = searchMethodArgs->getDist();
+            // int type = searchMethodArgs->getType();
+            // int dist = searchMethodArgs->getDist();
             int thread_index = searchMethodArgs->getParentIndex();
 
             int words_in_doc=doc->getWordsInDoc();
@@ -274,7 +283,7 @@ int Scheduler::assignJob() {
                         mutexDown(&this->queue_mutex);
                         job = this->q.pop();
                         mutexUp(&this->queue_mutex);
-                        
+
                         JobId jobId = job->getId();
                         if (jobId == SEARCH) {
                             mutexDown(&this->queue_mutex);
@@ -320,12 +329,12 @@ int Scheduler::assignJob() {
                 // pthread_mutex_lock(&sched->stdout_mutex);
                 // cout<<"signaled : "<<avail_t_id+1<<" to get job"<<endl;
                 // pthread_mutex_unlock(&sched->stdout_mutex);
-                return 0; 
+                return 0;
             }
             mutexUp(&this->job_mutex[i]);
         }
         pthread_cond_wait(&this->avail_worker_cv, &this->avail_worker_mutex);
-       
+
     }
 
     return -1;
@@ -382,6 +391,7 @@ void * giveJobFunction(void *void_argc){
 
 Scheduler::Scheduler(int threads_num){
     //threads_num workers + 1 the master thread
+    this->pending_deactivate_counter=0;
     this->job_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
     this->searches_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
     this->search_res_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
@@ -400,6 +410,8 @@ Scheduler::Scheduler(int threads_num){
 
     this->pending_match_jobs=0;
     this->work_done = false;
+
+    this->pending_deactivate_queries=new Vector<Query *>();
 
     if(this->job_mutex==NULL){
         perror("Malloc job mutex arr failed");
@@ -537,7 +549,7 @@ Scheduler::~Scheduler(){
     if (pthread_cond_destroy(&this->pending_match_cv)) {
     perror("cond destroy (~)");
     }
-    
+
     if (pthread_mutex_destroy(&this->results_mutex)) {
     perror("mutex destroy (~)");
     }
@@ -550,13 +562,30 @@ Scheduler::~Scheduler(){
     free(job_mutex);
     free(job_cv);
     free(thread_id);
+    delete pending_deactivate_queries;
 }
 
 SchedulerErrorCode Scheduler::addJob(Job * j){
+    // check if no pending matches
+    //aand if so deactivate all queries now that you can
+                //TO DO
+    //
+
     if(j->getId()==SEARCH){
         mutexDown(&this->pending_match_mutex);
         this->pending_match_jobs++;
         mutexUp(&this->pending_match_mutex);
+        // TO DO : ADD TO JOB THE CURRENT STATE OF pending_deactivate_queries
+        //SO THAT WHEN COMPUTING RESULT-> THE DEACTIVATED QUERIES SHHOULD BE REMOVED
+        j->addDeactivated(this->pending_deactivate_queries);
+    }else if(j->getId()==DEACTIVATE){
+        // increase pending deactivaates
+        //and add query to be deactivated to Vector
+
+
+        this->pending_deactivate_counter++;
+        Query * q=j->getArgs()->getQuery();
+        pending_deactivate_queries->insert(q);
     }
 
     // acquired lock -> time to push job to queue

@@ -12,7 +12,7 @@ Result * Args::getRes(){return NULL;}
 int Args::getType(){return -1;}
 int Args::getDist(){return -1;}
 int Args::getParentIndex(){return -1;}
-
+Query * Args::getQuery(){return NULL;}
 
 /* SearchArgs -------------------------------*/
 SearchArgs::SearchArgs(Document * doc){
@@ -62,15 +62,32 @@ int SearchMethodArgs::getParentIndex() {
     return this->threadIndex;
 }
 
+/* DeactivateArgs--------------------*/
+
+DeactivateArgs::DeactivateArgs(Query * q){
+    this->qPtr=q;
+}
+
+DeactivateArgs::~DeactivateArgs(){
+
+}
+
+Query * DeactivateArgs::getQuery(){
+    return qPtr;
+}
+
 /* Job ---------------------------------------*/
 Job::Job(JobId id, Args * a) {
     this->status=PENDING;
+    this->deactivated=NULL;
     this->id = id;
     args=a;
 }
 
 Job::~Job() {
     delete this->args;
+    if(this->deactivated!=NULL)
+        delete this->deactivated;
 }
 
 void Job::setStatus(enum Status s){
@@ -98,6 +115,16 @@ void Job::print(){
     }
 }
 
+void Job::addDeactivated(Vector<Query *> * vec){
+    this->deactivated=new Vector<Query *>(*vec);
+    return ;
+}
+
+Vector<Query *> * Job::getDeactivated(){
+    return deactivated;
+}
+
+
 JobId Job::getId() {
     return this->id;
 }
@@ -105,4 +132,3 @@ JobId Job::getId() {
 Args * Job::getArgs() {
     return this->args;
 }
-

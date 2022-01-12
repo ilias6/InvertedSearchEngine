@@ -22,6 +22,7 @@ class Args {
         virtual int getType();
         virtual int getDist();
         virtual int getParentIndex();
+        virtual Query * getQuery();
 
 };
 
@@ -30,6 +31,7 @@ class Job {
         enum Status status;
         JobId id;
         Args * args;
+        Vector<Query *> * deactivated;
     public:
         Job(JobId, Args *);
         void setStatus(enum Status);
@@ -37,6 +39,8 @@ class Job {
         JobId getId();
         Args * getArgs();
         void print();
+        void addDeactivated(Vector<Query *> *);
+        Vector<Query *> * getDeactivated();
         ~Job();
 };
 
@@ -53,12 +57,12 @@ class SearchArgs:public Args {
 
 class SearchMethodArgs:public Args {
     private:
-        Result * res; 
+        Result * res;
         Document * doc;
         int typeIndex;
         int distIndex;
         int threadIndex;
-    public: 
+    public:
         SearchMethodArgs(Result *, Document *, int, int, int);
         ~SearchMethodArgs();
         Result * getRes();
@@ -70,11 +74,11 @@ class SearchMethodArgs:public Args {
 
 class DeactivateArgs:public Args {
     private:
-        QueryID id;
+        Query *qPtr;
     public:
-        DeactivateArgs();
+        DeactivateArgs(Query *q);
         ~DeactivateArgs();
-        QueryID getQueryId();
+        Query * getQuery();
 };
 
 //

@@ -18,6 +18,7 @@ class Result{
         ~Result();
         ResultErrorCode increaseCounter(QueryID, Word * w);
         ResultErrorCode fetch(DocID *,unsigned int *,QueryID **);
+        ResultErrorCode resetCounters(QueryID);
         DocID getId();
         void print();
 };

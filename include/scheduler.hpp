@@ -21,6 +21,9 @@ class Scheduler {
         pthread_mutex_t pending_match_mutex;
         pthread_cond_t pending_match_cv;
 
+        int pending_deactivate_counter;
+        Vector<Query *> *pending_deactivate_queries;
+
         pthread_mutex_t* job_mutex;// for job array
         pthread_cond_t* job_cv;
 
@@ -39,7 +42,7 @@ class Scheduler {
 
         int threads_in_search;
         pthread_mutex_t threads_in_search_mutex;
-        
+
         int * searches_in_progress;
         pthread_cond_t * searches_cv;
         pthread_mutex_t * searches_mutex;

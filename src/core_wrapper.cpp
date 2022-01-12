@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(64);
+    this->scheduler = new Scheduler(8);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -32,8 +32,14 @@ CoreWrapper::CoreWrapper() {
 CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
     Query * qPtr = biSearchQuery(this->queries, id);
     if (qPtr != NULL){
-        this->scheduler->waitPendingMatchesFinish();
-        qPtr->deactivate();
+        // this->scheduler->waitPendingMatchesFinish();
+        // qPtr->deactivate();
+        Args * args = new DeactivateArgs(qPtr);
+        Job * job = new Job(DEACTIVATE, args);
+        if (this->scheduler->addJob(job) != S_SUCCESS) {
+            cerr << "addJob fail [Deactivate]\n";
+            return C_W_FAIL;
+        }
         return C_W_SUCCESS;
     }
     return C_W_FAIL;
@@ -41,6 +47,10 @@ CoreWrapperErrorCode CoreWrapper::deactivateQuery(QueryID id) {
 
 CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchType type, unsigned int dist){
     this->scheduler->waitPendingMatchesFinish();
+    /*
+                if there are pending deactivates
+                Now it's time to do them
+                                            */
     Query * q = new Query(id,str,type,dist);
     this->queries->insertSorted(q, q->getId());
     // insert to entry list
@@ -138,7 +148,7 @@ void CoreWrapper::searchWordHamm(Document * doc,Result *res,int thread_index){
         // cerr << "addJob fail searchWordInIndeces\n";
         // return;
     // }
-// 
+//
     // /*
        // int exactEntriesLen = entry_res.getLen();
        // this->exactEntries = new HashTable(findNextPrime(exactEntriesLen), djb2);
@@ -155,7 +165,7 @@ void CoreWrapper::searchWordHamm(Document * doc,Result *res,int thread_index){
             // return;
         // }
     // }
-// 
+//
     // // for hamming dist
     // for(int j=0;j<=range;j++){
         // Args * args2 = new SearchMethodArgs(res, w, 1, j, thread_index);
@@ -165,7 +175,7 @@ void CoreWrapper::searchWordHamm(Document * doc,Result *res,int thread_index){
             // return;
         // }
     // }
-// 
+//
     // //delete this->exactEntries;
 // }
 /*
@@ -189,7 +199,7 @@ void CoreWrapper::searchWordHamm(Document * doc,Result *res,int thread_index){
 
 void CoreWrapper::increaseCounter(List<Entry *>& e_list,Result * res,MatchType mt,
                                     unsigned int dist){
-        
+
     int len=e_list.getLen();
     for(int i=0;i<len;i++){
         Entry * e=e_list.getItem(i);
