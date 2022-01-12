@@ -120,6 +120,25 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
     return R_SUCCESS;
 }
 
+ResultErrorCode Result::resetCounters(QueryID query_id){
+    int query_index;
+    query_index=biSearchQueryIndex(&this->queries,query_id);
+    if(query_index==-1)//query with this id not found
+        return R_FAIL;
+    // Query * query = this->queries.getItem(query_index);
+    // int qLen = query->getWordsInQuery();
+    //int wordIndex = this->getIdx(query_index, w);
+    if (pthread_mutex_lock(&this->mutexes[query_index][0])) {
+        perror("mutex lock increaseCounter");
+    }
+    wordFlags[query_index][0] = false;
+
+    if (pthread_mutex_unlock(&this->mutexes[query_index][0])) {
+        perror("mutex lock increaseCounter");
+    }
+    return R_SUCCESS;
+}
+
 void Result::print(){
     cout<<"------------DOC: "<<this->docId<<"-------------"<<endl;
 }

@@ -36,6 +36,15 @@ void Scheduler::waitPendingMatchesFinish(void){
     mutexDown(&this->pending_match_mutex);
     while(pending_match_jobs)
         pthread_cond_wait(&this->pending_match_cv,&this->pending_match_mutex);
+    // all pending matches finished-> do all pending deactivates
+    for(int i=0;i<pending_deactivate_counter;i++)
+        pending_deactivate_queries->getItem(i)->deactivate();
+    if(pending_deactivate_queries!=NULL){
+        delete pending_deactivate_queries;
+        pending_deactivate_queries=NULL;
+        pending_deactivate_queries=new Vector<Query*>(20);
+        this->pending_deactivate_counter=0;
+    }
     mutexUp(&this->pending_match_mutex);
 
     return ;
@@ -215,8 +224,8 @@ SchedulerErrorCode Scheduler::doJob(Job * job, int thread_index){
                     pthread_cond_signal(&this->avail_res_cv);
 
                 mutexUp(&this->results_mutex);
-                // decrease pending_match_jobs
 
+                // decrease pending_match_jobs
                 mutexDown(&this->pending_match_mutex);
                 this->pending_match_jobs--;
                 // cout << "Done: " << doc->getId() << endl;
@@ -411,7 +420,7 @@ Scheduler::Scheduler(int threads_num){
     this->pending_match_jobs=0;
     this->work_done = false;
 
-    this->pending_deactivate_queries=new Vector<Query *>();
+    this->pending_deactivate_queries=new Vector<Query *>(20);
 
     if(this->job_mutex==NULL){
         perror("Malloc job mutex arr failed");
@@ -577,7 +586,8 @@ SchedulerErrorCode Scheduler::addJob(Job * j){
         mutexUp(&this->pending_match_mutex);
         // TO DO : ADD TO JOB THE CURRENT STATE OF pending_deactivate_queries
         //SO THAT WHEN COMPUTING RESULT-> THE DEACTIVATED QUERIES SHHOULD BE REMOVED
-        j->addDeactivated(this->pending_deactivate_queries);
+        if(this->pending_deactivate_counter>0)
+            j->addDeactivated(this->pending_deactivate_queries);
     }else if(j->getId()==DEACTIVATE){
         // increase pending deactivaates
         //and add query to be deactivated to Vector
