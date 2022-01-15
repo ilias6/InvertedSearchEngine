@@ -602,6 +602,7 @@ SchedulerErrorCode Scheduler::addJob(Job * j){
         //and add query to be deactivated to Vector
 
         Query * q=j->getArgs()->getQuery();
+        delete j;
         if(this->pending_match_jobs==0){
             q->deactivate();
             return S_SUCCESS;

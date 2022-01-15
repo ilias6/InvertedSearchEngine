@@ -14,6 +14,7 @@ int Args::getDist(){return -1;}
 int Args::getParentIndex(){return -1;}
 Query * Args::getQuery(){return NULL;}
 
+
 /* SearchArgs -------------------------------*/
 SearchArgs::SearchArgs(Document * doc){
     this->doc = doc;
@@ -32,6 +33,8 @@ void SearchArgs::print(){
     cout<<"\tdoc_id: "<<this->doc->getId()<<endl;
     // this->doc->print();
 }
+
+
 /* SearchMethodArgs --------------------------*/
 SearchMethodArgs::SearchMethodArgs(Result * res, Document * doc, int i, int j, int idx) {
     this->res = res;

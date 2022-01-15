@@ -24,9 +24,9 @@ class ResultTest: public ::testing::Test {
         }
 
         virtual void TearDown(){
+            delete res;
             queries->destroyData();
             delete queries;
-            delete res;
         }
 };
 

@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(16);
+    this->scheduler = new Scheduler(8);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -58,7 +58,7 @@ CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchTy
     //entryList->print();
     if(list_error_code!=E_L_SUCCESS)
         return C_W_FAIL;
-    IndexErrorCode error_code;
+    IndexErrorCode error_code = I_FAIL;
     switch(type){
         case MT_EXACT_MATCH:
             error_code=indeces[0][0]->insert(e_arr);

@@ -1,7 +1,7 @@
 #ifndef __CORE_WRAPPER_HPP__
 #define __CORE_WRAPPER_HPP__
 
-#include "hash_table.hpp"
+#include "hash_table_query.hpp"
 #include "entry_list.hpp"
 #include "index.hpp"
 #include "list.hpp"
@@ -50,6 +50,7 @@ class CoreWrapper {
            So for i=1,2 we have: Index[i][Max_possible_distances] */
         Index *** indeces;
         Vector<Query*> * queries;
+        // HashTableQuery * queries;
         Queue<Document *> * docs;
         Queue<Result *> * results;
         //HashTable * exactEntries;
