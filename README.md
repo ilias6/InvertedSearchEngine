@@ -21,7 +21,7 @@ int length | ListNode\<T\>* next | ListNode\<T\>\* tail | int length | _
 _  | _ | int length | int actual_size | _ 
 
 ### And the composite ones:
-Entry | Bucket | HashTable | Query | BKNode | BKTree | EntryList | Index | PayloadEntry | Result | CoreWrapper | Document
+Entry | Bucket | HashTable | Query | BKNode | BKTree | EntryList | Index | PayloadEntry | Result | CoreWrapper | Document |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:
 Word word | Vector\<Entry\*\> list| Bucket\* array | Word\*\* | Entry\* e | metric | List\<Entry\> list | MatchType type | QueryID id | DocID id | EntryList \* entryList | Word \*\* words
 List\<PayloadEntry\> payload\[MAX_TYPES_NUM\]\[MAX_DISTANCE+1\] | _ | int size (bucket num) | QueryID id | int distance (from parent) | BKNode\* root | HashTable hashtable | BKTree\*\* trees (multiple trees for manhattan distance) | bool \* active (points to addr of Querry::active) | Vector<Query *> queries | Index \*\*\* indeces | DocID id
@@ -62,7 +62,7 @@ the results in a List of Entry pointers.
 &emsp;For a given Matchtype-Match Distance an Index is built. The entries are inserted dynammically. When we search for a word in our index, the MatchType is checked and the corresponding lookup is made.\
 9. **Result**\
 &emsp;Contains the matched queries for a document. The queries are updated dynammically via a bool array that expresses if a word is matched.
-With the fetch method the bool array is parsed and the proper querries are returned.\
+With the fetch method the bool array is parsed and the proper querries are returned.
 10. **Document**\
 &emsp;Document class holds an array of Word *,its' size, the document's id. Document constructor makes sure that no duplicates are stored in the array (uses a local hashtable constructed inside for that purpose).
 11. **CoreWrapper**\
@@ -76,6 +76,60 @@ For each Word in Document:
     For each Distance: (exact match is defined with distance=0)
       update the Result struct
 ```
+
+### *Parallelism*
+First lets see the corresponding table
+
+### Scheduler-Job classes:
+Args | Job | Scheduler | ArgsClass |
+| :---: | :---: | :---: | :---: 
+Args is a superclass| Status | Queue<Job \*> | int threadId |
+for all job args. | JobId | int numOfThreads | Scheduler \* |
+Different jobs require different | Args \* | int maxSearchThreads | _ |
+args that derive from Args. | Vector<Query \*> deactivated | pthread_t \* pIds | _ |
+_ | _ | Job \*\* threadJobs | _ |
+_ | _ | A bunch of counters | _ |
+_ | _ | A bunch of mutexes | _ |
+_ | _ | A bunch of condVars | _ |
+
+1. **Args**\
+&emsp; Args is just the superclass. SearchArgs, SearchMethodArgs and DeactivateArgs are derived from Args and contain the information that a worker-thread
+must have access to.
+2. **Job**\
+&emsp;This class contains all information that is needed from the Scheduler to assign and do the work.
+3. **Scheduler**\
+&emsp;Scheduler is the class that synchronizes the parallelism. Having a thread pool and a queue of jobs the tasks that are described below run concurrently.
+
+The final step of optimization is the introduction to parallelism. A Scheduler-Job model is used to distribute the search-jobs to multiple workers.
+Insertion, on the other hand, is parallelized as it would be either too complicated either inefficient (or both!). So, searches are done by different threads
+and the test_driver keeps reading the input file without waiting until the batch is completed (batch is defined the sequence s-e-s-...-m-r-...-m-r).
+\
+We have 3 kind of jobs:
+1. SEARCH
+&emsp;This job is practically on match of a document. It is assigned to a thread that generates a new job (SEARCH_METHOD. This new job is about the half of its job. Then when it the thread finishes its task (the edit search) it waits for the other thread (with task SEARCH_METHOD) to finish and then add the result to 
+the global CoreWrapper struct.
+2. SEARCH_METHOD
+&emsp;As we said in the previous job, this one is the half of a matchDocument search. The thread that has been assigned this job is doing the exact match and hamming distance searches. *We must mention that mutexes are added to the class of result as the 2 threads may writing the object concurrently.*
+3. DEACTIVATE
+&emsp;This like a virtual job. When a query must be deactivated nothing happens! All deactivated queries are held in a Vector<Query \*> and the appropriate
+queries are eventually removed from the results of a matchDocument(). When there are no pending matches done by threads it is a chance to really deactivate
+these queries and empty the vector.\
+
+*We must mention that:*\
+&emsp;As explained above, a single search requires exactly 2 threads, one for the edit distance search and one for the exact match and hamming distance searches.
+So, if we have N threads, scheduler assigns at most N/2 searches to run concurrently so that in worst case scenario, N/2 threads are assigned the half work a document and the other N/2 threads are assigned the other half work. This is needed to prevent a deadlock.
+
+### About real-time efficiency!
+**Table of numOfThreads-Time** (small_test):
+Threads | 1 | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: | :---: 
+Time | 3.8s | 2.8s | 2.1s | 1.8s | 1.8s
+
+*with -O3 compilation*
+**Table of numOfThreads-Time** (small_test):
+Threads | 1 | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: | :---: 
+Time | 2.0s | 1.5s | 1.0s | 0.8s | 0.8s
 
 **For all templates, it is important to say that if the data type is pointer, it's programmer's responsibility to free the memory!** 
 
