@@ -20,25 +20,29 @@ void BucketQuery::copyBucketQuery(BucketQuery &b2){
     this->list.copyVector(b2.list);
 }
 
-enum HashTableQueryErrorCode BucketQuery::insert(Query * e){
+enum HashTableQueryErrorCode BucketQuery::insert(QueryEntry * e){
     list.insert(e);
     return H_T_Q_SUCCESS;
 }
 
 // used for testing
-Vector<Query *> BucketQuery::getListCopy() {
+Vector<QueryEntry *> BucketQuery::getListCopy() {
     return this->list;
+}
+
+Vector<QueryEntry *> * BucketQuery::getList() {
+    return &this->list;
 }
 
 /* flag == true search for id == j 
  * flag == false get jth query of BucketQuery */
-Query * BucketQuery::getQuery(unsigned int j, bool flag){
+QueryEntry * BucketQuery::getQueryEntry(QueryID j, bool flag){
     //returns NULL if doesn't exist
-    Query * q=NULL;
+    QueryEntry * q=NULL;
     if (flag) {
         for(int i=0;i<list.getLen();i++){
             q=list.getItem(i);
-            if((q->getId()) == j)
+            if((q->getQuery()->getId()) == j)
                 break;
             q = NULL;
 
@@ -72,9 +76,11 @@ HashTableQuery::HashTableQuery(int sz,unsigned long (*h_f)(const char *)){
 
 HashTableQuery::HashTableQuery(){
     this->size=0;
+    this->current_size=0;
     this->array=NULL;
     this->hash_func=NULL;
 }
+
 HashTableQuery::HashTableQuery(HashTableQuery & ht){
     this->size=ht.size;
     this->current_size=ht.current_size;
@@ -83,6 +89,11 @@ HashTableQuery::HashTableQuery(HashTableQuery & ht){
         this->array[i].copyBucketQuery(ht.array[i]);
     this->hash_func=ht.hash_func;
 }
+
+BucketQuery * HashTableQuery::getBucket(int i) {
+    return &this->array[i];
+}
+
 HashTableQuery::~HashTableQuery(){
     this->size=0;
     if(this->array!=NULL)
@@ -96,19 +107,20 @@ void HashTableQuery::deleteData(){
         Query * e;
         int sz=array[i].bucketSize();
         for(int j=0;j<sz;j++){
-            e=array[i].getQuery(j, false);
+            e=array[i].getQueryEntry(j, false)->getQuery();
             delete e;
         }
     }
 }
 
-Query * HashTableQuery::getQuery(int id) {
+QueryEntry * HashTableQuery::getQueryEntry(QueryID id) {
     string idStr = to_string(id);
     char * str = new char[idStr.length()+1];
+    strcpy(str, idStr.c_str());
     unsigned long hash = this->hash_func(str);
     delete[] str;
     int bucket_index = hash%this->size;
-    return this->array[bucket_index].getQuery(id, true);
+    return this->array[bucket_index].getQueryEntry(id, true);
 }
 
 int HashTableQuery::getSize(void){
@@ -140,13 +152,14 @@ enum HashTableQueryErrorCode HashTableQuery::setHashFunc(unsigned long (*h_f)(co
     return H_T_Q_SUCCESS;
 }
 
-enum HashTableQueryErrorCode HashTableQuery::insert(Query * q){
+enum HashTableQueryErrorCode HashTableQuery::insert(QueryEntry * q){
     if ((float)this->current_size/this->size >= 1.8)
         this->rehash();
 
     //insert just inserts entry in hashtable
-    string idStr = to_string(q->getId());
+    string idStr = to_string(q->getQuery()->getId());
     char * str = new char[idStr.length()+1];
+    strcpy(str, idStr.c_str());
     unsigned long hash= this->hash_func(str);
     delete[] str;
     int bucket_index=hash%this->size;
@@ -163,7 +176,7 @@ void HashTableQuery::rehash() {
     for (int i = 0; i < tmpSize; i++) {
         int bSize = tmpBucketQueryArr[i].bucketSize();
         for (int j = 0; j < bSize; ++j)
-            this->insert(tmpBucketQueryArr[i].getQuery(j, false));
+            this->insert(tmpBucketQueryArr[i].getQueryEntry(j, false));
     }
     delete[] tmpBucketQueryArr;
 }

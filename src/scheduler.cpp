@@ -11,7 +11,6 @@
 
 extern CoreWrapper * CW;
 
-
 inline void mutexDown(pthread_mutex_t * mutex, char * message = NULL) {
     if(pthread_mutex_lock(mutex)) {
         if (message)

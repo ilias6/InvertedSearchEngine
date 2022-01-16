@@ -4,74 +4,67 @@
 
 using namespace std;
 
-
-Result::Result(DocID id,Vector<Query *> & cur_queries):queries(cur_queries){
+Result::Result(DocID id,Vector<Query *> & cur_queries):queries(){
     this->docId=id;
+    this->queries.setHashFunc(djb2);
 
     int len=cur_queries.getLen();
-
-    //this->wordIndices = new HashTable*[len];
+    this->queries.setSizeAndAlloc(findNextPrime(int((len+1)/2)));
 
     this->wordFlags=new bool*[len];
     this->mutexes=new pthread_mutex_t*[len];
 
     for(int i=0;i<len;i++) {
-        //this->wordIndices[i] = new HashTable(MAX_QUERY_WORDS, djb2);
         Query * q = cur_queries.getItem(i);
+
+        QueryEntry * qEntry = new QueryEntry(i, q);
+        this->queries.insert(qEntry);
+
         int queryLen = q->getWordsInQuery();
         wordFlags[i]=new bool[queryLen];
         mutexes[i]=new pthread_mutex_t[queryLen];
         for (int j = 0; j < queryLen; ++j) {
             wordFlags[i][j] = false;
             mutexes[i][j]=PTHREAD_MUTEX_INITIALIZER;
-            //PayloadEntry pE(j, 0, MT_EXACT_MATCH, 0, NULL);
-            //Entry * ePtr = new Entry(*q->getWord(j), pE);
-            //this->wordIndices[i]->insert(ePtr);
         }
     }
 }
 
 Result::~Result(){
-    int len=this->queries.getLen();
-    for (int i = 0; i < len; ++ i) {
-        Query * q = this->queries.getItem(i);
-        int queryLen = q->getWordsInQuery();
-        for (int j = 0; j < queryLen; ++j)
-            if (pthread_mutex_destroy(&this->mutexes[i][j])) {
-                perror("mutex destroy (~)");
-            }
-        //this->wordIndices[i]->deleteData();
-        //delete this->wordIndices[i];
-        delete[] this->wordFlags[i];
-        delete[] this->mutexes[i];
+    int bucketsNum = this->queries.getSize();
+    for (int i = 0; i < bucketsNum; ++i) {
+        Vector<QueryEntry *> * qEntries = this->queries.getBucket(i)->getList();
+        int len = qEntries->getLen();
+        for (int k = 0; k < len; ++k) {
+            QueryEntry * qEntry = qEntries->getItem(k);
+            Query * q = qEntry->getQuery();
+            int index = qEntry->getIndex();
+            int queryLen = q->getWordsInQuery();
+            for (int j = 0; j < queryLen; ++j)
+                if (pthread_mutex_destroy(&this->mutexes[index][j])) {
+                    perror("mutex destroy (~)");
+                }
+            delete[] this->wordFlags[index];
+            delete[] this->mutexes[index];
+        }
     }
     delete[] this->wordFlags;
     delete[] this->mutexes;
-    //delete[] this->wordIndices;
+    //this->queries.deleteData();
 }
 
 DocID Result::getId(){
     return this->docId;
 }
 
-// For the hash table implementation but probably it does not worth
-/*
-int Result::getIdx(int hashIdx, Word * w) {
-    Entry * ePtr = this->wordIndices[hashIdx]->getEntry(w);
-    if (ePtr == NULL) {
-        cerr << "Result: hash table correpted!\n";
-        exit(1);
-    }
-    return ePtr->getPayload().getItem(0).getId();
-}
-*/
-
 ResultErrorCode Result::increaseCounter(QueryID query_id, Word * w){
-    int query_index;
-    query_index=biSearchQueryIndex(&this->queries,query_id);
+    QueryEntry * qEntry = this->queries.getQueryEntry(query_id);
+
+    int query_index = qEntry->getIndex();
     if(query_index==-1)//query with this id not found
         return R_FAIL;
-    Query * query = this->queries.getItem(query_index);
+
+    Query * query = qEntry->getQuery();
     int qLen = query->getWordsInQuery();
     //int wordIndex = this->getIdx(query_index, w);
     int wordIndex = -1;
@@ -94,13 +87,24 @@ ResultErrorCode Result::increaseCounter(QueryID query_id, Word * w){
 ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_id){
     int size=0;
     *d_id=this->docId;
-    int vec_len=queries.getLen();
-    *q_id=(QueryID *)malloc(sizeof(QueryID)*vec_len);
-    for(int i=0;i<vec_len;i++){
-        Query *q=queries.getItem(i);
-        if (satisfy(this->wordFlags[i], q->getWordsInQuery()))
-            (*q_id)[size++]=q->getId();;
+    int bucketsNum=this->queries.getSize();
+    int numOfQueries=this->queries.getNumOfQueries();
+    *q_id=(QueryID *)malloc(sizeof(QueryID)*numOfQueries);
+
+    for(int i=0; i<bucketsNum; i++) {
+        Vector<QueryEntry *> * qEntries = this->queries.getBucket(i)->getList();
+        int len = qEntries->getLen();
+        for (int j = 0; j < len; ++j) {
+            QueryEntry *qEntry=qEntries->getItem(j);
+            Query * q = qEntry->getQuery();
+            if (satisfy(this->wordFlags[qEntry->getIndex()], q->getWordsInQuery())) {
+                // (*q_id)[size++]=q->getId();;
+                insertSorted(q_id, size, q->getId());
+                size++;
+            }
+        }
     }
+
     if(size==0){
         free(*q_id);
         *size_ptr=0;
@@ -110,7 +114,7 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
     }
     *size_ptr=size;
     //resize array to actual size
-    if(size!=vec_len){
+    if(size!=numOfQueries){
         QueryID * tmp=*q_id;
         *q_id=(QueryID *)malloc(sizeof(QueryID)*size);
         for(int i=0;i<size;i++)
@@ -121,8 +125,9 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
 }
 
 ResultErrorCode Result::resetCounters(QueryID query_id){
-    int query_index;
-    query_index=biSearchQueryIndex(&this->queries,query_id);
+    QueryEntry * qEntry=this->queries.getQueryEntry(query_id);
+
+    int query_index = qEntry->getIndex();
     if(query_index==-1)//query with this id not found
         return R_FAIL;
     // Query * query = this->queries.getItem(query_index);

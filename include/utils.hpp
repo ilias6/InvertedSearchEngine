@@ -18,5 +18,6 @@ Query * biSearchQuery(Vector<Query *> *, QueryID);//returns query pointer
 int biSearchQueryIndex(Vector<Query *> *, QueryID);//returns index
 char * genRandStr(const int);
 bool satisfy(bool *, int);
+void insertSorted(QueryID **, int, QueryID);
 
 #endif

@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(8);
+    this->scheduler = new Scheduler(16);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 

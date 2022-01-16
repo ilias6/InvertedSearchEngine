@@ -21,6 +21,18 @@ bool isPrime(int n) {
 
 }
 
+void insertSorted(QueryID ** arr, int size, QueryID id) {
+    for (int i = 0; i < size; ++i) {
+        if ((*arr)[i] > id) {
+            for (int j = size; j > i; --j) 
+                (*arr)[j] = (*arr)[j-1];
+            (*arr)[i] = id;
+            return;
+        }
+    }
+    (*arr)[size] = id;
+}
+
 int findNextPrime(int n) {
     int canditatePrime = n;
     while (!isPrime(canditatePrime))

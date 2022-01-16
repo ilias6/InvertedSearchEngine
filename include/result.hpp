@@ -3,14 +3,15 @@
 #include "query.hpp"
 #include "vector.hpp"
 #include "document.hpp"
-#include "hash_table.hpp"
+#include "hash_table_query.hpp"
 #include <pthread.h>
 
 enum ResultErrorCode {R_SUCCESS,R_FAIL};
 class Result{
     private:
         DocID docId;
-        Vector<Query *> queries;
+        // Vector<Query *> queries;
+        HashTableQuery queries;
         pthread_mutex_t ** mutexes;
         bool ** wordFlags;
     public:
