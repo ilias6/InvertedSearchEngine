@@ -76,6 +76,50 @@ For each Word in Document:
     For each Distance: (exact match is defined with distance=0)
       update the Result struct
 ```
+### *Profiling & Optimizing*
+Running the gprof profiler to out executable gives the following results:\
+![alt text](https://github.com/ilias6/InvertedSearchEngine/Screenshot from 2022-01-16 13-38-00.png?raw=true)
+
+As we can see, almost 50% of time is spent calculating the edit distance of matches. The algorimth we choosed, that calculates the distance, is considered one of the optimal, so there is nothing we can do to save time. In the second row, we see a function: CoreWrapper::increaseCounter() (with ~14% of time). Lets describe it in pseudocode:
+```
+CoreWrapper::increaseCounter(List<Entry *> entryList, Result * res, MatchType mt, unsigned int dist):
+for each entry in entryList: # that has been found
+  List<PayloadEntry> payload = entry->getPayload(mt, dist) # get the correct payload corresponding to mt and dist
+  for each payloadEntry in payload:
+    queryID = payloadEntry.getId() # only if query is active
+    word = entry->getWord()
+    res->increaseCounter(queryID, word)
+
+Result::increaseCounter(queryId, word1):
+query, queryIndex = hashTableSearch(this->queries, queryId)
+for each word2 in query:
+  if (word1 == word2):
+     save wordIndex
+     break
+boolArr[queryIndex][wordIndex] = True
+```
+
+The rest of the calls are pretty much trivial.
+
+```
+CoreWrapper::increaseCounter(List<Entry *> entryList, Result * res, MatchType mt, unsigned int dist):
+for each entry in entryList: # that has been found
+  List<PayloadEntry> payload = entry->getPayload(mt, dist) # get the correct payload corresponding to mt and dist
+  for each payloadEntry in payload:
+    queryID = payloadEntry.getId() # only if query is active
+    word = entry->getWord()
+    res->increaseCounter(queryID, word)
+
+Result::increaseCounter(queryId, word1):
+query, queryIndex = binarySearch(this->queries, queryId) # this one performs binary search to find the query index in the vector
+for each word2 in query:
+  if (word1 == word2):
+     save wordIndex
+     break
+boolArr[queryIndex][wordIndex] = True
+
+One change that is not clear that will reduce overall time, is to delete from our indices the deactivated queries, not just deactivate them. This will save
+"some" loops in the above algorithm but then we must introduce a deletion time!
 
 ### *Parallelism*
 First lets see the corresponding table
@@ -86,7 +130,7 @@ Args | Job | Scheduler | ArgsClass |
 Args is a superclass| Status | Queue<Job \*> | int threadId |
 for all job args. | JobId | int numOfThreads | Scheduler \* |
 Different jobs require different | Args \* | int maxSearchThreads | _ |
-args that derive from Args. | Vector<Query \*> deactivated | pthread_t \* pIds | _ |
+args that are derive from Args. | Vector<Query \*> deactivated | pthread_t \* pIds | _ |
 _ | _ | Job \*\* threadJobs | _ |
 _ | _ | A bunch of counters | _ |
 _ | _ | A bunch of mutexes | _ |
