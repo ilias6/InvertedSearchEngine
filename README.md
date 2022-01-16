@@ -117,6 +117,7 @@ for each word2 in query:
      save wordIndex
      break
 boolArr[queryIndex][wordIndex] = True
+```
 
 One change that is not clear that will reduce overall time, is to delete from our indices the deactivated queries, not just deactivate them. This will save
 "some" loops in the above algorithm but then we must introduce a deletion time!
@@ -163,7 +164,7 @@ these queries and empty the vector.\
 &emsp;As explained above, a single search requires exactly 2 threads, one for the edit distance search and one for the exact match and hamming distance searches.
 So, if we have N threads, scheduler assigns at most N/2 searches to run concurrently so that in worst case scenario, N/2 threads are assigned the half work a document and the other N/2 threads are assigned the other half work. This is needed to prevent a deadlock.
 
-### About real-time efficiency!
+### About efficiency in real-time!
 **Table of numOfThreads-Time** (small_test):
 Threads | 1 | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: | :---: 
