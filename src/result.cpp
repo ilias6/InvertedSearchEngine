@@ -16,6 +16,8 @@ Result::Result(DocID id,Vector<Query *> & cur_queries):queries(){
 
     for(int i=0;i<len;i++) {
         Query * q = cur_queries.getItem(i);
+        if (!q->getActive())
+            continue;
 
         QueryEntry * qEntry = new QueryEntry(i, q);
         this->queries.insert(qEntry);
@@ -97,11 +99,9 @@ ResultErrorCode Result::fetch(DocID * d_id,unsigned int * size_ptr,QueryID ** q_
         for (int j = 0; j < len; ++j) {
             QueryEntry *qEntry=qEntries->getItem(j);
             Query * q = qEntry->getQuery();
-            if (satisfy(this->wordFlags[qEntry->getIndex()], q->getWordsInQuery())) {
-                // (*q_id)[size++]=q->getId();;
-                insertSorted(q_id, size, q->getId());
-                size++;
-            }
+            if (satisfy(this->wordFlags[qEntry->getIndex()], q->getWordsInQuery()))
+                // (*q_id)[size++]=q->getId();
+                insertSorted(q_id, size++, q->getId());
         }
     }
 

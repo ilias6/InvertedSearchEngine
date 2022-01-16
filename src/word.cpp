@@ -79,9 +79,11 @@ bool Word::exactMatch(Word & w) {
         return false;
 
     const char * str = w.getStr();
-    for (int i = 0; i < this->len; ++i)
-        if (this->str[i] != str[i])
-            return false;
+    // for (int i = 0; i < this->len; ++i)
+        // if (this->str[i] != str[i])
+            // return false;
+    if (strncmp(str, this->str, this->len))
+        return false;
     return true;
 }
 
