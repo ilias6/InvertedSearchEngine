@@ -78,9 +78,34 @@ For each Word in Document:
 ```
 ### *Profiling & Optimizing*
 Running the gprof profiler to out executable gives the following results:\
-![alt text](https://github.com/ilias6/InvertedSearchEngine/Screenshot from 2022-01-16 13-38-00.png?raw=true)
+![alt text](https://github.com/ilias6/InvertedSearchEngine/blob/7a75dfe7a7214d04f1a7f77ccb098fdff49eaeba/Screenshot%20from%202022-01-16%2013-38-00.png)
 
 As we can see, almost 50% of time is spent calculating the edit distance of matches. The algorimth we choosed, that calculates the distance, is considered one of the optimal, so there is nothing we can do to save time. In the second row, we see a function: CoreWrapper::increaseCounter() (with ~14% of time). Lets describe it in pseudocode:
+
+```
+CoreWrapper::increaseCounter(List<Entry *> entryList, Result * res, MatchType mt, unsigned int dist):
+for each entry in entryList: # that has been found
+  List<PayloadEntry> payload = entry->getPayload(mt, dist) # get the correct payload corresponding to mt and dist
+  for each payloadEntry in payload:
+    queryID = payloadEntry.getId() # only if query is active
+    word = entry->getWord()
+    res->increaseCounter(queryID, word)
+
+Result::increaseCounter(queryId, word1):
+query, queryIndex = binarySearch(this->queries, queryId) # this one performs binary search to find the query index in the vector
+for each word2 in query:
+  if (word1 == word2):
+     save wordIndex
+     break
+boolArr[queryIndex][wordIndex] = True
+```
+As we can observe the above code, the most "heavy" operation is the binarySearch. As the queries increase this search will take even longer for a single result.
+So, as a solution we replaced the struct of Vector<Query \*> to HashTableQuery\*  and store there a query and its index. Now, we have search operation in O(1) time.
+Disappointedly, it seems that all these hash tables to construct every time does not save any time at all... The following code shows this useless utility.
+
+\* *QueryEntry is a struct that contains a Query \* and an index for the bool array of the result. HashTableQuery is a hash table same as the previous one, but has as entries QueryEntry objects*
+
+
 ```
 CoreWrapper::increaseCounter(List<Entry *> entryList, Result * res, MatchType mt, unsigned int dist):
 for each entry in entryList: # that has been found
@@ -101,23 +126,8 @@ boolArr[queryIndex][wordIndex] = True
 
 The rest of the calls are pretty much trivial.
 
-```
-CoreWrapper::increaseCounter(List<Entry *> entryList, Result * res, MatchType mt, unsigned int dist):
-for each entry in entryList: # that has been found
-  List<PayloadEntry> payload = entry->getPayload(mt, dist) # get the correct payload corresponding to mt and dist
-  for each payloadEntry in payload:
-    queryID = payloadEntry.getId() # only if query is active
-    word = entry->getWord()
-    res->increaseCounter(queryID, word)
+So, we think that our structs perform at an optimal level. Maybe a more radical change would give better results.
 
-Result::increaseCounter(queryId, word1):
-query, queryIndex = binarySearch(this->queries, queryId) # this one performs binary search to find the query index in the vector
-for each word2 in query:
-  if (word1 == word2):
-     save wordIndex
-     break
-boolArr[queryIndex][wordIndex] = True
-```
 
 One change that is not clear that will reduce overall time, is to delete from our indices the deactivated queries, not just deactivate them. This will save
 "some" loops in the above algorithm but then we must introduce a deletion time!
@@ -165,16 +175,66 @@ these queries and empty the vector.\
 So, if we have N threads, scheduler assigns at most N/2 searches to run concurrently so that in worst case scenario, N/2 threads are assigned the half work a document and the other N/2 threads are assigned the other half work. This is needed to prevent a deadlock.
 
 ### About efficiency in real-time!
-**Table of numOfThreads-Time** (small_test):
-Threads | 1 | 2 | 4 | 8 | 16
-| :---: | :---: | :---: | :---: | :---: | :---: 
-Time | 3.8s | 2.8s | 2.1s | 1.8s | 1.8s
 
-*with -O3 compilation*
-**Table of numOfThreads-Time** (small_test):
+We have tested 3 versions of our engine:
+1. The simple one. Each document is assigned to one thread.
+2. Each document is assigned to 2 threads. The first thread responsible to do the exact match and hamming distance search, but first it generates the other half of the job (edit distance match) for another thread to take.
+3. Deactivation of queries is not something to care! The test driver may read an endQuery(), but matches are in progress most of the time. So, every job that represents a match contains also the queries that are deactivated so they are removed eventually.
+4. Parallel insertion of queries. At this point, we must note that startQuery() and matchDocument() do not interfere with each other meaning that when a query is added it must finish before a search starts. The same applies for the opposite.
+
+**For non-thread implementation.** (small_test):\
+Time = 3.8s
+
+**Table of numOfThreads-Time for 1.** (small_test):
 Threads | 1 | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: | :---: 
-Time | 2.0s | 1.5s | 1.0s | 0.8s | 0.8s
+Time | 2.6s | 1.6s | 1.3s | 1.3s | 1.3s
+
+**Table of numOfThreads-Time for 2.** (small_test):
+Threads | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: 
+Time | 2.6s | 1.7s | 1.5s | 1.3s
+
+**Table of numOfThreads-Time for 3. (and 2)** (small_test):
+Threads | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: 
+Time | 2.6s | 1.8s | 1.4s | 1.3s
+
+**Table of numOfThreads-Time for 4. (and 3 ,2)** (small_test):
+Threads | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: 
+Time |  |  |  | 
+
+*with -O3 compilation*\
+**For non-thread implementation.** (small_test):\
+Time = 1.7s
+
+**Table of numOfThreads-Time for 1.** (small_test):
+Threads | 1 | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: | :---: 
+Time | 1.3s | 0.9s | 0.7s | 0.7s | 0.7s
+
+**Table of numOfThreads-Time for 2.** (small_test):
+Threads | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: 
+Time | 1.3s | 1s | 0.8s | 0.7s
+
+**Table of numOfThreads-Time for 3. (and 2)** (small_test):
+Threads | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: 
+Time | 1.3s | 1s | 0.8s | 0.8s
+
+**Table of numOfThreads-Time for 4. (and 3 ,2)** (small_test):
+Threads | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: 
+Time |  |  |  | 
+
+We did some tests in another file also that has size equal to 30 mb. The results were in space of 11-14 minutes for each implementation where the faster was the on with the parallel endQuery().\
+We believe that for larger files it is a must-do to apply the delete operations (not just deactivation of the queries) so the search space is not going so big.
+
+The results show that none of "improvements" contributed to a time reduction. The simple version with threads handling one document each seems to be the best!
+Also, we must say that with different input files we most likely will get different results for each version. For example, the parallel endQuery() might be super useful if the file was like (m r e m r e m r e..).\
+
 
 **For all templates, it is important to say that if the data type is pointer, it's programmer's responsibility to free the memory!** 
 
