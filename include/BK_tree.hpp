@@ -5,6 +5,7 @@
 #include "word.hpp"
 #include "entry.hpp"
 #include "vector.hpp"
+#include <pthread.h>
 using namespace std;
 
 enum BKErrorCode {BK_SUCCESS, BK_FAIL};
@@ -19,6 +20,7 @@ class BKNode {
         //BKNode * parent;
         Vector<BKNode *> children;
     public:
+        pthread_mutex_t mutex;
         BKNode(Data *, int);
         ~BKNode();
         Data * getData();

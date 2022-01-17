@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include "../include/BK_tree.hpp"
+#include "../include/utils.hpp"
 #include "../include/word.hpp"
 
 #define CALL_MEMBER_FN(object, ptrToMember)  ((object).*(ptrToMember))
@@ -93,6 +94,7 @@ BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
         this->size++;
         return BK_SUCCESS;
     }
+    mutexDown(&(*node)->mutex);
 
     Word * word1 = &data->getWord();
     Word * word2 = &(*node)->getData()->getWord();
@@ -105,6 +107,7 @@ BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
         BKNode * n = children.getItem(i);
         int childDist = n->getDist();
         if (distWithThisNode == childDist) {
+            mutexUp(&(*node)->mutex);
             return insert(&n, data, distWithThisNode);
         }
     }
@@ -112,6 +115,7 @@ BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
     BKNode * newBranchNode = NULL;
     insert(&newBranchNode, data, distWithThisNode);
     children.insert(newBranchNode);
+    mutexUp(&(*node)->mutex);
     return BK_SUCCESS;
 }
 
@@ -161,9 +165,13 @@ List<Data *> BKTree::search(Key * key, int n) {
 BKNode::BKNode(Data * data, int distance):children() {
     this->data = data;
     this->dist = distance;
+    this->mutex=PTHREAD_MUTEX_INITIALIZER;
 }
 
-BKNode::~BKNode() {};
+BKNode::~BKNode() {
+    if (pthread_mutex_destroy(&this->mutex))
+        perror("mutex destroy (~)");
+};
 
 Data * BKNode::getData() {
     return this->data;

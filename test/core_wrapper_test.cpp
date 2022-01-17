@@ -38,11 +38,11 @@ class CoreWrapperTest: public ::testing::Test {
 };
 
 TEST_F(CoreWrapperTest,ConstructorTest){
-    CoreWrapper *c=new CoreWrapper();
+    // CoreWrapper *c=new CoreWrapper();
     // ASSERT_TRUE(NULL==c->pullDocument());
     // ASSERT_TRUE(NULL==c->pullResult());
 
-    delete c;
+    // delete c;
 }
 
 TEST_F(CoreWrapperTest,addQueryAndMatchTest){

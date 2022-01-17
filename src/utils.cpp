@@ -3,11 +3,30 @@
 #include <cstdlib>
 #include <fstream>
 #include <sys/time.h>
-
+#include <pthread.h>
 #include "../include/utils.hpp"
 
 using namespace std;
 
+void mutexDown(pthread_mutex_t * mutex, char * message) {
+    if(pthread_mutex_lock(mutex)) {
+        if (message)
+            perror(message);
+        else
+            perror("mutex lock failed");
+        pthread_exit(NULL);
+    }
+}
+
+void mutexUp(pthread_mutex_t * mutex, char * message) {
+    if(pthread_mutex_unlock(mutex)) {
+        if (message)
+            perror(message);
+        else
+            perror("mutex unlock failed");
+        pthread_exit(NULL);
+    }
+}
 
 bool isPrime(int n) {
     if (n % 2 == 0)

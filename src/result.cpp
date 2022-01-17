@@ -46,6 +46,7 @@ Result::~Result(){
                 if (pthread_mutex_destroy(&this->mutexes[index][j])) {
                     perror("mutex destroy (~)");
                 }
+            delete qEntry;
             delete[] this->wordFlags[index];
             delete[] this->mutexes[index];
         }
@@ -61,6 +62,8 @@ DocID Result::getId(){
 
 ResultErrorCode Result::increaseCounter(QueryID query_id, Word * w){
     QueryEntry * qEntry = this->queries.getQueryEntry(query_id);
+    if (qEntry == NULL)
+        return R_FAIL;
 
     int query_index = qEntry->getIndex();
     if(query_index==-1)//query with this id not found

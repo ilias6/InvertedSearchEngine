@@ -50,29 +50,9 @@ CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchTy
     Query * q = new Query(id,str,type,dist);
     this->queries->insertSorted(q, q->getId());
     // insert to entry list
-    Entry ** e_arr=NULL;
-    EntryListErrorCode list_error_code;
-    list_error_code=entryList->insert(*q, &e_arr);
-
-    //cout << "-------------------------\n";
-    //entryList->print();
-    if(list_error_code!=E_L_SUCCESS)
-        return C_W_FAIL;
-    IndexErrorCode error_code = I_FAIL;
-    switch(type){
-        case MT_EXACT_MATCH:
-            error_code=indeces[0][0]->insert(e_arr);
-            break;
-        case MT_HAMMING_DIST:
-            error_code=indeces[1][dist]->insert(e_arr);
-            break;
-        case MT_EDIT_DIST:
-            error_code=indeces[2][dist]->insert(e_arr);
-            break;
-    }
-    // delete entry arr
-    delete[] e_arr;
-    if(error_code!=I_SUCCESS)
+    Args * args = new InsertArgs(q);
+    Job *j=new Job(INSERT, args);
+    if (this->scheduler->addJob(j) != S_SUCCESS)
         return C_W_FAIL;
     return C_W_SUCCESS;
 }
@@ -87,6 +67,7 @@ Document * CoreWrapper::pullDocument(){
 }
 
 CoreWrapperErrorCode CoreWrapper::matchDocument(Document * doc){
+    this->scheduler->waitPendingInsertionsFinish();
     Args * args = new SearchArgs(doc);
     Job *j=new Job(SEARCH, args);
 

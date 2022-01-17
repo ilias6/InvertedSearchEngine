@@ -21,6 +21,10 @@ class Scheduler {
         pthread_mutex_t pending_match_mutex;
         pthread_cond_t pending_match_cv;
 
+        int pending_insert_jobs;
+        pthread_mutex_t pending_insert_mutex;
+        pthread_cond_t pending_insert_cv;
+
         int pending_deactivate_counter;
         Vector<Query *> *pending_deactivate_queries;
 
@@ -48,6 +52,9 @@ class Scheduler {
         pthread_mutex_t * searches_mutex;
         pthread_mutex_t * search_res_mutex;
 
+        pthread_mutex_t  entryList_mutex;
+        pthread_mutex_t  hash_mutex;
+
         // for debugging purposes (stdout)
         pthread_mutex_t stdout_mutex;
 
@@ -56,6 +63,7 @@ class Scheduler {
         Scheduler(int);
         ~Scheduler();
         void waitPendingMatchesFinish();
+        void waitPendingInsertionsFinish();
         void waitForAvailRes();
         void resMutexUp();
         void resMutexDown();

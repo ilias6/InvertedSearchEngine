@@ -2,6 +2,7 @@
 #include "../include/core_wrapper.hpp"
 #include "../include/document.hpp"
 #include "../include/entry.hpp"
+#include "../include/utils.hpp"
 #include <iostream>
 #include <errno.h>
 #include <cstdlib>
@@ -11,25 +12,6 @@
 
 extern CoreWrapper * CW;
 
-inline void mutexDown(pthread_mutex_t * mutex, char * message = NULL) {
-    if(pthread_mutex_lock(mutex)) {
-        if (message)
-            perror(message);
-        else
-            perror("mutex lock failed");
-        pthread_exit(NULL);
-    }
-}
-
-inline void mutexUp(pthread_mutex_t * mutex, char * message = NULL) {
-    if(pthread_mutex_unlock(mutex)) {
-        if (message)
-            perror(message);
-        else
-            perror("mutex unlock failed");
-        pthread_exit(NULL);
-    }
-}
 
 void Scheduler::waitPendingMatchesFinish(void){
     mutexDown(&this->pending_match_mutex);
@@ -46,6 +28,15 @@ void Scheduler::waitPendingMatchesFinish(void){
     }
     mutexUp(&this->pending_match_mutex);
 
+    return ;
+}
+
+void Scheduler::waitPendingInsertionsFinish(void){
+    mutexDown(&this->pending_insert_mutex);
+    while(pending_insert_jobs)
+        pthread_cond_wait(&this->pending_insert_cv,&this->pending_insert_mutex);
+    // all pending matches finished-> do all pending deactivates
+    mutexUp(&this->pending_insert_mutex);
     return ;
 }
 
@@ -146,9 +137,6 @@ void * doJobFunction(void *void_argc){
         if (sched->doJob(myJob, t_indx) != S_SUCCESS){
             return new SchedulerErrorCode(S_FAIL);
         }
-        // pthread_mutex_lock(&sched->stdout_mutex);
-        // cout<<"I'm "<<t_id<<" and done:\n\n";
-        // pthread_mutex_unlock(&sched->stdout_mutex);
 
         mutexDown(&sched->job_mutex[t_indx]);
         sched->thread_jobs[t_indx]=NULL;
@@ -272,6 +260,42 @@ SchedulerErrorCode Scheduler::doJob(Job * job, int thread_index){
                 pthread_cond_signal(&searches_cv[thread_index]);
             }
             mutexUp(&this->searches_mutex[thread_index]);
+            }
+            break;
+        case INSERT:
+            {
+            Args * insertArgs = job->getArgs();
+            Query * q = insertArgs->getQuery();
+            int type = q->getType();
+            int dist = q->getMatchDist();
+
+            Entry ** e_arr=NULL;
+            mutexDown(&this->entryList_mutex);
+            CW->entryList->insert(*q, &e_arr);
+            mutexUp(&this->entryList_mutex);
+
+            switch(type){
+                case MT_EXACT_MATCH:
+                    CW->indeces[0][0]->insert(e_arr);
+                    mutexUp(&this->hash_mutex);
+                    break;
+                case MT_HAMMING_DIST:
+                    CW->indeces[1][dist]->insert(e_arr);
+                    break;
+                case MT_EDIT_DIST:
+                    CW->indeces[2][dist]->insert(e_arr);
+                    break;
+            }
+            delete[] e_arr;
+            // decrease pending_insert_jobs
+            mutexDown(&this->pending_insert_mutex);
+            this->pending_insert_jobs--;
+            // cout << "Done: " << doc->getId() << endl;
+               // cout<<"pending"<<this->pending_match_jobs<<endl;
+            if(this->pending_insert_jobs==0){
+                pthread_cond_signal(&this->pending_insert_cv);
+            }
+            mutexUp(&this->pending_insert_mutex);
             }
             break;
         default:
@@ -419,13 +443,17 @@ Scheduler::Scheduler(int threads_num){
     this->avail_worker_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->results_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->pending_match_mutex=PTHREAD_MUTEX_INITIALIZER;
+    this->pending_insert_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->work_condition_mutex=PTHREAD_MUTEX_INITIALIZER;
     this->threads_in_search_mutex=PTHREAD_MUTEX_INITIALIZER;
+    this->entryList_mutex=PTHREAD_MUTEX_INITIALIZER;
+    this->hash_mutex=PTHREAD_MUTEX_INITIALIZER;
 
     this->max_docs_in_par = threads_num/2;
     this->threads_in_search=0;
 
     this->pending_match_jobs=0;
+    this->pending_insert_jobs=0;
     this->work_done = false;
 
     this->pending_deactivate_queries=new Vector<Query *>(20);
@@ -440,6 +468,11 @@ Scheduler::Scheduler(int threads_num){
         exit(1);
     }
     int ret_v = pthread_cond_init(&this->pending_match_cv, NULL);
+    if(ret_v){
+        perror("Error initializing pending match job condition variable");
+        exit(1);
+    }
+    ret_v = pthread_cond_init(&this->pending_insert_cv, NULL);
     if(ret_v){
         perror("Error initializing pending match job condition variable");
         exit(1);
@@ -579,6 +612,7 @@ Scheduler::~Scheduler(){
     free(job_mutex);
     free(job_cv);
     free(thread_id);
+    this->q.destroyData();
     delete pending_deactivate_queries;
 }
 
@@ -609,6 +643,11 @@ SchedulerErrorCode Scheduler::addJob(Job * j){
         this->pending_deactivate_counter++;
         pending_deactivate_queries->insert(q);
         return S_SUCCESS;
+    }
+    else if(j->getId()==INSERT){
+        mutexDown(&this->pending_insert_mutex);
+        this->pending_insert_jobs++;
+        mutexUp(&this->pending_insert_mutex);
     }
 
     // acquired lock -> time to push job to queue

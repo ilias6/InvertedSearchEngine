@@ -81,6 +81,14 @@ class DeactivateArgs:public Args {
         Query * getQuery();
 };
 
+class InsertArgs:public Args {
+    private:
+        Query *qPtr;
+    public:
+        InsertArgs(Query *q);
+        ~InsertArgs();
+        Query * getQuery();
+};
 //
 // class SearchArgs {
 //

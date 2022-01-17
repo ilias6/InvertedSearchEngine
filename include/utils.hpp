@@ -8,6 +8,8 @@
 #include "hash_table.hpp"
 
 
+void mutexDown(pthread_mutex_t * , char * message = NULL);
+void mutexUp(pthread_mutex_t * , char * message = NULL);
 bool isPrime(int);
 int findNextPrime(int);
 bool charInWhitespace(char c);

@@ -72,10 +72,22 @@ DeactivateArgs::DeactivateArgs(Query * q){
 }
 
 DeactivateArgs::~DeactivateArgs(){
-
 }
 
 Query * DeactivateArgs::getQuery(){
+    return qPtr;
+}
+
+/* InsertArgs--------------------*/
+
+InsertArgs::InsertArgs(Query * q){
+    this->qPtr=q;
+}
+
+InsertArgs::~InsertArgs(){
+}
+
+Query * InsertArgs::getQuery(){
     return qPtr;
 }
 
