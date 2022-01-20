@@ -11,6 +11,7 @@ BKTree::BKTree(int(Word::*distanceFunc) (Word &)) {
     this->root = NULL;
     this->size=0;
     this->distanceFunc = distanceFunc;
+    this->mutex=PTHREAD_MUTEX_INITIALIZER;
 }
 
 BKTree::~BKTree() {
@@ -84,6 +85,7 @@ void BKTree::print(BKNode * node, int tabsNum) {
 }
 
 BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
+    mutexDown(&this->mutex);
     if (*node == NULL) {
         try {
             *node = new BKNode(data, distWithParent);
@@ -94,6 +96,7 @@ BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
         this->size++;
         return BK_SUCCESS;
     }
+    mutexUp(&this->mutex);
     mutexDown(&(*node)->mutex);
 
     Word * word1 = &data->getWord();

@@ -4,7 +4,6 @@ LIBS	= -lm
 TESTFLAGS= -pthread
 TESTLIBS= -L ./lib/libgtest_main.a ./lib/libgtest.a
 
-
 SDIR	= ./src/
 ODIR 	= ./build/
 IDIR 	= ./include/

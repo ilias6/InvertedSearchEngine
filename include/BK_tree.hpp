@@ -34,6 +34,7 @@ class BKTree {
     private:
         int size;
         BKNode * root;
+        pthread_mutex_t mutex;
         // int height;
         int(Word::*distanceFunc) (Word &);
     

@@ -276,6 +276,7 @@ SchedulerErrorCode Scheduler::doJob(Job * job, int thread_index){
 
             switch(type){
                 case MT_EXACT_MATCH:
+                    mutexDown(&this->hash_mutex);
                     CW->indeces[0][0]->insert(e_arr);
                     mutexUp(&this->hash_mutex);
                     break;
