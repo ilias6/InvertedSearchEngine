@@ -12,6 +12,7 @@ using namespace std;
 Index::Index(MatchType tp,int h_size){
     this->type=tp;
     this->hTable=new HashTable(h_size,djb2);
+    this->hash_mutex = PTHREAD_MUTEX_INITIALIZER;
     if (this->type == MT_EXACT_MATCH) {
         this->numOfTrees=0;
         this->tree=NULL;
@@ -28,7 +29,6 @@ Index::Index(MatchType tp,int h_size){
         for(int i=0;i<this->numOfTrees;i++)
             tree[i]=new BKTree(&Word::hammingDist);
     }
-    this->hash_mutex = PTHREAD_MUTEX_INITIALIZER;
     // also make hashtable for searching if something exists as is in index
     return ;
 }
@@ -38,7 +38,9 @@ Index::Index(MatchType tp,int h_size){
 IndexErrorCode Index::insert(Entry ** arr){
     //first check if Entry exists in hashTable as is
     for(int i=0;arr[i]!=NULL;i++){
+        mutexDown(&this->hash_mutex);
         Entry * e=hTable->getEntry(&arr[i]->getWord());
+        mutexUp(&this->hash_mutex);
         IndexErrorCode i_err;
         HashTableErrorCode h_err;
         if(e==NULL){
