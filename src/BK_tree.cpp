@@ -94,6 +94,7 @@ BKErrorCode BKTree::insert(BKNode ** node, Data * data, int distWithParent) {
             return BK_FAIL;
         }
         this->size++;
+        mutexUp(&this->mutex);
         return BK_SUCCESS;
     }
     mutexUp(&this->mutex);
