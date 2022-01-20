@@ -4,6 +4,8 @@
 #include "../include/index.hpp"
 #include "../include/core.h"
 #include "../include/hash_functions.hpp"
+#include "../include/utils.hpp"
+
 using namespace std;
 
 
@@ -26,6 +28,7 @@ Index::Index(MatchType tp,int h_size){
         for(int i=0;i<this->numOfTrees;i++)
             tree[i]=new BKTree(&Word::hammingDist);
     }
+    this->hash_mutex = PTHREAD_MUTEX_INITIALIZER;
     // also make hashtable for searching if something exists as is in index
     return ;
 }
@@ -39,7 +42,9 @@ IndexErrorCode Index::insert(Entry ** arr){
         IndexErrorCode i_err;
         HashTableErrorCode h_err;
         if(e==NULL){
+            mutexDown(&this->hash_mutex);
             h_err=hTable->insert(arr[i]);
+            mutexUp(&this->hash_mutex);
             if(h_err==H_T_FAIL)
                 return I_FAIL;
             i_err=this->insert(arr[i]);
@@ -80,6 +85,9 @@ Index::~Index() {
     }else{
         delete tree[0];
         delete tree;
+    }
+    if (pthread_mutex_destroy(&this->hash_mutex)) {
+        perror("mutex destroy (~)");
     }
 }
 

@@ -1,6 +1,8 @@
 #ifndef __INDEX_HPP__
 #define __INDEX_HPP__
 
+#include <pthread.h>
+
 #include "BK_tree.hpp"
 #include "entry.hpp"
 #include "hash_table.hpp"
@@ -19,6 +21,7 @@ class Index {
         BKTree **tree;
         HashTable *hTable;
         IndexErrorCode insert(Entry *);
+        pthread_mutex_t hash_mutex;
     public:
         MatchType getType();
         Index(MatchType,int);
