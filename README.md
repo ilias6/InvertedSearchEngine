@@ -203,16 +203,19 @@ Time | 2.6s | 1.8s | 1.4s | 1.3s
 **Table of numOfThreads-Time for 4. (and 3 ,2)** (small_test):
 Threads | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: 
-Time |  |  |  | 
+Time | 2.6s | 1.4s | 1.4s | 1.3s
 
-*with -O3 compilation*\
-**For non-thread implementation.** (small_test):\
-Time = 1.7s
+## **with -O3 compilation (Optimal Implementation)**  
+
+**For non-thread implementation.**:\
+Time = 1.7s (small_test)
+Time = ~50 minutes (30mb test)
 
 **Table of numOfThreads-Time for 1.** (small_test):
 Threads | 1 | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: | :---: 
 Time | 1.3s | 0.9s | 0.7s | 0.7s | 0.7s
+For > 4 threads: ~15 minutes (30mb test)
 
 **Table of numOfThreads-Time for 2.** (small_test):
 Threads | 2 | 4 | 8 | 16
@@ -227,13 +230,24 @@ Time | 1.3s | 1s | 0.8s | 0.8s
 **Table of numOfThreads-Time for 4. (and 3 ,2)** (small_test):
 Threads | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: 
-Time |  |  |  | 
+Time | 1.4s | 1s | 0.9s | 0.8s  
+For > 4 threads: ~11 minutes (30mb test)
 
 We did some tests in another file also that has size equal to 30 mb. The results were in space of 11-14 minutes for each implementation where the faster was the on with the parallel endQuery().\
-We believe that for larger files it is a must-do to apply the delete operations (not just deactivation of the queries) so the search space is not going so big.
 
-The results show that none of "improvements" contributed to a time reduction. The simple version with threads handling one document each seems to be the best!
+The results show that none of "improvements" contributed to a time reduction. The simple version with threads handling one document each seems to be the best for small_test! In the contrary, approach 4. seems slower than approach 1. in small_test, but for the 30mb test, approach 4. was a litte faster! We believe that for bigger documents, approach 4. will perform at optimal level. Also, for larger files it is a must-do to apply the delete operations (not just deactivation of the queries) so the search space is not going so big! 
 Also, we must say that with different input files we most likely will get different results for each version. For example, the parallel endQuery() might be super useful if the file was like (m r e m r e m r e..).\
+**Now, let's compare the single thread implementation with the 4th approach using Amdahl's Speedup**
+Speedup=Tserial/Tpar
+**Table of Speedup for small_test (optimal implementation)**
+Threads | 2 | 4 | 8 | 16
+| :---: | :---: | :---: | :---: | :---: 
+Speedup | 1.21 | 1.7 | 1.88 | 2.1  
+
+**Speedup for 30mb test optimal implementation**
+Tserial = 50 minutes (3000)
+Tpar = 11 minutes (660)
+Speedup = 4.54
 
 
 **For all templates, it is important to say that if the data type is pointer, it's programmer's responsibility to free the memory!** 
@@ -241,7 +255,7 @@ Also, we must say that with different input files we most likely will get differ
 ***Gtest was used for unit testing.***
 We used the gtest framework for unit-testing. The two .a files in lib/ are linked at the compilation of the unit-test binary. The gtesh.h header file
 is located in the include directory.  
-##Run tests:
+## Run tests:
 ```bash
 make unit-test
 ```
