@@ -246,7 +246,7 @@ Threads | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: 
 Speedup | 1.21 | 1.7 | 1.88 | 2.1  
 
-**Speedup for 30mb test optimal implementation**
+**Speedup for 30mb test optimal implementation**  
 Tserial = 50 minutes  
 Tpar = 11 minutes  
 Speedup = 4.54
