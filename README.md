@@ -208,14 +208,15 @@ Time | 2.6s | 1.4s | 1.4s | 1.3s
 ## **with -O3 compilation (Optimal Implementation)**  
 
 **For non-thread implementation.**:\
-Time = 1.7s (small_test)
+Time = 1.7s (small_test)  
 Time = ~50 minutes (30mb test)
 
 **Table of numOfThreads-Time for 1.** (small_test):
 Threads | 1 | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: | :---: 
-Time | 1.3s | 0.9s | 0.7s | 0.7s | 0.7s
-For > 4 threads: ~15 minutes (30mb test)
+Time | 1.3s | 0.9s | 0.7s | 0.7s | 0.7s  
+
+For >= 4 threads: ~15 minutes (30mb test)
 
 **Table of numOfThreads-Time for 2.** (small_test):
 Threads | 2 | 4 | 8 | 16
@@ -231,7 +232,8 @@ Time | 1.3s | 1s | 0.8s | 0.8s
 Threads | 2 | 4 | 8 | 16
 | :---: | :---: | :---: | :---: | :---: 
 Time | 1.4s | 1s | 0.9s | 0.8s  
-For > 4 threads: ~11 minutes (30mb test)
+
+For >= 4 threads: ~11 minutes (30mb test)
 
 We did some tests in another file also that has size equal to 30 mb. The results were in space of 11-14 minutes for each implementation where the faster was the on with the parallel endQuery().\
 
@@ -245,8 +247,8 @@ Threads | 2 | 4 | 8 | 16
 Speedup | 1.21 | 1.7 | 1.88 | 2.1  
 
 **Speedup for 30mb test optimal implementation**
-Tserial = 50 minutes (3000)
-Tpar = 11 minutes (660)
+Tserial = 50 minutes  
+Tpar = 11 minutes  
 Speedup = 4.54
 
 
