@@ -174,7 +174,7 @@ these queries and empty the vector.\
 &emsp;As explained above, a single search requires exactly 2 threads, one for the edit distance search and one for the exact match and hamming distance searches.
 So, if we have N threads, scheduler assigns at most N/2 searches to run concurrently so that in worst case scenario, N/2 threads are assigned the half work a document and the other N/2 threads are assigned the other half work. This is needed to prevent a deadlock.
 
-### About efficiency in real-time!
+### About efficiency in real-time! (Tested in DI vms Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz)
 
 We have tested 3 versions of our engine:
 1. The simple one. Each document is assigned to one thread.
@@ -237,7 +237,7 @@ For >= 4 threads: ~11 minutes (30mb test)
 
 We did some tests in another file also that has size equal to 30 mb. The results were in space of 11-14 minutes for each implementation where the faster was the on with the parallel endQuery().\
 
-The results show that none of "improvements" contributed to a time reduction. The simple version with threads handling one document each seems to be the best for small_test! In the contrary, approach 4. seems slower than approach 1. in small_test, but for the 30mb test, approach 4. was a litte faster! We believe that for bigger documents, approach 4. will perform at optimal level. Also, for larger files it is a must-do to apply the delete operations (not just deactivation of the queries) so the search space is not going so big! 
+The results show that none of "improvements" contributed to a time reduction. The simple version with threads handling one document each seems to be the best for small_test! In the contrary, approach 4. seems slower than approach 1. in small_test, but for the 30mb test, approach 4. was a litte faster! We believe that for bigger documents, approach 4. will perform at optimal level. Also, for larger files it is a must-do to apply the delete operations (not just deactivation of the queries) so the search space is not going so big! Without delete implemented, approach 4. took ~6 hours for the 100mb test, whereas for 30 mb took ~11 minutes (the 100mb test is just ~3 times bigger than  30 mb... :().  
 Also, we must say that with different input files we most likely will get different results for each version. For example, the parallel endQuery() might be super useful if the file was like (m r e m r e m r e..).\
 **Now, let's compare the single thread implementation with the 4th approach using Amdahl's Speedup**
 Speedup=Tserial/Tpar
