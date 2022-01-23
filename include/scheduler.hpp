@@ -34,6 +34,7 @@ class Scheduler {
         pthread_mutex_t queue_mutex;
         pthread_cond_t queue_cv;
 
+        int avail_workers_num;
         pthread_mutex_t avail_worker_mutex;
         pthread_cond_t avail_worker_cv;
 

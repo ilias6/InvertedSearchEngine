@@ -8,7 +8,7 @@
 #define APPROXIMATE_Q_NUM 10000
 
 CoreWrapper::CoreWrapper() {
-    this->scheduler = new Scheduler(16);
+    this->scheduler = new Scheduler(2);
 
     this->entryList = new EntryList(findNextPrime(APPROXIMATE_Q_NUM));
 
@@ -49,6 +49,7 @@ CoreWrapperErrorCode CoreWrapper::addQuery(QueryID id, const char * str, MatchTy
     this->scheduler->waitPendingMatchesFinish();
     Query * q = new Query(id,str,type,dist);
     this->queries->insertSorted(q, q->getId());
+    // cout << id << endl;
     // insert to entry list
     Args * args = new InsertArgs(q);
     Job *j=new Job(INSERT, args);

@@ -35,7 +35,6 @@ void Scheduler::waitPendingInsertionsFinish(void){
     mutexDown(&this->pending_insert_mutex);
     while(pending_insert_jobs)
         pthread_cond_wait(&this->pending_insert_cv,&this->pending_insert_mutex);
-    // all pending matches finished-> do all pending deactivates
     mutexUp(&this->pending_insert_mutex);
     return ;
 }
@@ -130,13 +129,14 @@ void * doJobFunction(void *void_argc){
         // cout<<"took job"<<endl;
         // pthread_mutex_unlock(&sched->stdout_mutex);
 
-        // pthread_mutex_lock(&sched->stdout_mutex);
-        // cout<<"I'm "<<t_id<<" and got a job:\n\n";
-        // pthread_mutex_unlock(&sched->stdout_mutex);
 
         if (sched->doJob(myJob, t_indx) != S_SUCCESS){
             return new SchedulerErrorCode(S_FAIL);
         }
+
+        mutexDown(&sched->avail_worker_mutex);
+        sched->avail_workers_num++; 
+        mutexUp(&sched->avail_worker_mutex);
 
         mutexDown(&sched->job_mutex[t_indx]);
         sched->thread_jobs[t_indx]=NULL;
@@ -149,8 +149,7 @@ void * doJobFunction(void *void_argc){
         }
         delete myJob;
 
-        /* signal master that i am available
-        */
+        /* signal master that i am available */
 
         pthread_cond_signal(&sched->avail_worker_cv);
     }
@@ -362,6 +361,9 @@ int Scheduler::assignJob() {
                 // cout<<i<<" After pop "<<this->q.getList().getLen()<<endl;
                 // pthread_mutex_unlock(&this->stdout_mutex);
 
+                mutexDown(&this->avail_worker_mutex);
+                this->avail_workers_num--;
+                mutexUp(&this->avail_worker_mutex);
                 this->thread_jobs[i] = job;
                 mutexUp(&this->job_mutex[i]);
                 if (pthread_cond_signal(&this->job_cv[i])) {
@@ -375,7 +377,10 @@ int Scheduler::assignJob() {
             }
             mutexUp(&this->job_mutex[i]);
         }
-        pthread_cond_wait(&this->avail_worker_cv, &this->avail_worker_mutex);
+        mutexDown(&this->avail_worker_mutex);
+        while (!this->avail_workers_num)
+            pthread_cond_wait(&this->avail_worker_cv, &this->avail_worker_mutex);
+        mutexUp(&this->avail_worker_mutex);
 
     }
 
@@ -434,6 +439,7 @@ void * giveJobFunction(void *void_argc){
 Scheduler::Scheduler(int threads_num){
     //threads_num workers + 1 the master thread
     this->pending_deactivate_counter=0;
+    this->avail_workers_num=threads_num;
     this->job_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
     this->searches_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
     this->search_res_mutex=(pthread_mutex_t *)malloc((threads_num)*sizeof(pthread_mutex_t));
